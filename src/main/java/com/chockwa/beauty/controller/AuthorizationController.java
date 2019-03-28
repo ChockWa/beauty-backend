@@ -34,7 +34,7 @@ public class AuthorizationController {
     }
 
     @GetMapping("genVerifyCode")
-    public void generationVerifyCode(HttpServletResponse response){
+    public void generationVerifyCode(HttpServletResponse response, String uuid){
         try {
             VerifyCodeUtils.outputImage(80,30,response.getOutputStream(),VerifyCodeUtils.generateVerifyCode(4));
         } catch (IOException e) {
