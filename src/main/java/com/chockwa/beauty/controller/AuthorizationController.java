@@ -1,14 +1,15 @@
 package com.chockwa.beauty.controller;
 
+import com.chockwa.beauty.common.utils.VerifyCodeUtils;
 import com.chockwa.beauty.dto.LoginDto;
 import com.chockwa.beauty.dto.RegisterDto;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @auther: zhuohuahe
@@ -30,6 +31,15 @@ public class AuthorizationController {
     @PostMapping("register")
     public Result register(@RequestBody RegisterDto registerDto){
         return Result.SUCCESS().setData("token", authorizationService.registerAndLogin(registerDto));
+    }
+
+    @GetMapping("genVerifyCode")
+    public void generationVerifyCode(HttpServletResponse response){
+        try {
+            VerifyCodeUtils.outputImage(80,30,response.getOutputStream(),VerifyCodeUtils.generateVerifyCode(4));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
