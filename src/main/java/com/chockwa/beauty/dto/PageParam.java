@@ -6,19 +6,14 @@ import lombok.Setter;
 
 /**
  * @auther: zhuohuahe
- * @date: 2019/3/28 18:12
+ * @date: 2019/3/29 09:51
  * @description:
  */
 @Getter
 @Setter
 @AllArgsConstructor
-public class LoginDto {
+public class PageParam {
 
-    private String userName;
-
-    private String password;
-
-    private String verifyCode;
-
-    private String uuid;
+    private int pageIndex = 1;
+    private int pageSize = 20;
 }

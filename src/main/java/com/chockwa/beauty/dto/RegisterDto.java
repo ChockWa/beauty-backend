@@ -16,4 +16,5 @@ import lombok.Setter;
 public class RegisterDto extends User {
     private String verifyCode;
     private String confirmPassword;
+    private String uuid;
 }

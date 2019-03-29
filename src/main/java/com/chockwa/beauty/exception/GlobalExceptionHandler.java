@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    // 记录该次请求的异常
+    /**
+     * 记录该次请求的异常
+     */
     public static final ThreadLocal<Result> exceptionMsg = new ThreadLocal<>();
 
     @ExceptionHandler(value=BizException.class)

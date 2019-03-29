@@ -8,6 +8,7 @@ import com.chockwa.beauty.common.utils.UUIDUtils;
 import com.chockwa.beauty.dto.RegisterDto;
 import com.chockwa.beauty.entity.User;
 import com.chockwa.beauty.mapper.UserMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -69,6 +70,15 @@ public class AuthorizationService {
     private void checkPassword(String password, String md5Password, String salt){
         if(!md5Password.equals(MD5Utils.md5(salt + password + salt))){
             throw new IllegalStateException("Password mistake");
+        }
+    }
+
+    public void checkVerifyCode(String uuid, String verifyCode){
+        if(StringUtils.isBlank(uuid) || StringUtils.isBlank(verifyCode)){
+            throw new IllegalArgumentException("Parameter is wrong");
+        }
+        if(!verifyCode.equals(redisUtils.get(uuid))){
+            throw new IllegalStateException("Verification code error");
         }
     }
 }
