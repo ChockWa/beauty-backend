@@ -33,6 +33,11 @@ public class SourceController {
         return Result.SUCCESS().setData("data", sourceDetailService.getListPage(sourceId, pageParam));
     }
 
+    @GetMapping("getSourceDetail")
+    public Result getSourceDetail(Long sourceId){
+        return Result.SUCCESS().setData("data", sourceService.getSourceDetail(sourceId));
+    }
+
     @PostMapping("save")
     public Result saveSource(@RequestBody AddSourceDto addSourceDto){
         sourceService.saveSource(addSourceDto);

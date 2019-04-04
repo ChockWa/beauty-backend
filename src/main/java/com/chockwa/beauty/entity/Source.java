@@ -26,7 +26,7 @@ public class Source implements Serializable {
     /**
      * 分类
      */
-    private Long category;
+    private Integer category;
 
     /**
      * 资源名称
@@ -91,11 +91,11 @@ public class Source implements Serializable {
         this.type = type;
     }
 
-    public Long getCategory() {
+    public Integer getCategory() {
         return category;
     }
 
-    public void setCategory(Long category) {
+    public void setCategory(Integer category) {
         this.category = category;
     }
 

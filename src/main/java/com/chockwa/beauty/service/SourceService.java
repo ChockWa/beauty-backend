@@ -41,7 +41,8 @@ public class SourceService {
     public void saveSource(AddSourceDto addSourceDto){
         Long sourceId = null;
         if(addSourceDto.getSource().getId() == null){
-            sourceId = sourceMapper.insertSelective(addSourceDto.getSource());
+            sourceMapper.insert(addSourceDto.getSource());
+            sourceId = addSourceDto.getSource().getId();
         }else {
             sourceId = addSourceDto.getSource().getId();
             sourceMapper.updateByPrimaryKeySelective(addSourceDto.getSource());
@@ -62,5 +63,15 @@ public class SourceService {
         }
         sourceMapper.deleteByPrimaryKey(sourceId);
         sourceDetailMapper.delete(new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
+    }
+
+    public AddSourceDto getSourceDetail(Long sourceId){
+        if(sourceId == null){
+            return null;
+        }
+        AddSourceDto addSourceDto = new AddSourceDto();
+        addSourceDto.setSource(sourceMapper.selectById(sourceId));
+        addSourceDto.setSourceDetailList(sourceDetailMapper.selectList(new QueryWrapper<SourceDetail>().eq("source_id", sourceId)));
+        return addSourceDto;
     }
 }
