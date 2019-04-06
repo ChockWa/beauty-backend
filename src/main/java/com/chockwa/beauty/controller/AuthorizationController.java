@@ -48,7 +48,7 @@ public class AuthorizationController {
         try {
             String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
             VerifyCodeUtils.outputImage(80,30,response.getOutputStream(),verifyCode);
-            redisUtils.set(uuid, verifyCode, VERIFYCODE_EXPIRE_SECOND);
+//            redisUtils.set(uuid, verifyCode, VERIFYCODE_EXPIRE_SECOND);
         } catch (IOException e) {
             log.error("Failed to get verification code", e);
         }

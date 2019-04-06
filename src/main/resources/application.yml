@@ -6,10 +6,10 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      # 基本属性 url、user、password 193.112.46.15
-      url: jdbc:mysql://192.168.246.128:3306/beauty?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      # 基本属性 url、user、password 193.112.46.15 192.168.246.128
+      url: jdbc:mysql://193.112.46.15:3306/beauty?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
-      password: 123456
+      password: '!@pppqqq'
       # 配置初始化大小、最小、最大 (通常来说，只需要修改initialSize、minIdle、maxActive)
       initial-size: 1
       min-idle: 1
@@ -71,3 +71,6 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: true
+logging:
+  level:
+    root: info
