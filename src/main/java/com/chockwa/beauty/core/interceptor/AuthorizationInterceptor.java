@@ -37,7 +37,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if(checkNeedLoginOrNot(request.getRequestURI())){
-            String token = request.getHeader("beauty_token");
+            String token = request.getHeader("beautyT");
             if(StringUtils.isBlank(token) || !JwtUtils.verifyToken(token)){
                 throw BizException.TOKEN_EXPIRE;
             }
