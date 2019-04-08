@@ -1,6 +1,8 @@
 package com.chockwa.beauty.controller;
 
+import com.chockwa.beauty.common.utils.MD5Utils;
 import com.chockwa.beauty.common.utils.RedisUtils;
+import com.chockwa.beauty.common.utils.UUIDUtils;
 import com.chockwa.beauty.common.utils.VerifyCodeUtils;
 import com.chockwa.beauty.dto.LoginDto;
 import com.chockwa.beauty.dto.RegisterDto;
@@ -48,9 +50,15 @@ public class AuthorizationController {
         try {
             String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
             VerifyCodeUtils.outputImage(80,30,response.getOutputStream(),verifyCode);
-//            redisUtils.set(uuid, verifyCode, VERIFYCODE_EXPIRE_SECOND);
+            redisUtils.set(uuid, verifyCode, VERIFYCODE_EXPIRE_SECOND);
         } catch (IOException e) {
             log.error("Failed to get verification code", e);
         }
+    }
+
+    public static void main(String[] args) {
+        String salt = UUIDUtils.getUuid();
+        System.out.println(salt);
+        System.out.println(MD5Utils.md5(salt + "123456" + salt));
     }
 }

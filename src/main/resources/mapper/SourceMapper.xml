@@ -29,16 +29,6 @@
     delete from sys_source
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.chockwa.beauty.entity.Source" useGeneratedKeys="true">
-    insert into sys_source (`type`, category, `name`, 
-      description, cover, pics, 
-      `time`, download_code, download_link, 
-      create_time, update_time)
-    values (#{type,jdbcType=INTEGER}, #{category,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, #{pics,jdbcType=VARCHAR}, 
-      #{time,jdbcType=INTEGER}, #{downloadCode,jdbcType=VARCHAR}, #{downloadLink,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
-  </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.chockwa.beauty.entity.Source" useGeneratedKeys="true">
     insert into sys_source
     <trim prefix="(" suffix=")" suffixOverrides=",">

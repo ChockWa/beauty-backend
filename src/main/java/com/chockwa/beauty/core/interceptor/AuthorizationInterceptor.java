@@ -29,7 +29,10 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      * 需要检验登陆的黑名单
      */
     private static final ImmutableSet<String> NEED_CHECK_LOGIN_URIS = ImmutableSet.<String>builder()
-            .add("aaa").build();
+            .add("/source/sources")
+            .add("/source/getSourceDetail")
+            .add("/source/delete")
+            .add("/source/save").build();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

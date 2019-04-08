@@ -30,8 +30,8 @@ public class AuthorizationService {
     private RedisUtils redisUtils;
 
     public String login(String userName, String password){
-        Assert.isNull(userName, "username cannot be empty");
-        Assert.isNull(password, "password cannot be empty");
+        Assert.notNull(userName, "username cannot be empty");
+        Assert.notNull(password, "password cannot be empty");
         User user = userMapper.selectOne(new QueryWrapper<User>().lambda().eq(User::getUserName, userName));
         if(user == null){
             throw new IllegalStateException("User does not exist");
@@ -43,10 +43,10 @@ public class AuthorizationService {
     }
 
     public String registerAndLogin(RegisterDto registerDto){
-        Assert.isNull(registerDto.getUserName(), "Username cannot be empty");
-        Assert.isNull(registerDto.getConfirmPassword(), "Confirm that the password cannot be empty");
-        Assert.isNull(registerDto.getConfirmPassword(), "Password cannot be empty");
-        Assert.isNull(registerDto.getEmail(), "Email cannot be empty");
+        Assert.notNull(registerDto.getUserName(), "Username cannot be empty");
+        Assert.notNull(registerDto.getConfirmPassword(), "Confirm that the password cannot be empty");
+        Assert.notNull(registerDto.getConfirmPassword(), "Password cannot be empty");
+        Assert.notNull(registerDto.getEmail(), "Email cannot be empty");
         User user = userMapper.selectOne(new QueryWrapper<User>().lambda().eq(User::getUserName, registerDto.getUserName()));
         if(user != null){
             throw new IllegalStateException("The user name already exists");
@@ -77,7 +77,7 @@ public class AuthorizationService {
         if(StringUtils.isBlank(uuid) || StringUtils.isBlank(verifyCode)){
             throw new IllegalArgumentException("Parameter is wrong");
         }
-        if(!verifyCode.equals(redisUtils.get(uuid))){
+        if(!verifyCode.equalsIgnoreCase((String) redisUtils.get(uuid))){
             throw new IllegalStateException("Verification code error");
         }
     }

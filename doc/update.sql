@@ -60,3 +60,18 @@ CREATE TABLE `sys_source_detail`  (
 Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+create table sys_user(
+  uid varchar(64) not null comment 'uid',
+  user_name varchar(64) null comment '用户名',
+  password varchar(64) null comment '密码',
+  salt varchar(64) null comment '盐',
+  email varchar(64) null comment '邮箱',
+  mobile varchar(64) null comment '手机号',
+  is_vip int(2) not null default 0 comment '是否vip',
+  create_time datetime null comment '创建时间',
+  update_time datetime null comment '更新时间',
+  avator varchar(128) null comment '头像',
+  primary key (uid),
+  unique key idx_username(user_name)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用户表';
