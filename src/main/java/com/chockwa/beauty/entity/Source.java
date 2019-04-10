@@ -1,5 +1,6 @@
 package com.chockwa.beauty.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -15,7 +16,7 @@ public class Source implements Serializable {
     /**
      * 自增id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

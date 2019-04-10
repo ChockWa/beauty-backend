@@ -28,6 +28,11 @@ public class SourceController {
         return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam));
     }
 
+    @GetMapping("source")
+    public Result getSource(Long sourceId){
+        return Result.SUCCESS().setData("data", sourceService.getSource(sourceId));
+    }
+
     @GetMapping("details")
     public Result getSourceDetailListPage(Long sourceId, PageParam pageParam){
         return Result.SUCCESS().setData("data", sourceDetailService.getListPage(sourceId, pageParam));

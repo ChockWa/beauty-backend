@@ -37,6 +37,13 @@ public class SourceService {
         return pageResult;
     }
 
+    public Source getSource(Long sourceId){
+        if(sourceId == null){
+            return null;
+        }
+        return sourceMapper.selectById(sourceId);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public void saveSource(AddSourceDto addSourceDto){
         Long sourceId = null;
