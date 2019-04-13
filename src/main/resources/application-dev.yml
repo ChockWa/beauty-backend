@@ -57,4 +57,3 @@ fdfs:
   pool:
     max-total: 50
     max-wait-millis: 60
-    jmx-enabled: false
