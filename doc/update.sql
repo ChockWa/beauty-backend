@@ -35,7 +35,7 @@ CREATE TABLE `sys_source`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '资源表' ROW_FORMAT = 
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '资源表' ROW_FORMAT =
 Dynamic;
 
 -- ----------------------------
@@ -51,7 +51,8 @@ CREATE TABLE `sys_source_detail`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `source_id` bigint(20) NULL DEFAULT NULL COMMENT '资源id',
   `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片名称',
-  `pic_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片url',
+  `pic_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '带域名图片url',
+  `origin_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '不带域名地址',
   `delete_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '删除地址',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -69,6 +70,7 @@ create table sys_user(
   email varchar(64) null comment '邮箱',
   mobile varchar(64) null comment '手机号',
   is_vip int(2) not null default 0 comment '是否vip',
+  status int(2) null comment '正常',
   create_time datetime null comment '创建时间',
   update_time datetime null comment '更新时间',
   avator varchar(128) null comment '头像',

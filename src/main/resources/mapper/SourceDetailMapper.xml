@@ -6,11 +6,12 @@
     <result column="source_id" jdbcType="BIGINT" property="sourceId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="origin_url" jdbcType="VARCHAR" property="originUrl" />
     <result column="delete_url" jdbcType="VARCHAR" property="deleteUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, source_id, `name`, pic_url, delete_url, create_time
+    id, source_id, `name`, pic_url, origin_url, delete_url, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -34,6 +35,9 @@
       <if test="picUrl != null">
         pic_url,
       </if>
+      <if test="originUrl != null">
+        origin_url,
+      </if>
       <if test="deleteUrl != null">
         delete_url,
       </if>
@@ -50,6 +54,9 @@
       </if>
       <if test="picUrl != null">
         #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="originUrl != null">
+        #{originUrl,jdbcType=VARCHAR},
       </if>
       <if test="deleteUrl != null">
         #{deleteUrl,jdbcType=VARCHAR},
@@ -71,6 +78,9 @@
       <if test="picUrl != null">
         pic_url = #{picUrl,jdbcType=VARCHAR},
       </if>
+      <if test="originUrl != null">
+        origin_url = #{originUrl,jdbcType=VARCHAR},
+      </if>
       <if test="deleteUrl != null">
         delete_url = #{deleteUrl,jdbcType=VARCHAR},
       </if>
@@ -85,17 +95,18 @@
     set source_id = #{sourceId,jdbcType=BIGINT},
       `name` = #{name,jdbcType=VARCHAR},
       pic_url = #{picUrl,jdbcType=VARCHAR},
+      origin_url = #{originUrl,jdbcType=VARCHAR},
       delete_url = #{deleteUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
   <insert id="insertBatch">
-    insert into sys_source_detail (source_id, `name`, pic_url,
+    insert into sys_source_detail (source_id, `name`, pic_url, origin_url,
       delete_url, create_time)
     values
     <foreach collection="list" item="item" index="index" separator=",">
-    (#{item.sourceId,jdbcType=BIGINT}, #{item.name,jdbcType=VARCHAR}, #{item.picUrl,jdbcType=VARCHAR},
+    (#{item.sourceId,jdbcType=BIGINT}, #{item.name,jdbcType=VARCHAR}, #{item.picUrl,jdbcType=VARCHAR}, #{item.originUrl,jdbcType=VARCHAR},
       #{item.deleteUrl,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP})
     </foreach>
   </insert>

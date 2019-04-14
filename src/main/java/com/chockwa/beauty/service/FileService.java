@@ -27,7 +27,7 @@ public class FileService {
             System.out.println(storePath.getFullPath());
             // 不带分组的路径
             System.out.println(storePath.getPath());
-            return new UploadResponse(file.getName(), "http://beauties.org/"+storePath.getFullPath());
+            return new UploadResponse(file.getOriginalFilename(), "http://beauties.org/"+storePath.getFullPath(), storePath.getFullPath());
         } catch (Exception e) {
             e.printStackTrace();
         }

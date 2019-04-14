@@ -3,6 +3,10 @@ package com.chockwa.beauty.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +15,10 @@ import java.util.Date;
  * sys_source_detail
  * @author 
  */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("sys_source_detail")
 public class SourceDetail implements Serializable {
     /**
@@ -30,9 +38,14 @@ public class SourceDetail implements Serializable {
     private String name;
 
     /**
-     * 图片url
+     * 带域名图片url
      */
     private String picUrl;
+
+    /**
+     * 不带域名地址
+     */
+    private String originUrl;
 
     /**
      * 删除地址
@@ -46,51 +59,4 @@ public class SourceDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(Long sourceId) {
-        this.sourceId = sourceId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
-
-    public String getDeleteUrl() {
-        return deleteUrl;
-    }
-
-    public void setDeleteUrl(String deleteUrl) {
-        this.deleteUrl = deleteUrl;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }

@@ -81,4 +81,10 @@ public class AuthorizationService {
             throw new IllegalStateException("Verification code error");
         }
     }
+
+    public static void main(String[] args) {
+        String salt = UUIDUtils.getUuid();
+        System.out.println(salt);
+        System.out.println(MD5Utils.md5(salt + "123456" + salt));
+    }
 }

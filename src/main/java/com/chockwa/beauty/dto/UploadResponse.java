@@ -12,4 +12,5 @@ import lombok.Setter;
 public class UploadResponse {
     private String name;
     private String url;
+    private String originUrl;
 }
