@@ -65,6 +65,7 @@ public class FileService {
             for (File file : files) {
                 inputStream = new FileInputStream(file);
                 StorePath storePath = fastFileStorageClient.uploadFile(inputStream, file.length(), "jpg", null);
+                System.out.println(storePath.getFullPath());
                 UploadResponse uploadResponse = new UploadResponse();
                 uploadResponse.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
                 uploadResponse.setUrl("http://beauties.org/"+storePath.getFullPath());

@@ -47,8 +47,8 @@ logging:
     root: info
 
 fdfs:
-  soTimeout: 3000
-  connectTimeout: 6000
+  soTimeout: 5000
+  connectTimeout: 8000
   thumbImage:             #缩略图生成参数
     width: 150
     height: 150
