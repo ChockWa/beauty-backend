@@ -52,6 +52,7 @@ public class ZipUtils {
             }
         }catch(Exception e){
             log.error("解压失败", e);
+            throw new RuntimeException("解压失败");
         }finally{
             try{
                 if(bos != null){
