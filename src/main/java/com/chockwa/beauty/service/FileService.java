@@ -81,7 +81,8 @@ public class FileService {
                 inputStream = new FileInputStream(file);
                 // 缓存文件流
                 cacher = new InputStreamCacher(inputStream);
-                StorePath thumbStorePath = fastFileStorageClient.uploadFile(cacher.getInputStream(), file.length(), "jpg", null);
+                getThumbImage(cacher, file);
+                StorePath thumbStorePath = fastFileStorageClient.uploadFile(new FileInputStream(file), file.length(), "jpg", null);
                 StorePath storePath = fastFileStorageClient.uploadFile(cacher.getInputStream(), file.length(), "jpg", null);
                 System.out.println(thumbStorePath.getFullPath());
                 System.out.println(storePath.getFullPath());
@@ -119,37 +120,34 @@ public class FileService {
      * @param cacher
      * @return
      */
-    public InputStream getThumbImage(InputStreamCacher  cacher){
+    public void getThumbImage(InputStreamCacher  cacher, File file){
         ByteArrayOutputStream os = null;
         try {
             BufferedImage originImage = ImageIO.read(cacher.getInputStream());
             int originWidth = originImage.getWidth();
             int originHeight = originImage.getHeight();
             if(originWidth > originHeight){
-                BigDecimal percent = new BigDecimal(originHeight - 1).divide(new BigDecimal(thumbHeight),3,BigDecimal.ROUND_HALF_DOWN);
-                BigDecimal width = new BigDecimal(thumbWidth).multiply(percent).setScale(0, BigDecimal.ROUND_HALF_DOWN);
-                BufferedImage image = Thumbnails.of(cacher.getInputStream())
-                        .sourceRegion(Positions.BOTTOM_LEFT, 1,1)
-                        .size(width.intValue(), originHeight - 1)
-                        .keepAspectRatio(false).asBufferedImage();
-                os = new ByteArrayOutputStream();
-                ImageIO.write(image, "jpg", os);
-                BufferedImage thumbImage = Thumbnails.of(new ByteArrayInputStream(os.toByteArray()))
-                        .size(thumbWidth, thumbHeight)
-                        .asBufferedImage();
-                os.close();
-                os = null;
-                os = new ByteArrayOutputStream();
-                ImageIO.write(thumbImage, "jpg", os);
-                return new ByteArrayInputStream(os.toByteArray());
+//                BigDecimal percent = new BigDecimal(originHeight - 1).divide(new BigDecimal(thumbHeight),3,BigDecimal.ROUND_HALF_DOWN);
+//                BigDecimal width = new BigDecimal(thumbWidth).multiply(percent).setScale(0, BigDecimal.ROUND_HALF_DOWN);
+//                BufferedImage image = Thumbnails.of(cacher.getInputStream())
+//                        .sourceRegion(Positions.BOTTOM_LEFT, 1,1)
+//                        .size(width.intValue(), originHeight - 1)
+//                        .keepAspectRatio(false).asBufferedImage();
+//                os = new ByteArrayOutputStream();
+//                ImageIO.write(image, "jpg", os);
+//                BufferedImage thumbImage = Thumbnails.of(new ByteArrayInputStream(os.toByteArray()))
+//                        .size(thumbWidth, thumbHeight)
+//                        .asBufferedImage();
+//                os.close();
+//                os = null;
+//                os = new ByteArrayOutputStream();
+//                ImageIO.write(thumbImage, "jpg", os);
+//                return new ByteArrayInputStream(os.toByteArray());
             }else{
-                BufferedImage image = Thumbnails.of(cacher.getInputStream())
+                Thumbnails.of(cacher.getInputStream())
                         .size(thumbWidth, thumbHeight)
                         .keepAspectRatio(false)
-                        .asBufferedImage();
-                os = new ByteArrayOutputStream();
-                ImageIO.write(image, "jpg", os);
-                return new ByteArrayInputStream(os.toByteArray());
+                        .toFile(file);
             }
         } catch (IOException e) {
             log.error("生成缩略图失败");
