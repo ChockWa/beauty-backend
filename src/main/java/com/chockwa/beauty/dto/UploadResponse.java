@@ -13,4 +13,6 @@ public class UploadResponse {
     private String name;
     private String url;
     private String originUrl;
+    private String thumbUrl;
+    private String originThumbUrl;
 }

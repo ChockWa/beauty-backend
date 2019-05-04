@@ -1,30 +1,40 @@
 package com.chockwa.beauty.service;
 
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.chockwa.beauty.common.utils.InputStreamCacher;
 import com.chockwa.beauty.common.utils.ZipUtils;
 import com.chockwa.beauty.dto.UploadResponse;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.github.tobato.fastdfs.service.TrackerClient;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileSystemUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.tools.zip.ZipFile;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
+import net.coobird.thumbnailator.name.Rename;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 @Slf4j
 @Service
 public class FileService {
+
+    @Value("${thumb-image.width}")
+    private int thumbWidth;
+
+    @Value("${thumb-image.height}")
+    private int thumbHeight;
 
     @Autowired
     private FastFileStorageClient fastFileStorageClient;
@@ -42,7 +52,7 @@ public class FileService {
             System.out.println(storePath.getFullPath());
             // 不带分组的路径
             System.out.println(storePath.getPath());
-            return new UploadResponse(file.getOriginalFilename(), "http://beauties.org/"+storePath.getFullPath(), storePath.getFullPath());
+            return new UploadResponse(file.getOriginalFilename(), "http://beauties.org/"+storePath.getFullPath(), storePath.getFullPath(), null, null);
         } catch (Exception e) {
             log.error("上传失败", e);
         }
@@ -63,33 +73,96 @@ public class FileService {
     public List<UploadResponse> upload(String tempDirPath) {
         List<UploadResponse> uploadResponses = new ArrayList<>();
         InputStream inputStream = null;
+        InputStreamCacher cacher = null;
         try {
             File fileDir = new File(tempDirPath);
             File[] files = fileDir.listFiles();
             for (File file : files) {
                 inputStream = new FileInputStream(file);
-                StorePath storePath = fastFileStorageClient.uploadFile(inputStream, file.length(), "jpg", null);
+                // 缓存文件流
+                cacher = new InputStreamCacher(inputStream);
+                StorePath thumbStorePath = fastFileStorageClient.uploadFile(cacher.getInputStream(), file.length(), "jpg", null);
+                StorePath storePath = fastFileStorageClient.uploadFile(cacher.getInputStream(), file.length(), "jpg", null);
+                System.out.println(thumbStorePath.getFullPath());
                 System.out.println(storePath.getFullPath());
                 UploadResponse uploadResponse = new UploadResponse();
                 uploadResponse.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
                 uploadResponse.setUrl("http://beauties.org/"+storePath.getFullPath());
+                uploadResponse.setThumbUrl("http://beauties.org/"+thumbStorePath.getFullPath());
                 uploadResponse.setOriginUrl(storePath.getFullPath());
+                uploadResponse.setOriginThumbUrl(thumbStorePath.getFullPath());
                 uploadResponses.add(uploadResponse);
                 inputStream.close();
+                cacher.close();
+                cacher = null;
             }
             return uploadResponses;
         } catch (Exception e) {
-            log.error("上传失败", e);
+            log.error("上传失败");
+            throw new RuntimeException("上传失败", e);
         } finally {
-            if(inputStream != null){
-                try {
+            try {
+                if(inputStream != null){
                     inputStream.close();
-                } catch (IOException e) {
-                    log.error("关闭流失败", e);
                 }
+                if(cacher != null){
+                    cacher.close();
+                }
+            } catch (IOException e) {
+                log.error("关闭流失败", e);
             }
         }
-        return null;
+    }
+
+    /**
+     * 生成缩略图流
+     * @param cacher
+     * @return
+     */
+    public InputStream getThumbImage(InputStreamCacher  cacher){
+        ByteArrayOutputStream os = null;
+        try {
+            BufferedImage originImage = ImageIO.read(cacher.getInputStream());
+            int originWidth = originImage.getWidth();
+            int originHeight = originImage.getHeight();
+            if(originWidth > originHeight){
+                BigDecimal percent = new BigDecimal(originHeight - 1).divide(new BigDecimal(thumbHeight),3,BigDecimal.ROUND_HALF_DOWN);
+                BigDecimal width = new BigDecimal(thumbWidth).multiply(percent).setScale(0, BigDecimal.ROUND_HALF_DOWN);
+                BufferedImage image = Thumbnails.of(cacher.getInputStream())
+                        .sourceRegion(Positions.BOTTOM_LEFT, 1,1)
+                        .size(width.intValue(), originHeight - 1)
+                        .keepAspectRatio(false).asBufferedImage();
+                os = new ByteArrayOutputStream();
+                ImageIO.write(image, "jpg", os);
+                BufferedImage thumbImage = Thumbnails.of(new ByteArrayInputStream(os.toByteArray()))
+                        .size(thumbWidth, thumbHeight)
+                        .asBufferedImage();
+                os.close();
+                os = null;
+                os = new ByteArrayOutputStream();
+                ImageIO.write(thumbImage, "jpg", os);
+                return new ByteArrayInputStream(os.toByteArray());
+            }else{
+                BufferedImage image = Thumbnails.of(cacher.getInputStream())
+                        .size(thumbWidth, thumbHeight)
+                        .keepAspectRatio(false)
+                        .asBufferedImage();
+                os = new ByteArrayOutputStream();
+                ImageIO.write(image, "jpg", os);
+                return new ByteArrayInputStream(os.toByteArray());
+            }
+        } catch (IOException e) {
+            log.error("生成缩略图失败");
+            throw new RuntimeException("生成缩略图失败");
+        }finally {
+            try {
+                if(os != null){
+                    os.close();
+                }
+            }catch (Exception e){
+                log.error("关闭流失败", e);
+            }
+        }
     }
 
 //    public void unZipAndUpload(MultipartFile uploadZip){
