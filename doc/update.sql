@@ -51,6 +51,8 @@ CREATE TABLE `sys_source_detail`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `source_id` bigint(20) NULL DEFAULT NULL COMMENT '资源id',
   `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片名称',
+  `thumb_image` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '带域名缩略图',
+  `origin_thumb_image` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '不带域名缩略图',
   `pic_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '带域名图片url',
   `origin_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '不带域名地址',
   `delete_url` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '删除地址',

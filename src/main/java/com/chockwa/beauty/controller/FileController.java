@@ -34,6 +34,12 @@ public class FileController {
         return Result.SUCCESS().setData("data", uploadResponseList);
     }
 
+//    @PostMapping("unZipAndUpload")
+//    public synchronized Result unZipAndUpload(@RequestParam("file")MultipartFile file){
+//        fileService.unZipAndUpload(file);
+//        return Result.SUCCESS();
+//    }
+
     /**
      * 上传单文件
      * @param file

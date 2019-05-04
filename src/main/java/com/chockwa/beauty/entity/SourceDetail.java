@@ -37,6 +37,10 @@ public class SourceDetail implements Serializable {
      */
     private String name;
 
+    private String thumbImage;
+
+    private String originThumbImage;
+
     /**
      * 带域名图片url
      */

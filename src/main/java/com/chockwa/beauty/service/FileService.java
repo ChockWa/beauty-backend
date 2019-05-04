@@ -6,17 +6,21 @@ import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.github.tobato.fastdfs.service.TrackerClient;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileSystemUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.tools.zip.ZipFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.imageio.stream.FileImageInputStream;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @Slf4j
 @Service
@@ -87,4 +91,65 @@ public class FileService {
         }
         return null;
     }
+
+//    public void unZipAndUpload(MultipartFile uploadZip){
+//        List<UploadResponse> uploadResponses = new ArrayList<>();
+//        InputStream is = null;
+//        OutputStream os = null;
+//        ZipInputStream zis = null;
+//        try {
+//            byte[] zipBytes = FileCopyUtils.copyToByteArray(uploadZip.getInputStream());
+//            FileImageInputStream fileImageInputStream = new FileImageInputStream()
+//            zis = new ZipInputStream(new ByteArrayInputStream(zipBytes));
+//            ZipEntry zipEntry = null;
+//            java.util.zip.ZipFile.
+//            ZipFile zipFile = new ZipFile(new String(zipBytes));
+//            Enumeration<?> entries = zipFile.getEntries();
+//            int count = 1;
+//            while((zipEntry = zis.getNextEntry()) != null) {
+//                ZipEntry entry = (ZipEntry)entries.nextElement();
+//                String fileFullName = entry.getName();
+//                // 检查是否是文件夹
+//                if(fileFullName.length() == fileFullName.lastIndexOf("/") + 1){
+//                    continue;
+//                }
+//                is = zipFile.getInputStream(entry);
+//                if(zipEntry.isDirectory()){
+//                    continue;
+//                }
+//                byte[] bs = new byte[1024];
+//                int length = 0;
+//                os = new FileOutputStream("D:\\test\\image_" + count + ".jpg");
+//                while ((length=zis.read(bs)) > 0){
+//                    os.write(bs, 0, length);
+//                }
+//                StorePath storePath = fastFileStorageClient.uploadFile(is, entry.getSize(), "jpg", null);
+//                System.out.println(storePath.getFullPath());
+//                UploadResponse uploadResponse = new UploadResponse();
+//                uploadResponse.setName(entry.getName().substring(0, entry.getName().lastIndexOf(".")));
+//                uploadResponse.setUrl("http://beauties.org/"+storePath.getFullPath());
+//                uploadResponse.setOriginUrl(storePath.getFullPath());
+//                uploadResponses.add(uploadResponse);
+//                os.close();
+//                is.close();
+//                count++;
+//            }
+//        } catch (IOException e) {
+//            log.error("解压失败", e);
+//        } finally {
+//            try{
+//                if(zis != null){
+//                    zis.close();
+//                }
+//                if(os != null){
+//                    os.close();
+//                }
+//                if(is != null){
+//                    os.close();
+//                }
+//            }catch (Exception e){
+//                log.error("关闭流失败", e);
+//            }
+//        }
+//    }
 }

@@ -3,7 +3,7 @@ spring:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       # 基本属性 url、user、password 193.112.46.15 192.168.246.128 173.82.114.131
-      url: jdbc:mysql://173.82.232.47:3306/beauty?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      url: jdbc:mysql://198.252.105.138:3306/beauty?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
       password: 123456
       # 配置初始化大小、最小、最大 (通常来说，只需要修改initialSize、minIdle、maxActive)
@@ -31,7 +31,7 @@ spring:
   redis:
     open: false  # 是否开启redis缓存  true开启   false关闭
     database: 0
-    host: 173.82.232.47
+    host: 198.252.105.138
     port: 10379
     password: '!@*pppqqq'    # 密码（默认为空）
     timeout: 10000ms  # 连接超时时长（毫秒）
@@ -53,7 +53,7 @@ fdfs:
     width: 150
     height: 150
   trackerList:            #TrackerList参数,支持多个
-    - 173.82.232.47:22122
+    - 198.252.105.138:22122
   pool:
     max-total: 50
     max-wait-millis: 60

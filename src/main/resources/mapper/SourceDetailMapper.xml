@@ -5,13 +5,15 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="source_id" jdbcType="BIGINT" property="sourceId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="thumb_image" jdbcType="VARCHAR" property="thumbImage" />
+    <result column="origin_thumb_image" jdbcType="VARCHAR" property="originThumbImage" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="origin_url" jdbcType="VARCHAR" property="originUrl" />
     <result column="delete_url" jdbcType="VARCHAR" property="deleteUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, source_id, `name`, pic_url, origin_url, delete_url, create_time
+    id, source_id, `name`, thumb_image, origin_thumb_image, pic_url, origin_url, delete_url, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -44,6 +46,12 @@
       <if test="createTime != null">
         create_time,
       </if>
+      <if test="thumbImage != null">
+        thumb_image,
+      </if>
+      <if test="originThumbImage != null">
+        origin_thumb_image,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="sourceId != null">
@@ -63,6 +71,12 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="thumbImage != null">
+        #{thumbImage,jdbcType=VARCHAR},
+      </if>
+      <if test="originThumbImage != null">
+        #{originThumbImage,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -87,6 +101,12 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="thumbImage != null">
+        thumb_image = #{thumbImage,jdbcType=VARCHAR},
+      </if>
+      <if test="originThumbImage != null">
+        origin_thumb_image = #{originThumbImage,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -97,16 +117,18 @@
       pic_url = #{picUrl,jdbcType=VARCHAR},
       origin_url = #{originUrl,jdbcType=VARCHAR},
       delete_url = #{deleteUrl,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      thumb_image = #{thumbImage,jdbcType=VARCHAR},
+      origin_thumb_image = #{originThumbImage,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
   <insert id="insertBatch">
-    insert into sys_source_detail (source_id, `name`, pic_url, origin_url,
+    insert into sys_source_detail (source_id, `name`, thumb_image, origin_thumb_image, pic_url, origin_url,
       delete_url, create_time)
     values
     <foreach collection="list" item="item" index="index" separator=",">
-    (#{item.sourceId,jdbcType=BIGINT}, #{item.name,jdbcType=VARCHAR}, #{item.picUrl,jdbcType=VARCHAR}, #{item.originUrl,jdbcType=VARCHAR},
+    (#{item.sourceId,jdbcType=BIGINT}, #{item.name,jdbcType=VARCHAR}, #{item.thumbImage,jdbcType=VARCHAR}, #{item.originThumbImage,jdbcType=VARCHAR}, #{item.picUrl,jdbcType=VARCHAR}, #{item.originUrl,jdbcType=VARCHAR},
       #{item.deleteUrl,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
