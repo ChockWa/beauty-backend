@@ -47,6 +47,8 @@ public class SourceService {
     @Transactional(rollbackFor = Exception.class)
     public void saveSource(AddSourceDto addSourceDto){
         Long sourceId = null;
+        String cover = addSourceDto.getSourceDetailList().get(0).getThumbImage();
+        addSourceDto.getSource().setCover(cover);
         if(addSourceDto.getSource().getId() == null){
             sourceMapper.insert(addSourceDto.getSource());
             sourceId = addSourceDto.getSource().getId();

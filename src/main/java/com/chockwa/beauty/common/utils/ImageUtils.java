@@ -58,20 +58,24 @@ public class ImageUtils {
         try {
             BufferedImage bufferedImage = ImageIO.read(originfile);
             int originHeight = bufferedImage.getHeight();
-            int cutWidth = new BigDecimal(originHeight).multiply(new BigDecimal(thumbWidth)).divide(new BigDecimal(thumbHeight),0, RoundingMode.HALF_UP).intValue();
-            Thumbnails.Builder<File> builder = Thumbnails.of(originfile);
-            builder.sourceRegion(Positions.TOP_CENTER, cutWidth, originHeight);
-            builder.scale(1).toFile(thumbFile);
-
-            createImageFromExist(thumbFile, thumbFile, null, thumbHeight);
+            int originWidth = bufferedImage.getWidth();
+            if(originWidth > originHeight){
+                int cutWidth = new BigDecimal(originHeight).multiply(new BigDecimal(thumbWidth)).divide(new BigDecimal(thumbHeight),0, RoundingMode.HALF_UP).intValue();
+                Thumbnails.Builder<File> builder = Thumbnails.of(originfile);
+                builder.sourceRegion(Positions.TOP_CENTER, cutWidth, originHeight);
+                builder.scale(1).toFile(thumbFile);
+                createImageFromExist(thumbFile, thumbFile, null, thumbHeight);
+            }else{
+                createImageFromExist(thumbFile, thumbFile, thumbWidth, thumbHeight);
+            }
         } catch (IOException e) {
             log.error("剪裁圖片失敗", e);
         }
     }
 
     public static void main(String[] args) {
-        File file = new File("e:/test.jpg");
-        File file1 = new File("e:/test_thumb.jpg");
+        File file = new File("e:/粤BT87M5-20190508-174150.jpg");
+        File file1 = new File("e:/粤BT87M5-20190508-174150_thumb.jpg");
         cutImageAndGenThumb(file,file1,200,300);
     }
 }

@@ -1,6 +1,7 @@
 package com.chockwa.beauty.service;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.chockwa.beauty.common.utils.ImageUtils;
 import com.chockwa.beauty.common.utils.InputStreamCacher;
 import com.chockwa.beauty.common.utils.ZipUtils;
 import com.chockwa.beauty.dto.UploadResponse;
@@ -23,6 +24,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,18 +75,24 @@ public class FileService {
 
     public List<UploadResponse> upload(String tempDirPath) {
         List<UploadResponse> uploadResponses = new ArrayList<>();
-        InputStream inputStream = null;
-        InputStreamCacher cacher = null;
-        try {
+        InputStream originIs = null;
+        InputStream thumbIs = null;
+        try{
             File fileDir = new File(tempDirPath);
             File[] files = fileDir.listFiles();
             for (File file : files) {
-                inputStream = new FileInputStream(file);
                 // 缓存文件流
-                cacher = new InputStreamCacher(inputStream);
-                StorePath storePath = fastFileStorageClient.uploadFile(cacher.getInputStream(), file.length(), "jpg", null);
-                getThumbImage(cacher, file);
-                StorePath thumbStorePath = fastFileStorageClient.uploadFile(new FileInputStream(file), file.length(), "jpg", null);
+                originIs = new FileInputStream(file);
+                StorePath storePath = fastFileStorageClient.uploadFile(originIs, file.length(), "jpg", null);
+                // 生成缩略图
+                String thumbImagePath = file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf("\\")+1);
+                System.out.println(thumbImagePath);
+//                String thumbImageName = file.getName().substring(0, file.getName().lastIndexOf(".")) + "_thumb" + file.getName().substring(file.getName().lastIndexOf("."));
+//                File thumbImage = new File(thumbImagePath + thumbImageName);
+                originIs.close();
+                ImageUtils.cutImageAndGenThumb(file, file, thumbWidth, thumbHeight);
+                thumbIs = new FileInputStream(file);
+                StorePath thumbStorePath = fastFileStorageClient.uploadFile(thumbIs, file.length(), "jpg", null);
                 System.out.println(thumbStorePath.getFullPath());
                 System.out.println(storePath.getFullPath());
                 UploadResponse uploadResponse = new UploadResponse();
@@ -94,57 +102,23 @@ public class FileService {
                 uploadResponse.setOriginUrl(storePath.getFullPath());
                 uploadResponse.setOriginThumbUrl(thumbStorePath.getFullPath());
                 uploadResponses.add(uploadResponse);
-                inputStream.close();
-                cacher.close();
-                cacher = null;
+                thumbIs.close();
             }
             return uploadResponses;
-        } catch (Exception e) {
+        }catch (Exception e) {
             log.error("上传失败");
             throw new RuntimeException("上传失败", e);
-        } finally {
-            try {
-                if(inputStream != null){
-                    inputStream.close();
+        }finally {
+            try{
+                if(thumbIs != null){
+                    thumbIs.close();
                 }
-                if(cacher != null){
-                    cacher.close();
+                if(originIs != null){
+                    originIs.close();
                 }
-            } catch (IOException e) {
+            }catch (Exception e){
                 log.error("关闭流失败", e);
             }
-        }
-    }
-
-    /**
-     * 生成缩略图流
-     * @param cacher
-     * @return
-     */
-    public void getThumbImage(InputStreamCacher  cacher, File file){
-        try {
-            BufferedImage originImage = ImageIO.read(cacher.getInputStream());
-            int originWidth = originImage.getWidth();
-            int originHeight = originImage.getHeight();
-            if(originWidth > originHeight){
-                BigDecimal percent = new BigDecimal(originHeight - 1).divide(new BigDecimal(thumbHeight),3,BigDecimal.ROUND_HALF_DOWN);
-                BigDecimal width = new BigDecimal(thumbWidth).multiply(percent).setScale(0, BigDecimal.ROUND_HALF_DOWN);
-                Thumbnails.of(cacher.getInputStream())
-                        .sourceRegion(Positions.BOTTOM_LEFT, 1,1)
-                        .size(width.intValue(), originHeight - 1)
-                        .keepAspectRatio(false).toFile(file);
-                Thumbnails.of(file)
-                        .size(thumbWidth, thumbHeight)
-                        .toFile(file);
-            }else{
-                Thumbnails.of(cacher.getInputStream())
-                        .size(thumbWidth, thumbHeight)
-                        .keepAspectRatio(false)
-                        .toFile(file);
-            }
-        } catch (IOException e) {
-            log.error("生成缩略图失败");
-            throw new RuntimeException("生成缩略图失败");
         }
     }
 
