@@ -79,3 +79,4 @@ create table sys_user(
   primary key (uid),
   unique key idx_username(user_name)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用户表';
+INSERT INTO `sys_user` VALUES ('91a96c4621974583b987c8b72f2f9ed4', 'chockwa', '569badc2c8b71a6f19a23704e1b17b99', '91a96c4621974583b987c8b72f2f9ed4', NULL, NULL, 0, 1, NULL, NULL, NULL);

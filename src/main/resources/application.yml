@@ -36,5 +36,8 @@ spring:
       max-request-size: 50MB
 
 thumb-image:
-   width: 220
+   width: 210
    height: 300
+
+dns:
+   api: http://24beauties.xyz/

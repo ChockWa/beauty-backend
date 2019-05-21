@@ -1,32 +1,20 @@
 package com.chockwa.beauty.service;
 
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.chockwa.beauty.common.utils.ImageUtils;
-import com.chockwa.beauty.common.utils.InputStreamCacher;
 import com.chockwa.beauty.common.utils.ZipUtils;
 import com.chockwa.beauty.dto.UploadResponse;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.github.tobato.fastdfs.service.TrackerClient;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Positions;
-import net.coobird.thumbnailator.name.Rename;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.math.BigDecimal;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -38,6 +26,9 @@ public class FileService {
 
     @Value("${thumb-image.height}")
     private int thumbHeight;
+
+    @Value("${dns.api}")
+    private String dns;
 
     @Autowired
     private FastFileStorageClient fastFileStorageClient;
@@ -75,50 +66,36 @@ public class FileService {
 
     public List<UploadResponse> upload(String tempDirPath) {
         List<UploadResponse> uploadResponses = new ArrayList<>();
-        InputStream originIs = null;
-        InputStream thumbIs = null;
         try{
             File fileDir = new File(tempDirPath);
             File[] files = fileDir.listFiles();
             for (File file : files) {
                 // 缓存文件流
-                originIs = new FileInputStream(file);
-                StorePath storePath = fastFileStorageClient.uploadFile(originIs, file.length(), "jpg", null);
+//                InputStream originIs = ;
+                StorePath storePath = fastFileStorageClient.uploadFile(new FileInputStream(file), file.length(), "jpg", null);
                 // 生成缩略图
-                String thumbImagePath = file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf("\\")+1);
-                System.out.println(thumbImagePath);
+//                String thumbImagePath = file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf("\\")+1);
 //                String thumbImageName = file.getName().substring(0, file.getName().lastIndexOf(".")) + "_thumb" + file.getName().substring(file.getName().lastIndexOf("."));
 //                File thumbImage = new File(thumbImagePath + thumbImageName);
-                originIs.close();
+//                originIs.close();
                 ImageUtils.cutImageAndGenThumb(file, file, thumbWidth, thumbHeight);
-                thumbIs = new FileInputStream(file);
-                StorePath thumbStorePath = fastFileStorageClient.uploadFile(thumbIs, file.length(), "jpg", null);
+//                InputStream thumbIs = ;
+                StorePath thumbStorePath = fastFileStorageClient.uploadFile(new FileInputStream(file), file.length(), "jpg", null);
                 System.out.println(thumbStorePath.getFullPath());
                 System.out.println(storePath.getFullPath());
                 UploadResponse uploadResponse = new UploadResponse();
                 uploadResponse.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
-                uploadResponse.setUrl("http://beauties.org/"+storePath.getFullPath());
-                uploadResponse.setThumbUrl("http://beauties.org/"+thumbStorePath.getFullPath());
+                uploadResponse.setUrl(dns + storePath.getFullPath());
+                uploadResponse.setThumbUrl(dns + thumbStorePath.getFullPath());
                 uploadResponse.setOriginUrl(storePath.getFullPath());
                 uploadResponse.setOriginThumbUrl(thumbStorePath.getFullPath());
                 uploadResponses.add(uploadResponse);
-                thumbIs.close();
+//                thumbIs.close();
             }
             return uploadResponses;
         }catch (Exception e) {
             log.error("上传失败");
             throw new RuntimeException("上传失败", e);
-        }finally {
-            try{
-                if(thumbIs != null){
-                    thumbIs.close();
-                }
-                if(originIs != null){
-                    originIs.close();
-                }
-            }catch (Exception e){
-                log.error("关闭流失败", e);
-            }
         }
     }
 

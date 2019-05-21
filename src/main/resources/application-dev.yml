@@ -5,7 +5,7 @@ spring:
       # 基本属性 url、user、password 193.112.46.15 192.168.246.128 173.82.114.131
       url: jdbc:mysql://198.252.105.138:3306/beauty?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
-      password: 123456
+      password: '!@pppqqq'
       # 配置初始化大小、最小、最大 (通常来说，只需要修改initialSize、minIdle、maxActive)
       initial-size: 1
       min-idle: 1
@@ -47,8 +47,8 @@ logging:
     root: info
 
 fdfs:
-  soTimeout: 5000
-  connectTimeout: 8000
+  soTimeout: 10000
+  connectTimeout: 10000
   trackerList:            #TrackerList参数,支持多个
     - 198.252.105.138:22122
   pool:
