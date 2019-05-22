@@ -28,6 +28,11 @@ public class SourceController {
         return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam));
     }
 
+    @GetMapping("thumbs")
+    public Result getSourceThumbs(Long sourceId, PageParam pageParam){
+        return Result.SUCCESS().setData("data", sourceDetailService.getSourceThumbs(sourceId, pageParam));
+    }
+
     @GetMapping("source")
     public Result getSource(Long sourceId){
         return Result.SUCCESS().setData("data", sourceService.getSource(sourceId));

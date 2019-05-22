@@ -10,6 +10,8 @@ import com.chockwa.beauty.mapper.SourceDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 /**
  * @auther: zhuohuahe
  * @date: 2019/3/29 09:43
@@ -35,5 +37,19 @@ public class SourceDetailService {
             return;
         }
         sourceDetailMapper.deleteByPrimaryKey(sourceDetailId);
+    }
+
+    public PageResult<SourceDetail> getSourceThumbs(Long sourceId, PageParam pageParam){
+        IPage<SourceDetail> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
+        IPage<SourceDetail> result = sourceDetailMapper.selectPage(iPage, new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
+        PageResult<SourceDetail> pageResult = new PageResult<>();
+        pageResult.setTotal(result.getTotal());
+        pageResult.setRecords(result.getRecords().stream().map(m -> {
+            SourceDetail temp = new SourceDetail();
+            temp.setId(m.getId());
+            temp.setThumbImage(m.getThumbImage());
+            return temp;
+        }).collect(Collectors.toList()));
+        return pageResult;
     }
 }
