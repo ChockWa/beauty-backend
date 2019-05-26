@@ -41,7 +41,6 @@ Dynamic;
 -- ----------------------------
 -- Records of sys_source
 -- ----------------------------
-INSERT INTO `sys_source` VALUES (1, 1, 1, 'fdsd', 'fwefwef', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_source_detail
