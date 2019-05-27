@@ -65,4 +65,9 @@ public class SourceController {
         sourceDetailService.delete(sourceDetailId);
         return Result.SUCCESS();
     }
+
+    @GetMapping("max")
+    public Result getMax(Long sourceDetailId){
+        return Result.SUCCESS().setData("url", sourceDetailService.getMaxImageById(sourceDetailId));
+    }
 }

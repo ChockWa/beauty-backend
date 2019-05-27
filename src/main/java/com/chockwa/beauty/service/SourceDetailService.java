@@ -7,9 +7,11 @@ import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.SourceDetail;
 import com.chockwa.beauty.mapper.SourceDetailMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -51,5 +53,18 @@ public class SourceDetailService {
             return temp;
         }).collect(Collectors.toList()));
         return pageResult;
+    }
+
+    /**
+     * 获取大图
+     * @param id
+     * @return
+     */
+    public String getMaxImageById(Long id){
+        if(null == id){
+            return null;
+        }
+        SourceDetail sourceDetail = sourceDetailMapper.selectById(id);
+        return Optional.ofNullable(sourceDetail).map(m -> m.getPicUrl()).orElse(null);
     }
 }

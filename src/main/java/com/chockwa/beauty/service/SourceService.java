@@ -3,6 +3,7 @@ package com.chockwa.beauty.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chockwa.beauty.common.utils.UUIDUtils;
 import com.chockwa.beauty.dto.AddSourceDto;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
@@ -48,10 +49,11 @@ public class SourceService {
 
     @Transactional(rollbackFor = Exception.class)
     public void saveSource(AddSourceDto addSourceDto){
-        Long sourceId = null;
+        String sourceId = null;
         String cover = addSourceDto.getSourceDetailList().get(0).getThumbImage();
         addSourceDto.getSource().setCover(cover);
         if(addSourceDto.getSource().getId() == null){
+            addSourceDto.getSource().setId(UUIDUtils.getUuid());
             sourceMapper.insert(addSourceDto.getSource());
             sourceId = addSourceDto.getSource().getId();
         }else {
@@ -61,6 +63,7 @@ public class SourceService {
         }
         if(addSourceDto.getSourceDetailList() != null){
             for(SourceDetail sourceDetail : addSourceDto.getSourceDetailList()){
+                sourceDetail.setId(UUIDUtils.getUuid());
                 sourceDetail.setSourceId(sourceId);
             }
             sourceDetailMapper.insertBatch(addSourceDto.getSourceDetailList());

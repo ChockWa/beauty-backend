@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chockwa.beauty.mapper.SourceMapper">
   <resultMap id="BaseResultMap" type="com.chockwa.beauty.entity.Source">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="category" jdbcType="BIGINT" property="category" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -23,15 +23,18 @@
     select 
     <include refid="Base_Column_List" />
     from sys_source
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_source
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.chockwa.beauty.entity.Source" useGeneratedKeys="true">
     insert into sys_source
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="type != null">
         `type`,
       </if>
@@ -67,6 +70,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
       </if>
@@ -139,7 +145,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.chockwa.beauty.entity.Source">
     update sys_source
@@ -154,6 +160,6 @@
       download_link = #{downloadLink,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

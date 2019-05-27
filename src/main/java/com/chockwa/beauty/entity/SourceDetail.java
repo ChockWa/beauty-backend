@@ -24,13 +24,13 @@ public class SourceDetail implements Serializable {
     /**
      * 自增id
      */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+    @TableId(type = IdType.UUID)
+    private String id;
 
     /**
      * 资源id
      */
-    private Long sourceId;
+    private String sourceId;
 
     /**
      * 图片名称
