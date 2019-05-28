@@ -45,3 +45,12 @@ spring:
 logging:
   level:
     root: info
+
+fdfs:
+  soTimeout: 12000
+  connectTimeout: 12000
+  trackerList:            #TrackerList参数,支持多个
+    - 198.252.105.138:22122
+  pool:
+    max-total: 50
+    max-wait-millis: 60
