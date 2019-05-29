@@ -6,11 +6,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface SourceMapper extends BaseMapper<Source> {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(String id);
 
     int insertSelective(Source record);
 
-    Source selectByPrimaryKey(Long id);
+    Source selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(Source record);
 

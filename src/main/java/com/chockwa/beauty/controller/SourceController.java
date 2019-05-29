@@ -29,22 +29,22 @@ public class SourceController {
     }
 
     @GetMapping("thumbs")
-    public Result getSourceThumbs(Long sourceId, PageParam pageParam){
+    public Result getSourceThumbs(String sourceId, PageParam pageParam){
         return Result.SUCCESS().setData("data", sourceDetailService.getSourceThumbs(sourceId, pageParam));
     }
 
     @GetMapping("source")
-    public Result getSource(Long sourceId){
+    public Result getSource(String sourceId){
         return Result.SUCCESS().setData("data", sourceService.getSource(sourceId));
     }
 
     @GetMapping("details")
-    public Result getSourceDetailListPage(Long sourceId, PageParam pageParam){
+    public Result getSourceDetailListPage(String sourceId, PageParam pageParam){
         return Result.SUCCESS().setData("data", sourceDetailService.getListPage(sourceId, pageParam));
     }
 
     @GetMapping("getSourceDetail")
-    public Result getSourceDetail(Long sourceId){
+    public Result getSourceDetail(String sourceId){
         return Result.SUCCESS().setData("data", sourceService.getSourceDetail(sourceId));
     }
 
@@ -55,19 +55,19 @@ public class SourceController {
     }
 
     @GetMapping("delete")
-    public Result deleteSource(Long sourceId){
+    public Result deleteSource(String sourceId){
         sourceService.delete(sourceId);
         return Result.SUCCESS();
     }
 
     @GetMapping("deleteDetail")
-    public Result deleteDetail(Long sourceDetailId){
+    public Result deleteDetail(String sourceDetailId){
         sourceDetailService.delete(sourceDetailId);
         return Result.SUCCESS();
     }
 
     @GetMapping("max")
-    public Result getMax(Long sourceDetailId){
+    public Result getMax(String sourceDetailId){
         return Result.SUCCESS().setData("url", sourceDetailService.getMaxImageById(sourceDetailId));
     }
 }

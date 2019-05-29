@@ -25,7 +25,7 @@ public class SourceDetailService {
     @Autowired
     private SourceDetailMapper sourceDetailMapper;
 
-    public PageResult<SourceDetail> getListPage(Long sourceId, PageParam pageParam){
+    public PageResult<SourceDetail> getListPage(String sourceId, PageParam pageParam){
         IPage<SourceDetail> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         IPage<SourceDetail> result = sourceDetailMapper.selectPage(iPage, new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
         PageResult<SourceDetail> pageResult = new PageResult<>();
@@ -34,14 +34,14 @@ public class SourceDetailService {
         return pageResult;
     }
 
-    public void delete(Long sourceDetailId){
-        if(sourceDetailId == null){
+    public void delete(String sourceDetailId){
+        if(StringUtils.isBlank(sourceDetailId)){
             return;
         }
         sourceDetailMapper.deleteByPrimaryKey(sourceDetailId);
     }
 
-    public PageResult<SourceDetail> getSourceThumbs(Long sourceId, PageParam pageParam){
+    public PageResult<SourceDetail> getSourceThumbs(String sourceId, PageParam pageParam){
         IPage<SourceDetail> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         IPage<SourceDetail> result = sourceDetailMapper.selectPage(iPage, new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
         PageResult<SourceDetail> pageResult = new PageResult<>();
@@ -60,8 +60,8 @@ public class SourceDetailService {
      * @param id
      * @return
      */
-    public String getMaxImageById(Long id){
-        if(null == id){
+    public String getMaxImageById(String id){
+        if(StringUtils.isBlank(id)){
             return null;
         }
         SourceDetail sourceDetail = sourceDetailMapper.selectById(id);

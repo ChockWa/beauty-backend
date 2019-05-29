@@ -11,6 +11,7 @@ import com.chockwa.beauty.entity.Source;
 import com.chockwa.beauty.entity.SourceDetail;
 import com.chockwa.beauty.mapper.SourceDetailMapper;
 import com.chockwa.beauty.mapper.SourceMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +41,8 @@ public class SourceService {
         return pageResult;
     }
 
-    public Source getSource(Long sourceId){
-        if(sourceId == null){
+    public Source getSource(String sourceId){
+        if(StringUtils.isBlank(sourceId)){
             return null;
         }
         return sourceMapper.selectById(sourceId);
@@ -71,16 +72,16 @@ public class SourceService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long sourceId){
-        if(sourceId == null){
+    public void delete(String sourceId){
+        if(StringUtils.isBlank(sourceId)){
             return;
         }
         sourceMapper.deleteByPrimaryKey(sourceId);
         sourceDetailMapper.delete(new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
     }
 
-    public AddSourceDto getSourceDetail(Long sourceId){
-        if(sourceId == null){
+    public AddSourceDto getSourceDetail(String sourceId){
+        if(StringUtils.isBlank(sourceId)){
             return null;
         }
         AddSourceDto addSourceDto = new AddSourceDto();

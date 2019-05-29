@@ -8,11 +8,11 @@ import java.util.List;
 
 @Mapper
 public interface SourceDetailMapper extends BaseMapper<SourceDetail> {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(String id);
 
     int insertSelective(SourceDetail record);
 
-    SourceDetail selectByPrimaryKey(Long id);
+    SourceDetail selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(SourceDetail record);
 
