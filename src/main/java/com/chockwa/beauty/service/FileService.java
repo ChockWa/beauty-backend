@@ -144,7 +144,7 @@ public class FileService {
 
     private Source expainDescFile(File descFile){
         try {
-            String descJson = FileUtils.readFileToString(descFile);
+            String descJson = FileUtils.readFileToString(descFile, "UTF-8");
             return JSON.parseObject(descJson, Source.class);
         } catch (IOException e) {
             log.error("转换失败", e);
