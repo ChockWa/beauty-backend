@@ -1,12 +1,26 @@
 package com.chockwa.beauty.service;
 
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONString;
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
+import com.chockwa.beauty.common.utils.BeanUtils;
 import com.chockwa.beauty.common.utils.ImageUtils;
+import com.chockwa.beauty.common.utils.UUIDUtils;
 import com.chockwa.beauty.common.utils.ZipUtils;
+import com.chockwa.beauty.dto.AddSourceDto;
 import com.chockwa.beauty.dto.UploadResponse;
+import com.chockwa.beauty.dto.UploadResult;
+import com.chockwa.beauty.entity.Source;
+import com.chockwa.beauty.entity.SourceDetail;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.github.tobato.fastdfs.service.TrackerClient;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,8 +28,10 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -28,13 +44,22 @@ public class FileService {
     private int thumbHeight;
 
     @Value("${dns.api}")
-    private String dns;
+    private String DNS;
+
+    // 上傳文件目標根路徑
+    private static final String UPLOAD_FILE_ROOT_PATH = "/files";
+
+    // 預上傳文件路徑
+    private static final String PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/files/";
 
     @Autowired
     private FastFileStorageClient fastFileStorageClient;
 
     @Autowired
     private TrackerClient trackerClient;
+
+    @Autowired
+    private SourceService sourceService;
 
     public UploadResponse upload(MultipartFile file) {
         // 上传并且生成缩略图
@@ -70,27 +95,19 @@ public class FileService {
             File fileDir = new File(tempDirPath);
             File[] files = fileDir.listFiles();
             for (File file : files) {
-                // 缓存文件流
-//                InputStream originIs = ;
                 StorePath storePath = fastFileStorageClient.uploadFile(new FileInputStream(file), file.length(), "jpg", null);
                 // 生成缩略图
-//                String thumbImagePath = file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf("\\")+1);
-//                String thumbImageName = file.getName().substring(0, file.getName().lastIndexOf(".")) + "_thumb" + file.getName().substring(file.getName().lastIndexOf("."));
-//                File thumbImage = new File(thumbImagePath + thumbImageName);
-//                originIs.close();
                 ImageUtils.cutImageAndGenThumb(file, file, thumbWidth, thumbHeight);
-//                InputStream thumbIs = ;
                 StorePath thumbStorePath = fastFileStorageClient.uploadFile(new FileInputStream(file), file.length(), "jpg", null);
                 System.out.println(thumbStorePath.getFullPath());
                 System.out.println(storePath.getFullPath());
                 UploadResponse uploadResponse = new UploadResponse();
                 uploadResponse.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
-                uploadResponse.setUrl(dns + storePath.getFullPath());
-                uploadResponse.setThumbUrl(dns + thumbStorePath.getFullPath());
+                uploadResponse.setUrl(DNS + "/" + storePath.getFullPath());
+                uploadResponse.setThumbUrl(DNS + "/" + thumbStorePath.getFullPath());
                 uploadResponse.setOriginUrl(storePath.getFullPath());
                 uploadResponse.setOriginThumbUrl(thumbStorePath.getFullPath());
                 uploadResponses.add(uploadResponse);
-//                thumbIs.close();
             }
             return uploadResponses;
         }catch (Exception e) {
@@ -99,64 +116,113 @@ public class FileService {
         }
     }
 
-//    public void unZipAndUpload(MultipartFile uploadZip){
-//        List<UploadResponse> uploadResponses = new ArrayList<>();
-//        InputStream is = null;
-//        OutputStream os = null;
-//        ZipInputStream zis = null;
-//        try {
-//            byte[] zipBytes = FileCopyUtils.copyToByteArray(uploadZip.getInputStream());
-//            FileImageInputStream fileImageInputStream = new FileImageInputStream()
-//            zis = new ZipInputStream(new ByteArrayInputStream(zipBytes));
-//            ZipEntry zipEntry = null;
-//            java.util.zip.ZipFile.
-//            ZipFile zipFile = new ZipFile(new String(zipBytes));
-//            Enumeration<?> entries = zipFile.getEntries();
-//            int count = 1;
-//            while((zipEntry = zis.getNextEntry()) != null) {
-//                ZipEntry entry = (ZipEntry)entries.nextElement();
-//                String fileFullName = entry.getName();
-//                // 检查是否是文件夹
-//                if(fileFullName.length() == fileFullName.lastIndexOf("/") + 1){
-//                    continue;
-//                }
-//                is = zipFile.getInputStream(entry);
-//                if(zipEntry.isDirectory()){
-//                    continue;
-//                }
-//                byte[] bs = new byte[1024];
-//                int length = 0;
-//                os = new FileOutputStream("D:\\test\\image_" + count + ".jpg");
-//                while ((length=zis.read(bs)) > 0){
-//                    os.write(bs, 0, length);
-//                }
-//                StorePath storePath = fastFileStorageClient.uploadFile(is, entry.getSize(), "jpg", null);
-//                System.out.println(storePath.getFullPath());
-//                UploadResponse uploadResponse = new UploadResponse();
-//                uploadResponse.setName(entry.getName().substring(0, entry.getName().lastIndexOf(".")));
-//                uploadResponse.setUrl("http://beauties.org/"+storePath.getFullPath());
-//                uploadResponse.setOriginUrl(storePath.getFullPath());
-//                uploadResponses.add(uploadResponse);
-//                os.close();
-//                is.close();
-//                count++;
-//            }
-//        } catch (IOException e) {
-//            log.error("解压失败", e);
-//        } finally {
-//            try{
-//                if(zis != null){
-//                    zis.close();
-//                }
-//                if(os != null){
-//                    os.close();
-//                }
-//                if(is != null){
-//                    os.close();
-//                }
-//            }catch (Exception e){
-//                log.error("关闭流失败", e);
-//            }
-//        }
-//    }
+    public void uploadFiles(String prepareFilePath){
+        if(StringUtils.isBlank(prepareFilePath)){
+            return;
+        }
+        File prepareFileDir = new File(PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
+        if(!prepareFileDir.exists()){
+            return;
+        }
+        File[] filesDirs = prepareFileDir.listFiles();
+        if(filesDirs == null || filesDirs.length < 1){
+            return;
+        }
+        List<AddSourceDto> addSourceDtos = new ArrayList<>();
+        for(File fileDir : filesDirs){
+            File[] files = fileDir.listFiles();
+            if(files == null || files.length < 1){
+                continue;
+            }
+            File descFile = Arrays.asList(files).stream().filter(f -> f.getName().contains(".txt")).findFirst().orElse(null);
+            if(descFile == null){
+                continue;
+            }
+            Source source = expainDescFile(descFile);
+            List<SourceDetail> sourceDetails = uploadFiles(fileDir.getName(), files);
+            source.setCover(sourceDetails.get(0).getThumbImage());
+            AddSourceDto addSourceDto = new AddSourceDto();
+            addSourceDto.setSource(source);
+            addSourceDto.setSourceDetailList(sourceDetails);
+            addSourceDtos.add(addSourceDto);
+        }
+        addSourceDtos.forEach(e -> {
+            sourceService.saveSource(e);
+        });
+    }
+
+    private Source expainDescFile(File descFile){
+        try {
+            String descJson = FileUtils.readFileToString(descFile);
+            return (Source) JSONUtils.parse(descJson);
+        } catch (IOException e) {
+            log.error("转换失败", e);
+        }
+        return null;
+    }
+
+    private List<SourceDetail> uploadFiles(String fileDirName, File[] files){
+        List<SourceDetail> sourceDetails = new ArrayList<>();
+        for(File file : files){
+            if(file.getName().contains(".txt")){
+                continue;
+            }
+            sourceDetails.add(upload(fileDirName, file));
+        }
+        return sourceDetails;
+    }
+
+    private SourceDetail upload(String fileDirName, File file){
+        try {
+            HashMap<String, Object> paramMap = new HashMap<>();
+            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\") + 1) + UUIDUtils.getUuid() + ".jpg";
+            File newFile = new File(newFilePath);
+            FileUtils.copyFile(file, newFile);
+            paramMap.put("file", newFile);
+            paramMap.put("output","json");
+            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName.hashCode());
+            paramMap.put("scene","image");
+            String result= HttpUtil.post("http://198.252.105.138:8080/upload", paramMap);
+            UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
+            System.out.println(JSON.toJSON(uploadResult));
+
+            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\") + 1) + UUIDUtils.getUuid() + ".jpg";
+            File thumbFile = new File(thumbFilePath);
+            thumbFile.createNewFile();
+            // 生成缩略图
+            ImageUtils.cutImageAndGenThumb(file, thumbFile, 210, 300);
+            paramMap.put("file", thumbFile);
+            paramMap.put("output","json");
+            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName.hashCode());
+            paramMap.put("scene","image");
+            String thumbResult= HttpUtil.post("http://198.252.105.138:8080/upload", paramMap);
+            UploadResult thumbUploadResult = JSON.parseObject(thumbResult, UploadResult.class);
+            return genSourceDetail(file, uploadResult, thumbUploadResult);
+        } catch (IOException e) {
+            log.error("上傳失敗", e);
+        }
+        return null;
+    }
+
+    private SourceDetail genSourceDetail(File file, UploadResult result, UploadResult thumbResult){
+        SourceDetail detail = new SourceDetail();
+        detail.setThumbImage(DNS + "/" + thumbResult.getPath());
+        detail.setPicUrl(DNS + "/" + result.getPath());
+        detail.setOriginThumbImage(thumbResult.getMd5());
+        detail.setOriginUrl(result.getMd5());
+        detail.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
+        detail.setCreateTime(new Date());
+        return detail;
+    }
+
+    public static void main(String[] args) {
+        File file = new File("E:\\test.jpg");
+//        upload("中国", file);
+    }
+
+    public void delete(){
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("md5", "b07c96a29b4e068ec52074ec9690b993");
+        String thumbResult= HttpUtil.post("http://198.252.105.138:8080/group/delete", paramMap);
+    }
 }

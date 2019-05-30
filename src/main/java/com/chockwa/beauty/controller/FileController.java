@@ -4,10 +4,7 @@ import com.chockwa.beauty.dto.UploadResponse;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -81,5 +78,11 @@ public class FileController {
             }
             tempDir.delete();
         }
+    }
+
+    @GetMapping("oneUpload")
+    public Result oneUpload(String prepareFilePath){
+        fileService.uploadFiles(prepareFilePath);
+        return Result.SUCCESS();
     }
 }
