@@ -74,7 +74,7 @@ public class FileService {
 
     public void unZip(MultipartFile file, String tempDirPath){
         try {
-            File tempFile = new File(tempDirPath + "\\" +file.getOriginalFilename());
+            File tempFile = new File(tempDirPath + "/" +file.getOriginalFilename());
             FileCopyUtils.copy(file.getBytes(), tempFile);
             ZipUtils.unZip(tempFile, tempDirPath);
             tempFile.delete();
@@ -169,7 +169,7 @@ public class FileService {
     private SourceDetail upload(String fileDirName, File file){
         try {
             HashMap<String, Object> paramMap = new HashMap<>();
-            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\") + 1) + UUIDUtils.getUuid() + ".jpg";
+            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
             File newFile = new File(newFilePath);
             FileUtils.copyFile(file, newFile);
             paramMap.put("file", newFile);
@@ -180,7 +180,7 @@ public class FileService {
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
             System.out.println(JSON.toJSON(uploadResult));
 
-            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\") + 1) + UUIDUtils.getUuid() + ".jpg";
+            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
             File thumbFile = new File(thumbFilePath);
             thumbFile.createNewFile();
             // 生成缩略图
@@ -210,7 +210,7 @@ public class FileService {
     }
 
     public static void main(String[] args) {
-        File file = new File("E:\\test.jpg");
+        File file = new File("E:/test.jpg");
 //        upload("中国", file);
     }
 
