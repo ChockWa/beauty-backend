@@ -171,7 +171,7 @@ public class FileService {
             FileUtils.copyFile(file, newFile);
             paramMap.put("file", newFile);
             paramMap.put("output","json");
-            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName.hashCode());
+            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()));
             paramMap.put("scene","image");
             String result= HttpUtil.post("http://198.252.105.138:8080/upload", paramMap);
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
@@ -179,12 +179,12 @@ public class FileService {
 
             String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
             File thumbFile = new File(thumbFilePath);
-            thumbFile.createNewFile();
+            FileUtils.copyFile(newFile, thumbFile);
             // 生成缩略图
-            ImageUtils.cutImageAndGenThumb(file, thumbFile, 210, 300);
+            ImageUtils.cutImageAndGenThumb(thumbFile, thumbFile, 210, 300);
             paramMap.put("file", thumbFile);
             paramMap.put("output","json");
-            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName.hashCode());
+            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()));
             paramMap.put("scene","image");
             String thumbResult= HttpUtil.post("http://198.252.105.138:8080/upload", paramMap);
             UploadResult thumbUploadResult = JSON.parseObject(thumbResult, UploadResult.class);
