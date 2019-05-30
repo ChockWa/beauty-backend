@@ -1,10 +1,7 @@
 package com.chockwa.beauty.service;
 
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONString;
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
-import com.chockwa.beauty.common.utils.BeanUtils;
 import com.chockwa.beauty.common.utils.ImageUtils;
 import com.chockwa.beauty.common.utils.UUIDUtils;
 import com.chockwa.beauty.common.utils.ZipUtils;
@@ -16,10 +13,8 @@ import com.chockwa.beauty.entity.SourceDetail;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.github.tobato.fastdfs.service.TrackerClient;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +23,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -154,7 +148,7 @@ public class FileService {
     private Source expainDescFile(File descFile){
         try {
             String descJson = FileUtils.readFileToString(descFile);
-            return (Source) JSONUtils.parse(descJson);
+            return JSON.parseObject(descJson, Source.class);
         } catch (IOException e) {
             log.error("转换失败", e);
         }
