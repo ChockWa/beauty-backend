@@ -43,9 +43,6 @@ public class FileService {
     // 上傳文件目標根路徑
     private static final String UPLOAD_FILE_ROOT_PATH = "/files";
 
-    // 預上傳文件路徑
-    private static final String PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/files/";
-
     @Autowired
     private FastFileStorageClient fastFileStorageClient;
 
@@ -114,7 +111,7 @@ public class FileService {
         if(StringUtils.isBlank(prepareFilePath)){
             return;
         }
-        File prepareFileDir = new File(PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
+        File prepareFileDir = new File(prepareFilePath);
         if(!prepareFileDir.exists()){
             return;
         }
@@ -202,8 +199,8 @@ public class FileService {
 
     private SourceDetail genSourceDetail(File file, UploadResult result, UploadResult thumbResult){
         SourceDetail detail = new SourceDetail();
-        detail.setThumbImage(DNS + "/" + thumbResult.getPath());
-        detail.setPicUrl(DNS + "/" + result.getPath());
+        detail.setThumbImage(DNS + thumbResult.getPath());
+        detail.setPicUrl(DNS + result.getPath());
         detail.setOriginThumbImage(thumbResult.getMd5());
         detail.setOriginUrl(result.getMd5());
         detail.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
@@ -213,12 +210,14 @@ public class FileService {
 
     public static void main(String[] args) {
         File file = new File("E:/test.jpg");
-//        upload("中国", file);
+        delete();
     }
 
-    public void delete(){
+    public static void delete(){
         HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("md5", "b07c96a29b4e068ec52074ec9690b993");
+        paramMap.put("md5", "d41d8cd98f00b204e9800998ecf8427e");
+        paramMap.put("output","json");
         String thumbResult= HttpUtil.post("http://198.252.105.138:8080/group/delete", paramMap);
+        System.out.println(thumbResult);
     }
 }

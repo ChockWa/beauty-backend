@@ -14,6 +14,9 @@ import java.util.List;
 @RequestMapping("file")
 public class FileController {
 
+    // 預上傳文件路徑
+    private static final String PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/files/";
+
     @Autowired
     private FileService fileService;
 
@@ -82,7 +85,8 @@ public class FileController {
 
     @GetMapping("oneUpload")
     public Result oneUpload(String prepareFilePath){
-        fileService.uploadFiles(prepareFilePath);
+//        fileService.uploadFiles("E:\\201905301");
+        fileService.uploadFiles(PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
         return Result.SUCCESS();
     }
 }
