@@ -173,7 +173,7 @@ public class FileService {
             paramMap.put("output","json");
             paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()));
             paramMap.put("scene","image");
-            String result= HttpUtil.post("http://198.252.105.138:8080/upload", paramMap);
+            String result= HttpUtil.post(DNS + ":8080/upload", paramMap);
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
             log.info("uploadResult:{}", JSON.toJSON(uploadResult));
 
@@ -186,7 +186,7 @@ public class FileService {
             paramMap.put("output","json");
             paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()));
             paramMap.put("scene","image");
-            String thumbResult= HttpUtil.post("http://198.252.105.138:8080/upload", paramMap);
+            String thumbResult= HttpUtil.post(DNS + ":8080/upload", paramMap);
             UploadResult thumbUploadResult = JSON.parseObject(thumbResult, UploadResult.class);
             log.info("thumbUploadResult:{}", JSON.toJSON(thumbUploadResult));
 
