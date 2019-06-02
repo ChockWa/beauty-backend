@@ -40,7 +40,7 @@ public class FileService {
     @Value("${dns.api-http}")
     private String DNS_HTTP;
 
-    @Value("${dns.api-http}")
+    @Value("${dns.api-https}")
     private String DNS_HTTPS;
 
     // 上傳文件目標根路徑
