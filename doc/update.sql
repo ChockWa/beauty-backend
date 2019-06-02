@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_source`;
 CREATE TABLE `sys_source`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `id` VARCHAR(36) NOT NULL COMMENT '自增id',
   `type` int(2) NULL DEFAULT NULL COMMENT '类型',
   `category` int(2) NULL DEFAULT NULL COMMENT '分类',
   `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '资源名称',
@@ -47,8 +47,8 @@ Dynamic;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_source_detail`;
 CREATE TABLE `sys_source_detail`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `source_id` bigint(20) NULL DEFAULT NULL COMMENT '资源id',
+  `id` VARCHAR(36) NOT NULL COMMENT '自增id',
+  `source_id` VARCHAR(36) NULL DEFAULT NULL COMMENT '资源id',
   `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片名称',
   `thumb_image` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '带域名缩略图',
   `origin_thumb_image` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '不带域名缩略图',

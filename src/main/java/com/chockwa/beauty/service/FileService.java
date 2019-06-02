@@ -154,7 +154,8 @@ public class FileService {
 
     private List<SourceDetail> uploadFiles(String fileDirName, File[] files){
         List<SourceDetail> sourceDetails = new ArrayList<>();
-        for(File file : files){
+        File[] tempFiles = files;
+        for(File file : tempFiles){
             if(file.getName().contains(".txt")){
                 continue;
             }
