@@ -37,8 +37,11 @@ public class FileService {
     @Value("${thumb-image.height}")
     private int thumbHeight;
 
-    @Value("${dns.api}")
-    private String DNS;
+    @Value("${dns.api-http}")
+    private String DNS_HTTP;
+
+    @Value("${dns.api-http}")
+    private String DNS_HTTPS;
 
     // 上傳文件目標根路徑
     private static final String UPLOAD_FILE_ROOT_PATH = "/files";
@@ -94,8 +97,8 @@ public class FileService {
                 System.out.println(storePath.getFullPath());
                 UploadResponse uploadResponse = new UploadResponse();
                 uploadResponse.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
-                uploadResponse.setUrl(DNS + "/" + storePath.getFullPath());
-                uploadResponse.setThumbUrl(DNS + "/" + thumbStorePath.getFullPath());
+                uploadResponse.setUrl(DNS_HTTPS + "/" + storePath.getFullPath());
+                uploadResponse.setThumbUrl(DNS_HTTPS + "/" + thumbStorePath.getFullPath());
                 uploadResponse.setOriginUrl(storePath.getFullPath());
                 uploadResponse.setOriginThumbUrl(thumbStorePath.getFullPath());
                 uploadResponses.add(uploadResponse);
@@ -174,7 +177,7 @@ public class FileService {
             paramMap.put("output","json");
             paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()));
             paramMap.put("scene","image");
-            String result= HttpUtil.post(DNS + ":8080/upload", paramMap);
+            String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
             log.info("uploadResult:{}", JSON.toJSON(uploadResult));
 
@@ -187,7 +190,7 @@ public class FileService {
             paramMap.put("output","json");
             paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()));
             paramMap.put("scene","image");
-            String thumbResult= HttpUtil.post(DNS + ":8080/upload", paramMap);
+            String thumbResult= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult thumbUploadResult = JSON.parseObject(thumbResult, UploadResult.class);
             log.info("thumbUploadResult:{}", JSON.toJSON(thumbUploadResult));
 
@@ -200,8 +203,8 @@ public class FileService {
 
     private SourceDetail genSourceDetail(File file, UploadResult result, UploadResult thumbResult){
         SourceDetail detail = new SourceDetail();
-        detail.setThumbImage(DNS + thumbResult.getPath());
-        detail.setPicUrl(DNS + result.getPath());
+        detail.setThumbImage(DNS_HTTPS + thumbResult.getPath());
+        detail.setPicUrl(DNS_HTTPS + result.getPath());
         detail.setOriginThumbImage(thumbResult.getMd5());
         detail.setOriginUrl(result.getMd5());
         detail.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));

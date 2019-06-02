@@ -40,4 +40,5 @@ thumb-image:
    height: 300
 
 dns:
-   api: http://24beauties.xyz
+   api-http: http://24beauties.xyz
+   api-https: https://24beauties.xyz
