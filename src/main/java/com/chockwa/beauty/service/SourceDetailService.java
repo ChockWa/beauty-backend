@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.SourceDetail;
+import com.chockwa.beauty.entity.SourceHot;
 import com.chockwa.beauty.mapper.SourceDetailMapper;
+import com.chockwa.beauty.mapper.SourceHotMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ public class SourceDetailService {
 
     @Autowired
     private SourceDetailMapper sourceDetailMapper;
+
+    @Autowired
+    private SourceHotMapper sourceHotMapper;
 
     public PageResult<SourceDetail> getListPage(String sourceId, PageParam pageParam){
         IPage<SourceDetail> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
@@ -53,7 +58,24 @@ public class SourceDetailService {
             temp.setSourceId(m.getSourceId());
             return temp;
         }).collect(Collectors.toList()));
+
+        // 插入热搜信息
+        updateHotInfo(sourceId);
+
         return pageResult;
+    }
+
+    private synchronized void updateHotInfo(String sourceId){
+        SourceHot sourceHot = sourceHotMapper.selectById(sourceId);
+        if(sourceHot == null){
+            sourceHot = new SourceHot();
+            sourceHot.setSourceId(sourceId);
+            sourceHot.setCount(1);
+            sourceHotMapper.insert(sourceHot);
+        }else{
+            sourceHot.setCount(sourceHot.getCount() + 1);
+            sourceHotMapper.updateById(sourceHot);
+        }
     }
 
     /**

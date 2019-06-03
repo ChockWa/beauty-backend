@@ -18,9 +18,6 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
     @GetMapping("/getUser")
     public User getUser(){
         return userMapper.selectById(1L);

@@ -97,23 +97,7 @@ public class SourceService {
         addSourceDto.setSource(sourceMapper.selectById(sourceId));
         addSourceDto.setSourceDetailList(sourceDetailMapper.selectList(new QueryWrapper<SourceDetail>().eq("source_id", sourceId)));
 
-        // 插入热搜信息
-        updateHotInfo(sourceId);
-
         return addSourceDto;
-    }
-
-    private synchronized void updateHotInfo(String sourceId){
-        SourceHot sourceHot = sourceHotMapper.selectById(sourceId);
-        if(sourceHot == null){
-            sourceHot = new SourceHot();
-            sourceHot.setSourceId(sourceId);
-            sourceHot.setCount(1);
-            sourceHotMapper.insert(sourceHot);
-        }else{
-            sourceHot.setCount(sourceHot.getCount() + 1);
-            sourceHotMapper.updateById(sourceHot);
-        }
     }
 
     /**
