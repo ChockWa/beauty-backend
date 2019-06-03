@@ -50,6 +50,7 @@ public class SourceDetailService {
             SourceDetail temp = new SourceDetail();
             temp.setId(m.getId());
             temp.setThumbImage(m.getThumbImage());
+            temp.setSourceId(m.getSourceId());
             return temp;
         }).collect(Collectors.toList()));
         return pageResult;
