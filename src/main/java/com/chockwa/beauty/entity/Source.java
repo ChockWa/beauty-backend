@@ -65,6 +65,11 @@ public class Source implements Serializable {
     private String downloadLink;
 
     /**
+     * 下载地址
+     */
+    private String zipDownloadLink;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -75,6 +80,14 @@ public class Source implements Serializable {
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
+
+    public String getZipDownloadLink() {
+        return zipDownloadLink;
+    }
+
+    public void setZipDownloadLink(String zipDownloadLink) {
+        this.zipDownloadLink = zipDownloadLink;
+    }
 
     public String getId() {
         return id;

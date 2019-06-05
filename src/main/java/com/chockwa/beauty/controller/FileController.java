@@ -3,6 +3,7 @@ package com.chockwa.beauty.controller;
 import com.chockwa.beauty.dto.UploadResponse;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.FileService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("file")
+@Slf4j
 public class FileController {
 
     // 預上傳文件路徑
@@ -86,7 +88,11 @@ public class FileController {
     @GetMapping("oneUpload")
     public Result oneUpload(String prepareFilePath){
 //        fileService.uploadFiles("E:\\201905301");
-        fileService.uploadFiles(PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
+        try {
+            fileService.uploadFiles(PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
+        } catch (Exception e) {
+            log.error("一键上传失败", e);
+        }
         return Result.SUCCESS();
     }
 }

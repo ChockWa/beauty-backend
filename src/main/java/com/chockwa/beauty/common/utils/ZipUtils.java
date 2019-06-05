@@ -73,10 +73,45 @@ public class ZipUtils {
         }
     }
 
-//    public static void main(String[] args) throws IOException {
-//        File directory = new File("");//参数为空
-//        String courseFile = directory.getAbsolutePath() + "\\.temp\\";//标准的路径 ;
-//        System.out.println(courseFile);
-//        unZip(new File("D:\\Users\\zhuohuahe\\Desktop\\Desktop.zip"), courseFile);
-//    }
+
+    public static void generationZipLinux(String zipFilePath, String zipName) throws IOException, InterruptedException {
+        File zipFileDir = new File(zipFilePath);
+        if (!zipFileDir.exists()) {
+            zipFileDir.mkdirs();
+        }
+        File wd = new File("/bin");
+        Process proc = null;
+        String enterTempDir = "cd " + zipFileDir;
+        String zip = "zip -r " + zipName + ".zip" + " ./*";
+        try {
+            proc = Runtime.getRuntime().exec("/bin/bash", null, wd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (proc != null) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(proc.getOutputStream())), true);
+            out.println(enterTempDir);
+            out.println(zip);
+            out.println("exit");
+            try {
+                String line;
+                while ((line = in.readLine()) != null) {
+                    System.out.println(line);
+                }
+                proc.waitFor();
+                in.close();
+                out.close();
+                proc.destroy();
+            } catch (Exception e) {
+                log.error("打zip包失败", e);
+                // 打包失败删除文件
+                File tempZip = new File(zipFilePath + "/" + zipName + ".zip");
+                if (tempZip.exists()) {
+                    tempZip.delete();
+                }
+                throw e;
+            }
+        }
+    }
 }

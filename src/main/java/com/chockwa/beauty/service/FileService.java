@@ -18,6 +18,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,9 +46,6 @@ public class FileService {
     @Value("${dns.api-https}")
     private String DNS_HTTPS;
 
-    // 上傳文件目標根路徑
-    private static final String UPLOAD_FILE_ROOT_PATH = "/files";
-
     @Autowired
     private FastFileStorageClient fastFileStorageClient;
 
@@ -54,6 +54,9 @@ public class FileService {
 
     @Autowired
     private SourceService sourceService;
+
+    @Autowired
+    private TaskExecutor taskExecutor;
 
     public UploadResponse upload(MultipartFile file) {
         // 上传并且生成缩略图
@@ -110,7 +113,7 @@ public class FileService {
         }
     }
 
-    public void uploadFiles(String prepareFilePath){
+    public void uploadFiles(String prepareFilePath) throws IOException, InterruptedException {
         if(StringUtils.isBlank(prepareFilePath)){
             return;
         }
@@ -134,6 +137,9 @@ public class FileService {
             }
             Source source = expainDescFile(descFile);
             List<SourceDetail> sourceDetails = uploadFiles(fileDir.getName(), files);
+            String zipName = UUIDUtils.getUuid();
+            taskExecutor.execute(() -> genZip(fileDir.getName(), zipName));
+            source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDir.getName().hashCode()) + "/" + zipName + ".zip");
             source.setCover(sourceDetails.get(0).getThumbImage());
             AddSourceDto addSourceDto = new AddSourceDto();
             addSourceDto.setSource(source);
@@ -143,6 +149,15 @@ public class FileService {
         addSourceDtos.forEach(e -> {
             sourceService.saveSource(e);
         });
+    }
+
+    @Async
+    public void genZip(String zipFilePath, String zipName){
+        try {
+            ZipUtils.generationZipLinux(zipFilePath, zipName);
+        } catch (Exception e) {
+            log.error("打包失败", e);
+        }
     }
 
     private Source expainDescFile(File descFile){

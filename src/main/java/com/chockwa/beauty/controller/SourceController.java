@@ -3,6 +3,7 @@ package com.chockwa.beauty.controller;
 import com.chockwa.beauty.dto.AddSourceDto;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.Result;
+import com.chockwa.beauty.entity.Source;
 import com.chockwa.beauty.service.SourceDetailService;
 import com.chockwa.beauty.service.SourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class SourceController {
 
     @GetMapping("source")
     public Result getSource(String sourceId){
+        Source source = sourceService.getSource(sourceId);
+        source.setZipDownloadLink(null);
         return Result.SUCCESS().setData("data", sourceService.getSource(sourceId));
     }
 

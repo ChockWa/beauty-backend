@@ -30,6 +30,7 @@ CREATE TABLE `sys_source`  (
   `cover` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封面',
   `pics` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '预览图片',
   `time` int(5) NULL DEFAULT NULL COMMENT '时长单位:分钟',
+  zip_download_link varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'zip下载地址',
   `download_code` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '下载码',
   `download_link` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '下载地址',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
