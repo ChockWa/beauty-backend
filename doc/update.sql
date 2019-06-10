@@ -90,7 +90,7 @@ create table sys_source_hot(
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '热资源表';
 
 create table sys_log(
-  id bigint auto_increment not null;
+  id bigint auto_increment not null,
   method varchar(32) null comment '方法',
   params varchar(256) null comment '参数',
   ip varchar(32) null comment 'ip',
