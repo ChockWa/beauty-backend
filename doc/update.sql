@@ -25,6 +25,8 @@ CREATE TABLE `sys_source`  (
   `id` VARCHAR(36) NOT NULL COMMENT '自增id',
   `type` int(2) NULL DEFAULT NULL COMMENT '类型',
   `category` int(2) NULL DEFAULT NULL COMMENT '分类',
+  org int(3) null comment '所属机构',
+  model varchar(16) null comment '人物',
   `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '资源名称',
   `description` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   `cover` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封面',

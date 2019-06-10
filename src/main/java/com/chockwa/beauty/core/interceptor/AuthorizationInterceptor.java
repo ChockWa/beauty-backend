@@ -1,5 +1,6 @@
 package com.chockwa.beauty.core.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.chockwa.beauty.entity.Log;
 import com.chockwa.beauty.exception.BizException;
 import com.chockwa.beauty.common.utils.JwtUtils;
@@ -8,6 +9,7 @@ import com.chockwa.beauty.entity.User;
 import com.chockwa.beauty.entity.UserInfo;
 import com.chockwa.beauty.service.LogService;
 import com.google.common.collect.ImmutableSet;
+import io.netty.util.concurrent.CompleteFuture;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @auther: zhuohuahe
@@ -62,17 +65,12 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void addLog(HttpServletRequest request){
-        taskExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Log log = new Log();
-                log.setMethod(request.getRequestURI());
-                log.setParams(request.getParameterMap().toString());
-                log.setIp(getIpAddress(request));
-                log.setCreateTime(new Date());
-                logService.add(log);
-            }
-        });
+        Log log = new Log();
+        log.setMethod(request.getRequestURI());
+        log.setParams(JSON.toJSONString(request.getParameterMap()));
+        log.setIp(getIpAddress(request));
+        log.setCreateTime(new Date());
+        logService.add(log);
     }
 
     private boolean checkNeedLoginOrNot(String uri){
