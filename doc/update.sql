@@ -89,3 +89,13 @@ create table sys_source_hot(
   primary key (source_id)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '热资源表';
 
+create table sys_log(
+  id bigint auto_increment not null;
+  method varchar(32) null comment '方法',
+  params varchar(256) null comment '参数',
+  ip varchar(32) null comment 'ip',
+  create_time datetime null comment '创建时间',
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '日志表';
+
+
