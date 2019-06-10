@@ -3,6 +3,10 @@ package com.chockwa.beauty.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +15,10 @@ import java.util.Date;
  * sys_source
  * @author 
  */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("sys_source")
 public class Source implements Serializable {
     /**
@@ -28,6 +36,16 @@ public class Source implements Serializable {
      * 分类
      */
     private Integer category;
+
+    /**
+     * 所屬機構
+     */
+    private Integer org;
+
+    /**
+     * 人物
+     */
+    private String model;
 
     /**
      * 资源名称
@@ -80,108 +98,4 @@ public class Source implements Serializable {
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
-
-    public String getZipDownloadLink() {
-        return zipDownloadLink;
-    }
-
-    public void setZipDownloadLink(String zipDownloadLink) {
-        this.zipDownloadLink = zipDownloadLink;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Integer getCategory() {
-        return category;
-    }
-
-    public void setCategory(Integer category) {
-        this.category = category;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public String getPics() {
-        return pics;
-    }
-
-    public void setPics(String pics) {
-        this.pics = pics;
-    }
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public String getDownloadCode() {
-        return downloadCode;
-    }
-
-    public void setDownloadCode(String downloadCode) {
-        this.downloadCode = downloadCode;
-    }
-
-    public String getDownloadLink() {
-        return downloadLink;
-    }
-
-    public void setDownloadLink(String downloadLink) {
-        this.downloadLink = downloadLink;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

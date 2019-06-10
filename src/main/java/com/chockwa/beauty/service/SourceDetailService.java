@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SourceDetailService {
+
+    final transient ReentrantLock lock = new ReentrantLock();
 
     @Autowired
     private SourceDetailMapper sourceDetailMapper;
@@ -43,7 +47,7 @@ public class SourceDetailService {
         if(StringUtils.isBlank(sourceDetailId)){
             return;
         }
-        sourceDetailMapper.deleteByPrimaryKey(sourceDetailId);
+        sourceDetailMapper.deleteById(sourceDetailId);
     }
 
     public PageResult<SourceDetail> getSourceThumbs(String sourceId, PageParam pageParam){
@@ -65,7 +69,7 @@ public class SourceDetailService {
         return pageResult;
     }
 
-    private synchronized void updateHotInfo(String sourceId){
+    private void updateHotInfo(String sourceId){
         SourceHot sourceHot = sourceHotMapper.selectById(sourceId);
         if(sourceHot == null){
             sourceHot = new SourceHot();
@@ -74,7 +78,13 @@ public class SourceDetailService {
             sourceHotMapper.insert(sourceHot);
         }else{
             sourceHot.setCount(sourceHot.getCount() + 1);
-            sourceHotMapper.updateById(sourceHot);
+            final Lock lock = this.lock;
+            lock.lock();
+            try{
+                sourceHotMapper.updateById(sourceHot);
+            }finally {
+                lock.unlock();
+            }
         }
     }
 

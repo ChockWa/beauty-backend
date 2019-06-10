@@ -14,9 +14,11 @@ import com.chockwa.beauty.mapper.SourceDetailMapper;
 import com.chockwa.beauty.mapper.SourceHotMapper;
 import com.chockwa.beauty.mapper.SourceMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -44,6 +46,7 @@ public class SourceService {
         IPage<Source> result = sourceMapper.selectPage(iPage, new QueryWrapper<Source>().lambda().orderByDesc(Source::getCreateTime));
         PageResult<Source> pageResult = new PageResult<>();
         pageResult.setTotal(result.getTotal());
+        result.getRecords().forEach(e -> e.setZipDownloadLink(null));
         pageResult.setRecords(result.getRecords());
         return pageResult;
     }
@@ -67,7 +70,7 @@ public class SourceService {
             sourceId = addSourceDto.getSource().getId();
         }else {
             sourceId = addSourceDto.getSource().getId();
-            sourceMapper.updateByPrimaryKeySelective(addSourceDto.getSource());
+            sourceMapper.updateById(addSourceDto.getSource());
             sourceDetailMapper.delete(new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, addSourceDto.getSource().getId()));
         }
         if(addSourceDto.getSourceDetailList() != null){
@@ -85,7 +88,7 @@ public class SourceService {
         if(StringUtils.isBlank(sourceId)){
             return;
         }
-        sourceMapper.deleteByPrimaryKey(sourceId);
+        sourceMapper.deleteById(sourceId);
         sourceDetailMapper.delete(new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
     }
 
@@ -101,28 +104,51 @@ public class SourceService {
     }
 
     /**
-     * 获取最新的前10条记录
+     * 讀取首頁資源列表
+     * @param pageIndex
+     * @param pageSize
      * @return
      */
-    public List<Source> getNewerSourceList(){
-        return sourceMapper.selectList(new QueryWrapper<Source>().lambda().orderByDesc(Source::getCreateTime).last("limit 10"));
-    }
-
-    /**
-     * 获取20-30的记录
-     * @return
-     */
-    public List<Source> getOlderSourceList(){
-        return sourceMapper.selectList(new QueryWrapper<Source>().lambda().orderByAsc(Source::getCreateTime).last("limit 20,10"));
+    public List<Source> getIndexSource(Integer pageIndex, Integer pageSize){
+        return sourceMapper.getIndexSource(pageIndex, pageSize);
     }
 
     /**
      * 获取最热的5条记录
      * @return
      */
-    public List<Source> getHotestSourceList(){
-        List<SourceHot> sourceHots = sourceHotMapper.selectList(new QueryWrapper<SourceHot>().lambda().orderByDesc(SourceHot::getCount).last("limit 5"));
+    public List<Source> getHotestSourceList(Integer pageIndex, Integer pageSize){
+        List<SourceHot> sourceHots = sourceHotMapper.selectList(new QueryWrapper<SourceHot>().lambda().orderByDesc(SourceHot::getCount).last("limit " + pageIndex + "," + pageSize));
         List<String> sourceIds = sourceHots.stream().map(m -> m.getSourceId()).collect(Collectors.toList());
-        return sourceMapper.selectList(new QueryWrapper<Source>().lambda().in(Source::getId, sourceIds));
+        if(CollectionUtils.isEmpty(sourceIds)){
+            return getIndexSource(1,10);
+        }
+        List<Source> hotests = sourceMapper.selectList(new QueryWrapper<Source>().lambda().in(Source::getId, sourceIds));
+        hotests.forEach(e -> e.setZipDownloadLink(null));
+        return hotests;
+    }
+
+    public String getZipDownloadLink(String sourceId){
+        if(StringUtils.isBlank(sourceId)){
+            return null;
+        }
+        Source source = sourceMapper.selectById(sourceId);
+        if(source == null){
+            throw new IllegalStateException("source not exist");
+        }
+        return source.getZipDownloadLink();
+    }
+
+    public PageResult<Source> searchSources(String content, PageParam pageParam){
+        if(StringUtils.isBlank(content)){
+            return null;
+        }
+        IPage<Source> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
+        IPage<Source> result = sourceMapper.selectPage(iPage, new QueryWrapper<Source>().lambda().like(Source::getName, content).or().like(Source::getOrg, content));
+        PageResult<Source> pageResult = new PageResult<>();
+        pageResult.setTotal(result.getTotal());
+        result.getRecords().forEach(e -> e.setZipDownloadLink(null));
+        pageResult.setRecords(result.getRecords());
+        return pageResult;
     }
 }

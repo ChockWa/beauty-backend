@@ -8,15 +8,5 @@ import java.util.List;
 
 @Mapper
 public interface SourceDetailMapper extends BaseMapper<SourceDetail> {
-    int deleteByPrimaryKey(String id);
-
-    int insertSelective(SourceDetail record);
-
-    SourceDetail selectByPrimaryKey(String id);
-
-    int updateByPrimaryKeySelective(SourceDetail record);
-
-    int updateByPrimaryKey(SourceDetail record);
-
     int insertBatch(List<SourceDetail> list);
 }
