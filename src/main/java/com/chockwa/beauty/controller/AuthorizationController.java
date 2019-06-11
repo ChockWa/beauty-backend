@@ -36,13 +36,15 @@ public class AuthorizationController {
     @PostMapping("login")
     public Result login(@RequestBody LoginDto loginDto){
         authorizationService.checkVerifyCode(loginDto.getUuid(), loginDto.getVerifyCode());
-        return Result.SUCCESS().setData("token", authorizationService.login(loginDto.getUserName(), loginDto.getPassword()));
+        return Result.SUCCESS().setData("token", authorizationService.login(loginDto.getUserName(), loginDto.getPassword()))
+                .setData("userName", loginDto.getUserName());
     }
 
     @PostMapping("register")
     public Result register(@RequestBody RegisterDto registerDto){
         authorizationService.checkVerifyCode(registerDto.getUuid(), registerDto.getVerifyCode());
-        return Result.SUCCESS().setData("token", authorizationService.registerAndLogin(registerDto));
+        return Result.SUCCESS().setData("token", authorizationService.registerAndLogin(registerDto))
+                .setData("userName", registerDto.getUserName());
     }
 
     @GetMapping("genVerifyCode")

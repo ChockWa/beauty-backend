@@ -46,7 +46,7 @@ public class AuthorizationService {
         Assert.notNull(registerDto.getUserName(), "Username cannot be empty");
         Assert.notNull(registerDto.getConfirmPassword(), "Confirm that the password cannot be empty");
         Assert.notNull(registerDto.getConfirmPassword(), "Password cannot be empty");
-        Assert.notNull(registerDto.getEmail(), "Email cannot be empty");
+//        Assert.notNull(registerDto.getEmail(), "Email cannot be empty");
         User user = userMapper.selectOne(new QueryWrapper<User>().lambda().eq(User::getUserName, registerDto.getUserName()));
         if(user != null){
             throw new IllegalStateException("The user name already exists");

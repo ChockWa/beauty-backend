@@ -64,7 +64,7 @@ public class SourceDoorContoller {
 
     @GetMapping("download")
     public Result getZipDownloadLink(String sourceId){
-        return Result.SUCCESS().setData("link", sourceService.getZipDownloadLink(sourceId));
+        return Result.SUCCESS().setData("downloadLink", sourceService.getZipDownloadLink(sourceId));
     }
 
     @GetMapping("search")
