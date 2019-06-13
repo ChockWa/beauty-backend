@@ -141,8 +141,8 @@ public class FileService {
             List<SourceDetail> sourceDetails = uploadFiles(fileDir.getName(), files);
             String zipName = UUIDUtils.getUuid();
             // "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode())
-            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDir.getName().hashCode()), zipName));
-            source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDir.getName().hashCode()) + "/" + zipName + ".zip");
+            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), zipName, String.valueOf(Math.abs(fileDir.getName().hashCode()))));
+            source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + zipName + ".zip");
             source.setCover(sourceDetails.get(0).getThumbImage());
             AddSourceDto addSourceDto = new AddSourceDto();
             addSourceDto.setSource(source);
@@ -155,9 +155,9 @@ public class FileService {
     }
 
     @Async
-    public void genZip(String zipFilePath, String zipName){
+    public void genZip(String zipFilePath, String zipName, String targetDirName){
         try {
-            ZipUtils.generationZipLinux(zipFilePath, zipName);
+            ZipUtils.generationZipLinux(zipFilePath, zipName, targetDirName);
         } catch (Exception e) {
             log.error("打包失败", e);
         }

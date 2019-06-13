@@ -74,16 +74,15 @@ public class ZipUtils {
     }
 
 
-    public static void generationZipLinux(String zipFilePath, String zipName) throws IOException, InterruptedException {
+    public static void generationZipLinux(String zipFilePath, String zipName, String targetDirName) throws IOException, InterruptedException {
         File zipFileDir = new File(zipFilePath);
         if (!zipFileDir.exists()) {
             zipFileDir.mkdirs();
         }
         File wd = new File("/bin");
-        System.out.println(wd);
         Process proc = null;
         String enterTempDir = "cd " + zipFileDir;
-        String zip = "zip -r " + zipName + ".zip" + " *";
+        String zip = "zip -qr " + zipName + ".zip" + " ./" + targetDirName +"/*";
         log.info("zip localtion:{}", zipFileDir);
         try {
             proc = Runtime.getRuntime().exec("/bin/bash", null, wd);
