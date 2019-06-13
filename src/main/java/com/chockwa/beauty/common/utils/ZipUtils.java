@@ -80,6 +80,7 @@ public class ZipUtils {
             zipFileDir.mkdirs();
         }
         File wd = new File("/bin");
+        System.out.println(wd);
         Process proc = null;
         String enterTempDir = "cd " + zipFileDir;
         String zip = "zip -r " + zipName + ".zip" + " *";
@@ -87,7 +88,7 @@ public class ZipUtils {
         try {
             proc = Runtime.getRuntime().exec("/bin/bash", null, wd);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("zip fail", e);
         }
         if (proc != null) {
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
