@@ -34,6 +34,8 @@ import java.util.*;
 @Service
 public class FileService {
 
+    private static final String UPLOAD_FILE_ROOT_PATH = "/files/";
+
     @Value("${thumb-image.width}")
     private int thumbWidth;
 
@@ -138,7 +140,8 @@ public class FileService {
             Source source = expainDescFile(descFile);
             List<SourceDetail> sourceDetails = uploadFiles(fileDir.getName(), files);
             String zipName = UUIDUtils.getUuid();
-            genZip(fileDir.getName(), zipName);
+            // "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode())
+            genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDir.getName().hashCode()), zipName);
             source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDir.getName().hashCode()) + "/" + zipName + ".zip");
             source.setCover(sourceDetails.get(0).getThumbImage());
             AddSourceDto addSourceDto = new AddSourceDto();
