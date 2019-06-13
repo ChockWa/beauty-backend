@@ -139,9 +139,9 @@ public class FileService {
             }
             Source source = expainDescFile(descFile);
             List<SourceDetail> sourceDetails = uploadFiles(fileDir.getName(), files);
-            String zipName = UUIDUtils.getUuid();
+            String zipName = String.valueOf(Math.abs(fileDir.getName().hashCode()));
             // "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode())
-            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), zipName, String.valueOf(Math.abs(fileDir.getName().hashCode()))));
+            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), zipName, zipName));
             source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + zipName + ".zip");
             source.setCover(sourceDetails.get(0).getThumbImage());
             AddSourceDto addSourceDto = new AddSourceDto();
