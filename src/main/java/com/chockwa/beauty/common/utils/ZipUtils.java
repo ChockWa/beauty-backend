@@ -83,6 +83,7 @@ public class ZipUtils {
         Process proc = null;
         String enterTempDir = "cd " + zipFileDir;
         String zip = "zip -r " + zipName + ".zip" + " ./*";
+        log.info("zip localtion:{}", zipFileDir);
         try {
             proc = Runtime.getRuntime().exec("/bin/bash", null, wd);
         } catch (IOException e) {
