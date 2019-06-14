@@ -187,25 +187,25 @@ public class FileService {
     private SourceDetail upload(String fileDirName, File file){
         try {
             HashMap<String, Object> paramMap = new HashMap<>();
-            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + "/origin/" + UUIDUtils.getUuid() + ".jpg";
+            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
             File newFile = new File(newFilePath);
             FileUtils.copyFile(file, newFile);
             paramMap.put("file", newFile);
             paramMap.put("output","json");
-            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()));
+            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()) + "/origin");
             paramMap.put("scene","image");
             String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
             log.info("uploadResult:{}", JSON.toJSON(uploadResult));
 
-            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + "/thumb/" + UUIDUtils.getUuid() + ".jpg";
+            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
             File thumbFile = new File(thumbFilePath);
             FileUtils.copyFile(newFile, thumbFile);
             // 生成缩略图
             ImageUtils.cutImageAndGenThumb(thumbFile, thumbFile, 210, 300);
             paramMap.put("file", thumbFile);
             paramMap.put("output","json");
-            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()));
+            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode()) + "/thumb");
             paramMap.put("scene","image");
             String thumbResult= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult thumbUploadResult = JSON.parseObject(thumbResult, UploadResult.class);
