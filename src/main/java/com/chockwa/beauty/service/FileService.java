@@ -141,7 +141,7 @@ public class FileService {
             List<SourceDetail> sourceDetails = uploadFiles(fileDir.getName(), files);
             String zipName = String.valueOf(Math.abs(fileDir.getName().hashCode()));
             // "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + Math.abs(fileDirName.hashCode())
-            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), zipName, zipName));
+            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), zipName, zipName + "/origin"));
             source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + zipName + ".zip");
             source.setCover(sourceDetails.get(0).getThumbImage());
             AddSourceDto addSourceDto = new AddSourceDto();
@@ -154,7 +154,6 @@ public class FileService {
         });
     }
 
-    @Async
     public void genZip(String zipFilePath, String zipName, String targetDirName){
         try {
             ZipUtils.generationZipLinux(zipFilePath, zipName, targetDirName);
@@ -188,7 +187,7 @@ public class FileService {
     private SourceDetail upload(String fileDirName, File file){
         try {
             HashMap<String, Object> paramMap = new HashMap<>();
-            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
+            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + "/origin/" + UUIDUtils.getUuid() + ".jpg";
             File newFile = new File(newFilePath);
             FileUtils.copyFile(file, newFile);
             paramMap.put("file", newFile);
@@ -199,7 +198,7 @@ public class FileService {
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
             log.info("uploadResult:{}", JSON.toJSON(uploadResult));
 
-            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
+            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + "/thumb/" + UUIDUtils.getUuid() + ".jpg";
             File thumbFile = new File(thumbFilePath);
             FileUtils.copyFile(newFile, thumbFile);
             // 生成缩略图
