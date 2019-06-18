@@ -34,7 +34,7 @@ import java.util.*;
 @Service
 public class FileService {
 
-    private static final String UPLOAD_FILE_ROOT_PATH = "/files/";
+    private static final String UPLOAD_FILE_ROOT_PATH = "/usr/local/go-fastdfs/files/";
 
     @Value("${thumb-image.width}")
     private int thumbWidth;
@@ -140,7 +140,7 @@ public class FileService {
             Source source = expainDescFile(descFile);
             String sourceDirName = String.valueOf(System.currentTimeMillis());
             List<SourceDetail> sourceDetails = uploadFiles(sourceDirName, files);
-            genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), sourceDirName, sourceDirName + "/origin");
+            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), sourceDirName, sourceDirName + "/origin"));
             source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + sourceDirName + ".zip");
             source.setCover(sourceDetails.get(0).getThumbImage());
             AddSourceDto addSourceDto = new AddSourceDto();
@@ -191,7 +191,7 @@ public class FileService {
             FileUtils.copyFile(file, newFile);
             paramMap.put("file", newFile);
             paramMap.put("output","json");
-            paramMap.put("path", "/files/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
+            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
             paramMap.put("scene","image");
             String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
@@ -204,7 +204,7 @@ public class FileService {
             ImageUtils.cutImageAndGenThumb(thumbFile, thumbFile, 210, 300);
             paramMap.put("file", thumbFile);
             paramMap.put("output","json");
-            paramMap.put("path", "/files/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/thumb");
+            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/thumb");
             paramMap.put("scene","image");
             String thumbResult= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult thumbUploadResult = JSON.parseObject(thumbResult, UploadResult.class);
