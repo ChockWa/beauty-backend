@@ -9,7 +9,6 @@ import com.chockwa.beauty.entity.User;
 import com.chockwa.beauty.entity.UserInfo;
 import com.chockwa.beauty.service.LogService;
 import com.google.common.collect.ImmutableSet;
-import io.netty.util.concurrent.CompleteFuture;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @auther: zhuohuahe
@@ -43,10 +41,18 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      * 需要检验登陆的黑名单
      */
     private static final ImmutableSet<String> NEED_CHECK_LOGIN_URIS = ImmutableSet.<String>builder()
-//            .add("/file/oneUpload")
+            // 一鍵上傳
+            .add("/file/oneUpload")
+            // 後台獲取資源詳情
             .add("/source/getSourceDetail")
+            // 後台刪除資源
             .add("/source/delete")
-            .add("/source/save").build();
+            // 後台保存資源
+            .add("/source/save")
+            // 門戶搜索資源
+            .add("/door/search")
+            // 門戶下載資源
+            .add("/door/download").build();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -59,9 +65,10 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
         return true;
     }
+
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
-        addLog(request);
+        taskExecutor.execute(() -> addLog(request));
     }
 
     private void addLog(HttpServletRequest request){
