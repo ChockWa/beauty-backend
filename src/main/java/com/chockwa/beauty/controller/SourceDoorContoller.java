@@ -45,7 +45,7 @@ public class SourceDoorContoller extends BaseController{
             return Result.SUCCESS().setData("newers", newerFuture.get())
                     .setData("olders", olderFuture.get())
                     .setData("hotests1", hotest.size() < 5 ? hotest.subList(0, hotest.size()) : hotest.subList(0, 5))
-                    .setData("hotests2", hotest.size() == 10 ? hotest.subList(0, hotest.size()) : hotest.subList(5, 10));
+                    .setData("hotests2", hotest.size() < 5 ? hotest.subList(0, hotest.size()) : hotest.subList(5, hotest.size()));
         } catch (InterruptedException e) {
             log.error("thread was interrupted", e);
             throw e;

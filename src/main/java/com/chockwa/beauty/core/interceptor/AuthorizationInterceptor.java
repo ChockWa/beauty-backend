@@ -74,7 +74,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private void addLog(HttpServletRequest request){
         Log log = new Log();
         log.setMethod(request.getRequestURI());
-        log.setParams(JSON.toJSONString(request.getParameterMap()));
+//        log.setParams(JSON.toJSONString(request.getParameterMap()));
         log.setIp(getIpAddress(request));
         log.setCreateTime(new Date());
         logService.add(log);

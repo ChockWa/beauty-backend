@@ -64,7 +64,7 @@ public class AuthorizationService {
         user.setIsVip(0);
         userMapper.insert(user);
 
-        return login(user.getUserName(), user.getPassword());
+        return login(user.getUserName(), registerDto.getPassword());
     }
 
     private void checkPassword(String password, String md5Password, String salt){
