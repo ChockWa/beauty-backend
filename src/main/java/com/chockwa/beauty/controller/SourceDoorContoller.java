@@ -49,10 +49,11 @@ public class SourceDoorContoller {
         CompletableFuture<List<Source>> hotestFuture = CompletableFuture.supplyAsync(() -> sourceService.getHotestSourceList(1,10));
         CompletableFuture.allOf(newerFuture, olderFuture, hotestFuture).join();
         try {
+            List<Source> hotest = hotestFuture.get();
             return Result.SUCCESS().setData("newers", newerFuture.get())
                     .setData("olders", olderFuture.get())
-                    .setData("hotests1", hotestFuture.get().subList(0,5))
-                    .setData("hotests2", hotestFuture.get().subList(5,10));
+                    .setData("hotests1", hotest.size() < 5 ? hotest.subList(0, hotest.size()) : hotest.subList(0, 5))
+                    .setData("hotests2", hotest.size() == 10 ? hotest.subList(0, hotest.size()) : hotest.subList(5, 10));
         } catch (InterruptedException e) {
             log.error("thread was interrupted", e);
             throw e;
