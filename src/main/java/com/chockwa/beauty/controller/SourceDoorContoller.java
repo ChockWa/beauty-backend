@@ -4,6 +4,7 @@ import com.chockwa.beauty.annotation.RateLimit;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.entity.Source;
+import com.chockwa.beauty.service.SourceDetailService;
 import com.chockwa.beauty.service.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,20 +29,9 @@ public class SourceDoorContoller extends BaseController{
     @Autowired
     private SourceService sourceService;
 
-//    @GetMapping("newer")
-//    public Result getNewerSourceList(){
-//        return Result.SUCCESS().setData("data", sourceService.getSourceListLimit(1,8));
-//    }
-//
-//    @GetMapping("older")
-//    public Result getOlderSourceList(){
-//        return Result.SUCCESS().setData("data", sourceService.getSourceListLimit(20, 8));
-//    }
-//
-//    @GetMapping("hotest")
-//    public Result getHotestSourceList(){
-//        return Result.SUCCESS().setData("data", sourceService.getHotestSourceList(1,5));
-//    }
+    @Autowired
+    private SourceDetailService sourceDetailService;
+
 
     @RateLimit(fallback = "fallBack")
     @GetMapping("index")
@@ -75,6 +65,30 @@ public class SourceDoorContoller extends BaseController{
     @GetMapping("search")
     public Result searchSources(String content, PageParam pageParam){
         return Result.SUCCESS().setData("data", sourceService.searchSources(content, pageParam));
+    }
+
+    @RateLimit(fallback = "fallBack")
+    @GetMapping("thumbs")
+    public Result getSourceThumbs(String sourceId, PageParam pageParam){
+        return Result.SUCCESS().setData("data", sourceDetailService.getSourceThumbs(sourceId, pageParam));
+    }
+
+    @RateLimit(fallback = "fallBack")
+    @GetMapping("details")
+    public Result getSourceDetailListPage(String sourceId, PageParam pageParam){
+        return Result.SUCCESS().setData("data", sourceDetailService.getListPage(sourceId, pageParam));
+    }
+
+    @RateLimit(fallback = "fallBack")
+    @GetMapping("max")
+    public Result getMax(String sourceDetailId){
+        return Result.SUCCESS().setData("url", sourceDetailService.getMaxImageById(sourceDetailId));
+    }
+
+    @RateLimit(fallback = "fallBack")
+    @GetMapping("sources")
+    public Result getSourceListPage(PageParam pageParam){
+        return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam));
     }
 
 }

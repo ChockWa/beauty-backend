@@ -24,26 +24,11 @@ public class SourceController {
     @Autowired
     private SourceDetailService sourceDetailService;
 
-    @GetMapping("sources")
-    public Result getSourceListPage(PageParam pageParam){
-        return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam));
-    }
-
-    @GetMapping("thumbs")
-    public Result getSourceThumbs(String sourceId, PageParam pageParam){
-        return Result.SUCCESS().setData("data", sourceDetailService.getSourceThumbs(sourceId, pageParam));
-    }
-
     @GetMapping("source")
     public Result getSource(String sourceId){
         Source source = sourceService.getSource(sourceId);
         source.setZipDownloadLink(null);
-        return Result.SUCCESS().setData("data", sourceService.getSource(sourceId));
-    }
-
-    @GetMapping("details")
-    public Result getSourceDetailListPage(String sourceId, PageParam pageParam){
-        return Result.SUCCESS().setData("data", sourceDetailService.getListPage(sourceId, pageParam));
+        return Result.SUCCESS().setData("data", source);
     }
 
     @GetMapping("getSourceDetail")
@@ -67,10 +52,5 @@ public class SourceController {
     public Result deleteDetail(String sourceDetailId){
         sourceDetailService.delete(sourceDetailId);
         return Result.SUCCESS();
-    }
-
-    @GetMapping("max")
-    public Result getMax(String sourceDetailId){
-        return Result.SUCCESS().setData("url", sourceDetailService.getMaxImageById(sourceDetailId));
     }
 }
