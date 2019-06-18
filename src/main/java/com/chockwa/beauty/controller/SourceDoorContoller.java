@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @RequestMapping("door")
 @Slf4j
-public class SourceDoorContoller {
+public class SourceDoorContoller extends BaseController{
 
     @Autowired
     private SourceService sourceService;
@@ -77,7 +77,4 @@ public class SourceDoorContoller {
         return Result.SUCCESS().setData("data", sourceService.searchSources(content, pageParam));
     }
 
-    public void fallBack(){
-        throw new RuntimeException("Server is busy!Please try again!");
-    }
 }
