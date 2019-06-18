@@ -53,4 +53,9 @@ public class SourceController {
         sourceDetailService.delete(sourceDetailId);
         return Result.SUCCESS();
     }
+
+    @GetMapping("sources")
+    public Result getSourceListPage(PageParam pageParam){
+        return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam));
+    }
 }
