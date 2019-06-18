@@ -77,7 +77,7 @@ public class SourceDoorContoller {
         return Result.SUCCESS().setData("data", sourceService.searchSources(content, pageParam));
     }
 
-    public Result fallBack(){
-        return Result.FAIL(9999, "server is busy,please try again");
+    public void fallBack(){
+        throw new RuntimeException("Server is busy!Please try again!");
     }
 }
