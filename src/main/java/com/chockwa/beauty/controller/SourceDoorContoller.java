@@ -1,5 +1,6 @@
 package com.chockwa.beauty.controller;
 
+import com.chockwa.beauty.annotation.RateLimit;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.entity.Source;
@@ -42,6 +43,7 @@ public class SourceDoorContoller {
 //        return Result.SUCCESS().setData("data", sourceService.getHotestSourceList(1,5));
 //    }
 
+    @RateLimit(fallback = "fallBack")
     @GetMapping("index")
     public Result getIndexData() throws InterruptedException {
         CompletableFuture<List<Source>> newerFuture = CompletableFuture.supplyAsync(() -> sourceService.getIndexSource(1,8));
@@ -63,13 +65,19 @@ public class SourceDoorContoller {
         return Result.FAIL(9999, "get source error");
     }
 
+    @RateLimit(fallback = "fallBack")
     @GetMapping("download")
     public Result getZipDownloadLink(String sourceId){
         return Result.SUCCESS().setData("downloadLink", sourceService.getZipDownloadLink(sourceId));
     }
 
+    @RateLimit(fallback = "fallBack")
     @GetMapping("search")
     public Result searchSources(String content, PageParam pageParam){
         return Result.SUCCESS().setData("data", sourceService.searchSources(content, pageParam));
+    }
+
+    public Result fallBack(){
+        return Result.FAIL(9999, "server is busy,please try again");
     }
 }
