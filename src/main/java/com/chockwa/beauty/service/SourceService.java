@@ -16,6 +16,7 @@ import com.chockwa.beauty.mapper.SourceMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -41,12 +42,18 @@ public class SourceService {
     @Autowired
     private SourceHotMapper sourceHotMapper;
 
+    @Value("${dns.api-https}")
+    private String DNS_HTTPS;
+
     public PageResult<Source> getListPage(PageParam pageParam){
         IPage<Source> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         IPage<Source> result = sourceMapper.selectPage(iPage, new QueryWrapper<Source>().lambda().orderByDesc(Source::getCreateTime));
         PageResult<Source> pageResult = new PageResult<>();
         pageResult.setTotal(result.getTotal());
-        result.getRecords().forEach(e -> e.setZipDownloadLink(null));
+        result.getRecords().forEach(e -> {
+            e.setZipDownloadLink(null);
+            e.setCover(DNS_HTTPS + e.getCover());
+        });
         pageResult.setRecords(result.getRecords());
         return pageResult;
     }
@@ -110,6 +117,10 @@ public class SourceService {
      * @return
      */
     public List<Source> getIndexSource(Integer pageIndex, Integer pageSize){
+        List<Source> sources = sourceMapper.getIndexSource(pageIndex, pageSize);
+        if(!CollectionUtils.isEmpty(sources)){
+            sources.forEach(e -> e.setCover(DNS_HTTPS + e.getCover()));
+        }
         return sourceMapper.getIndexSource(pageIndex, pageSize);
     }
 
@@ -124,7 +135,10 @@ public class SourceService {
             return getIndexSource(1,10);
         }
         List<Source> hotests = sourceMapper.selectList(new QueryWrapper<Source>().lambda().in(Source::getId, sourceIds));
-        hotests.forEach(e -> e.setZipDownloadLink(null));
+        hotests.forEach(e -> {
+            e.setZipDownloadLink(null);
+            e.setCover(DNS_HTTPS + e.getCover());
+        });
         return hotests;
     }
 
@@ -147,7 +161,10 @@ public class SourceService {
         IPage<Source> result = sourceMapper.selectPage(iPage, new QueryWrapper<Source>().lambda().like(Source::getName, content).or().like(Source::getOrg, content));
         PageResult<Source> pageResult = new PageResult<>();
         pageResult.setTotal(result.getTotal());
-        result.getRecords().forEach(e -> e.setZipDownloadLink(null));
+        result.getRecords().forEach(e -> {
+            e.setZipDownloadLink(null);
+            e.setCover(DNS_HTTPS + e.getCover());
+        });
         pageResult.setRecords(result.getRecords());
         return pageResult;
     }

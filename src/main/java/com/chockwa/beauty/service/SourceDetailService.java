@@ -11,7 +11,9 @@ import com.chockwa.beauty.mapper.SourceDetailMapper;
 import com.chockwa.beauty.mapper.SourceHotMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -34,9 +36,15 @@ public class SourceDetailService {
     @Autowired
     private SourceHotMapper sourceHotMapper;
 
+    @Value("${dns.api-https}")
+    private String DNS_HTTPS;
+
     public PageResult<SourceDetail> getListPage(String sourceId, PageParam pageParam){
         IPage<SourceDetail> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         IPage<SourceDetail> result = sourceDetailMapper.selectPage(iPage, new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
+        if(!CollectionUtils.isEmpty(result.getRecords())){
+            result.getRecords().forEach(e -> e.setThumbImage(DNS_HTTPS + e.getThumbImage()));
+        }
         PageResult<SourceDetail> pageResult = new PageResult<>();
         pageResult.setTotal(result.getTotal());
         pageResult.setRecords(result.getRecords());
@@ -58,7 +66,7 @@ public class SourceDetailService {
         pageResult.setRecords(result.getRecords().stream().map(m -> {
             SourceDetail temp = new SourceDetail();
             temp.setId(m.getId());
-            temp.setThumbImage(m.getThumbImage());
+            temp.setThumbImage(DNS_HTTPS + m.getThumbImage());
             temp.setSourceId(m.getSourceId());
             return temp;
         }).collect(Collectors.toList()));
@@ -98,6 +106,6 @@ public class SourceDetailService {
             return null;
         }
         SourceDetail sourceDetail = sourceDetailMapper.selectById(id);
-        return Optional.ofNullable(sourceDetail).map(m -> m.getPicUrl()).orElse(null);
+        return Optional.ofNullable(sourceDetail).map(m -> DNS_HTTPS + m.getPicUrl()).orElse(null);
     }
 }

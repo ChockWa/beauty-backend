@@ -219,8 +219,8 @@ public class FileService {
 
     private SourceDetail genSourceDetail(File file, UploadResult result, UploadResult thumbResult){
         SourceDetail detail = new SourceDetail();
-        detail.setThumbImage(DNS_HTTPS + thumbResult.getPath());
-        detail.setPicUrl(DNS_HTTPS + result.getPath());
+        detail.setThumbImage(thumbResult.getPath());
+        detail.setPicUrl(result.getPath());
         detail.setOriginThumbImage(thumbResult.getMd5());
         detail.setOriginUrl(result.getMd5());
         detail.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
