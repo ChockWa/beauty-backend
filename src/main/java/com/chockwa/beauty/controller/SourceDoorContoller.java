@@ -87,8 +87,8 @@ public class SourceDoorContoller extends BaseController{
 
     @RateLimit(fallback = "fallBack")
     @GetMapping("sources")
-    public Result getSourceListPage(PageParam pageParam){
-        return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam));
+    public Result getSourceListPage(PageParam pageParam, Integer category){
+        return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam, category));
     }
 
 }

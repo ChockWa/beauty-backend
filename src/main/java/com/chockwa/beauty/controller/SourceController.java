@@ -56,6 +56,6 @@ public class SourceController {
 
     @GetMapping("sources")
     public Result getSourceListPage(PageParam pageParam){
-        return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam));
+        return Result.SUCCESS().setData("data", sourceService.getListPage(pageParam, null));
     }
 }

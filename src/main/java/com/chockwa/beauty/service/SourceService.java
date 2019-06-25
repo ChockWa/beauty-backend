@@ -45,9 +45,11 @@ public class SourceService {
     @Value("${dns.api-https}")
     private String DNS_HTTPS;
 
-    public PageResult<Source> getListPage(PageParam pageParam){
+    public PageResult<Source> getListPage(PageParam pageParam, Integer category){
         IPage<Source> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
-        IPage<Source> result = sourceMapper.selectPage(iPage, new QueryWrapper<Source>().lambda().orderByDesc(Source::getCreateTime));
+        IPage<Source> result = sourceMapper.selectPage(iPage, new QueryWrapper<Source>().lambda()
+                .eq(category!=null, Source::getCategory, category)
+                .orderByDesc(Source::getCreateTime));
         PageResult<Source> pageResult = new PageResult<>();
         pageResult.setTotal(result.getTotal());
         result.getRecords().forEach(e -> {
