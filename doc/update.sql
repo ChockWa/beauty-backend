@@ -78,6 +78,7 @@ create table sys_user(
   create_time datetime null comment '创建时间',
   update_time datetime null comment '更新时间',
   avator varchar(128) null comment '头像',
+  point int(5) null comment '积分',
   primary key (uid),
   unique key idx_username(user_name)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用户表';
@@ -99,5 +100,22 @@ create table sys_log(
   create_time datetime null comment '创建时间',
   primary key (id)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '日志表';
+
+create table sys_point_log(
+  id bigint auto_increment not null,
+  uid varchar(64) null comment '用户id',
+  point int(5) null comment '变动积分',
+  description varchar(64) null comment '描述',
+  create_time datetime null comment '创建时间',
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '积分记录表';
+
+create table sys_download_log(
+  id bigint auto_increment not null,
+  uid varchar(64) null comment '用户id',
+  source_id VARCHAR(36) NOT NULL COMMENT '资源id',
+  create_time datetime null comment '创建时间',
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '下载记录表';
 
 
