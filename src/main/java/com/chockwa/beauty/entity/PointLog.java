@@ -1,5 +1,8 @@
 package com.chockwa.beauty.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +19,10 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("sys_point_log")
 public class PointLog {
 
+    @TableId(type = IdType.AUTO)
     private Long id;
     private String uid;
     private int point;
