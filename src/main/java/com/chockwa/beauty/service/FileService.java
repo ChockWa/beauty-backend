@@ -1,5 +1,6 @@
 package com.chockwa.beauty.service;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.chockwa.beauty.common.utils.ImageUtils;
@@ -15,6 +16,7 @@ import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.github.tobato.fastdfs.service.TrackerClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -171,7 +174,7 @@ public class FileService {
         return null;
     }
 
-    private List<SourceDetail> uploadFiles(String fileDirName, File[] files){
+    private List<SourceDetail> uploadFiles(String fileDirName, File[] files) throws IOException {
         List<SourceDetail> sourceDetails = new ArrayList<>();
         File[] tempFiles = Arrays.copyOf(files, files.length);
         for(File file : tempFiles){
@@ -180,16 +183,19 @@ public class FileService {
             }
             sourceDetails.add(upload(fileDirName, file));
         }
+        // 生成描述文件并上传
+        File descFile = generateDescText(tempFiles[0].getAbsolutePath().substring(0, tempFiles[0].getAbsolutePath().lastIndexOf("/")+1));
+        uploadDescText(fileDirName, descFile);
         return sourceDetails;
     }
 
     private SourceDetail upload(String fileDirName, File file){
         try {
             HashMap<String, Object> paramMap = new HashMap<>();
-            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
-            File newFile = new File(newFilePath);
-            FileUtils.copyFile(file, newFile);
-            paramMap.put("file", newFile);
+//            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
+//            File newFile = new File(newFilePath);
+//            FileUtils.copyFile(file, newFile);
+            paramMap.put("file", file);
             paramMap.put("output","json");
             paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
             paramMap.put("scene","image");
@@ -197,9 +203,10 @@ public class FileService {
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
             log.info("uploadResult:{}", JSON.toJSON(uploadResult));
 
-            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
+            String thumbFileName = file.getName().substring(0, file.getName().lastIndexOf("."));
+            String thumbFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + "thumb_" + thumbFileName + ".jpg";
             File thumbFile = new File(thumbFilePath);
-            FileUtils.copyFile(newFile, thumbFile);
+            FileUtils.copyFile(file, thumbFile);
             // 生成缩略图
             ImageUtils.cutImageAndGenThumb(thumbFile, thumbFile, 210, 300);
             paramMap.put("file", thumbFile);
@@ -217,6 +224,31 @@ public class FileService {
         return null;
     }
 
+    public static void main(String[] args) throws IOException {
+//        generateDescText("E://");
+    }
+
+    private File generateDescText(String targetFilePath) throws IOException {
+        File file = new File(targetFilePath + "beauties-desc.txt");
+        if(!file.exists()){
+            file.createNewFile();
+        }
+        FileUtils.writeByteArrayToFile(file, new String(new String("福利站點，收藏不迷路。https://www.24beauties.xyz").getBytes(), Charset.defaultCharset()).getBytes());
+        return file;
+    }
+
+    private void uploadDescText(String fileDirName, File descText){
+        if(descText == null){
+            return;
+        }
+        Map<String, Object> paramMap = new HashMap<>(4);
+        paramMap.put("file", descText);
+        paramMap.put("output","json");
+        paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
+        paramMap.put("scene","");
+        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
+    }
+
     private SourceDetail genSourceDetail(File file, UploadResult result, UploadResult thumbResult){
         SourceDetail detail = new SourceDetail();
         detail.setThumbImage(thumbResult.getPath());
@@ -226,11 +258,6 @@ public class FileService {
         detail.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
         detail.setCreateTime(new Date());
         return detail;
-    }
-
-    public static void main(String[] args) {
-        File file = new File("E:/test.jpg");
-        delete();
     }
 
     public static void delete(){
