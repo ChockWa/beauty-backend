@@ -233,7 +233,7 @@ public class FileService {
         if(!file.exists()){
             file.createNewFile();
         }
-        FileUtils.writeByteArrayToFile(file, new String(new String("福利站點，收藏不迷路。https://www.24beauties.xyz").getBytes(), Charset.defaultCharset()).getBytes());
+        FileUtils.writeByteArrayToFile(file, new String(new String("福利站點，收藏不迷路。" + DNS_HTTPS).getBytes(), Charset.defaultCharset()).getBytes());
         return file;
     }
 
