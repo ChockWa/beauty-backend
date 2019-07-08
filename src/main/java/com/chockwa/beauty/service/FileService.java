@@ -229,7 +229,7 @@ public class FileService {
     }
 
     private File generateDescText(String targetFilePath) throws IOException {
-        File file = new File(targetFilePath + "24beauties.txt");
+        File file = new File(targetFilePath + "www.24beauties.xyz.txt");
         if(!file.exists()){
             file.createNewFile();
         }
