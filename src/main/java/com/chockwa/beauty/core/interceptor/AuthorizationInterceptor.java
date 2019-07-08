@@ -1,6 +1,5 @@
 package com.chockwa.beauty.core.interceptor;
 
-import com.alibaba.fastjson.JSON;
 import com.chockwa.beauty.entity.Log;
 import com.chockwa.beauty.exception.BizException;
 import com.chockwa.beauty.common.utils.JwtUtils;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +67,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
         taskExecutor.execute(() -> addLog(request));
     }
 
