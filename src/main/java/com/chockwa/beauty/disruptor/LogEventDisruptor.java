@@ -1,5 +1,6 @@
 package com.chockwa.beauty.disruptor;
 
+import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.TimeoutException;
 import com.lmax.disruptor.dsl.Disruptor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,20 +24,24 @@ public class LogEventDisruptor {
 
     private Disruptor<LogEvent> disruptor;
 
+    private RingBuffer<LogEvent> ringBuffer;
+
     @PostConstruct
-    public void init(){
-        disruptor = new Disruptor<>(new LogEventFactory(), bufferSize, new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                return new Thread(r, "LogEventDisruptor-Thread");
-            }
-        });
-        disruptor.handleEventsWithWorkerPool(new LogEventHandler());
-        disruptor.start();
+    public synchronized void init(){
+        if(disruptor == null){
+            disruptor = new Disruptor<>(new LogEventFactory(), bufferSize, new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    return new Thread(r, "LogEventDisruptor-Thread");
+                }
+            });
+            disruptor.handleEventsWithWorkerPool(new LogEventHandler());
+            ringBuffer = disruptor.start();
+        }
     }
 
-    public Disruptor<LogEvent> get(){
-        return disruptor;
+    public RingBuffer<LogEvent> getRingBuffer(){
+        return ringBuffer;
     }
 
     @PreDestroy
@@ -46,5 +51,22 @@ public class LogEventDisruptor {
         } catch (TimeoutException e) {
             log.error("LogEventDisruptor close time out", e);
         }
+    }
+
+    public static void main(String[] args) {
+//        Disruptor<LogEvent> disruptor = new Disruptor<>(new LogEventFactory(), bufferSize, new ThreadFactory() {
+//            @Override
+//            public Thread newThread(Runnable r) {
+//                return new Thread(r, "LogEventDisruptor-Thread");
+//            }
+//        });
+//        disruptor.handleEventsWithWorkerPool(new LogEventHandler());
+//        LogEventProducer producer = new LogEventProducer(new LogEventTranslator(), disruptor.start());
+//        for(int i=0;i<100000;i++){
+//            Log log = new Log();
+//            log.setId(Long.valueOf(i));
+//            producer.recordLog(log);
+//        }
+//        disruptor.shutdown();
     }
 }
