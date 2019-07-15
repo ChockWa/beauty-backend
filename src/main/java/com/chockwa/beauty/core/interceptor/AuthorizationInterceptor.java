@@ -1,5 +1,6 @@
 package com.chockwa.beauty.core.interceptor;
 
+import com.chockwa.beauty.disruptor.LogEventDisruptor;
 import com.chockwa.beauty.disruptor.LogEventProducer;
 import com.chockwa.beauty.disruptor.LogEventTranslator;
 import com.chockwa.beauty.entity.Log;
@@ -11,7 +12,6 @@ import com.chockwa.beauty.entity.UserInfo;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -31,8 +31,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private RedisUtils redisUtils;
 
-//    @Autowired
-//    private LogEventDisruptor logEventDisruptor;
+    @Autowired
+    private LogEventDisruptor logEventDisruptor;
 
     /**
      * 需要检验登陆的黑名单
@@ -65,18 +65,16 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
-//        addLog(request);
+        addLog(request);
     }
 
     private void addLog(HttpServletRequest request){
-//        LogEventProducer producer = new LogEventProducer(new LogEventTranslator(), logEventDisruptor.getRingBuffer());
-//        Log log = new Log();
-//        log.setMethod(request.getRequestURI());
-////        log.setParams(JSON.toJSONString(request.getParameterMap()));
-//        log.setIp(getIpAddress(request));
-//        log.setCreateTime(new Date());
-////        logService.add(log);
-//        producer.recordLog(log);
+        LogEventProducer producer = new LogEventProducer(new LogEventTranslator(), logEventDisruptor.getRingBuffer());
+        Log log = new Log();
+        log.setMethod(request.getRequestURI());
+        log.setIp(getIpAddress(request));
+        log.setCreateTime(new Date());
+        producer.recordLog(log);
     }
 
     private boolean checkNeedLoginOrNot(String uri){
