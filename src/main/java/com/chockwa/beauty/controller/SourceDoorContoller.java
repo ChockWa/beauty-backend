@@ -48,7 +48,7 @@ public class SourceDoorContoller extends BaseController{
                     .setData("hotests2", hotest.size() < 5 ? hotest.subList(0, hotest.size()) : hotest.subList(5, hotest.size()));
         } catch (InterruptedException e) {
             log.error("thread was interrupted", e);
-            throw e;
+            Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
             log.error("get source error!", e);
         }
