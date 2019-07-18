@@ -11,10 +11,10 @@ import com.lmax.disruptor.WorkHandler;
  */
 public class LogEventHandler implements WorkHandler<LogEvent> {
 
-    private LogService logService = SpringUtil.getBean(LogService.class);
+//    private LogService logService = SpringUtil.getBean(LogService.class);
 
     @Override
     public void onEvent(LogEvent logEvent) throws Exception {
-        logService.add(logEvent.getLog());
+//        logService.add(logEvent.getLog());
     }
 }
