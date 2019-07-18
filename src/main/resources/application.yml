@@ -42,3 +42,6 @@ thumb-image:
 dns:
    api-http: http://www.24beauties.xyz
    api-https: https://www.24beauties.xyz
+
+logging:
+  config: classpath:logback-${spring.profiles.active}.xml
