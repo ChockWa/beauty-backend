@@ -1,9 +1,5 @@
 package com.chockwa.beauty.core.interceptor;
 
-import com.chockwa.beauty.disruptor.LogEventDisruptor;
-import com.chockwa.beauty.disruptor.LogEventProducer;
-import com.chockwa.beauty.disruptor.LogEventTranslator;
-import com.chockwa.beauty.entity.Log;
 import com.chockwa.beauty.exception.BizException;
 import com.chockwa.beauty.common.utils.JwtUtils;
 import com.chockwa.beauty.common.utils.RedisUtils;
@@ -18,7 +14,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 
 /**
  * @auther: zhuohuahe
