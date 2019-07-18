@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,8 +17,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageResult<T> {
-
+public class PageResult<T> implements Serializable {
+    private static final long serialVersionUID = -8309770079710582868L;
     private long total;
 
     private List<T> records;
