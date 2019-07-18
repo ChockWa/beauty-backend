@@ -50,3 +50,6 @@ fdfs:
   pool:
     max-total: 50
     max-wait-millis: 60
+
+logging:
+  config: classpath:logback-dev.xml
