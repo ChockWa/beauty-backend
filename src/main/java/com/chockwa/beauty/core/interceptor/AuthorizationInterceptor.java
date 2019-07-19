@@ -1,5 +1,9 @@
 package com.chockwa.beauty.core.interceptor;
 
+import com.chockwa.beauty.disruptor.LogEventDisruptor;
+import com.chockwa.beauty.disruptor.LogEventProducer;
+import com.chockwa.beauty.disruptor.LogEventTranslator;
+import com.chockwa.beauty.entity.Log;
 import com.chockwa.beauty.exception.BizException;
 import com.chockwa.beauty.common.utils.JwtUtils;
 import com.chockwa.beauty.common.utils.RedisUtils;
@@ -14,6 +18,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 /**
  * @auther: zhuohuahe
@@ -26,8 +31,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private RedisUtils redisUtils;
 
-//    @Autowired
-//    private LogEventDisruptor logEventDisruptor;
+    @Autowired
+    private LogEventDisruptor logEventDisruptor;
 
     /**
      * 需要检验登陆的黑名单
@@ -60,16 +65,16 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
-//        addLog(request);
+        addLog(request);
     }
 
     private void addLog(HttpServletRequest request){
-//        LogEventProducer producer = new LogEventProducer(new LogEventTranslator(), logEventDisruptor.getRingBuffer());
-//        Log log = new Log();
-//        log.setMethod(request.getRequestURI());
-//        log.setIp(getIpAddress(request));
-//        log.setCreateTime(new Date());
-//        producer.recordLog(log);
+        LogEventProducer producer = new LogEventProducer(new LogEventTranslator(), logEventDisruptor.getRingBuffer());
+        Log log = new Log();
+        log.setMethod(request.getRequestURI());
+        log.setIp(getIpAddress(request));
+        log.setCreateTime(new Date());
+        producer.recordLog(log);
     }
 
     private boolean checkNeedLoginOrNot(String uri){
