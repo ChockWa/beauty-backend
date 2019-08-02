@@ -41,6 +41,7 @@ public class LogEventDisruptor {
                 }
             });
             disruptor.handleEventsWithWorkerPool(new LogEventHandler(logService));
+            disruptor.setDefaultExceptionHandler(new LogEventExceptionHandler());
             ringBuffer = disruptor.start();
         }
     }
