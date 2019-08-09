@@ -1,10 +1,15 @@
 package com.chockwa.beauty.common.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.BitFieldSubCommands;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -55,5 +60,23 @@ public class RedisUtils {
 
     public void deleteByKey(String key) {
         redisTemplate.delete(key);
+    }
+
+    public boolean setBit(String key, long offset, boolean value){
+        return redisTemplate.opsForValue().setBit(key, offset, value);
+    }
+
+    public void getBit(String key, long offset){
+        redisTemplate.opsForValue().getBit(key, offset);
+    }
+
+    public long getBitCount(String key){
+        Long count = (Long) redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                return redisConnection.bitCount(key.getBytes());
+            }
+        });
+        return Optional.ofNullable(count).orElse(0L);
     }
 }
