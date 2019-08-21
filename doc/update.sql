@@ -77,12 +77,14 @@ create table sys_user(
   status int(2) null comment '正常',
   create_time datetime null comment '创建时间',
   update_time datetime null comment '更新时间',
+  vip_end_time datetime null comment 'vip有效时间',
   avator varchar(128) null comment '头像',
   point int(5) null comment '积分',
+  coin int(5) null comment '币数',
   primary key (uid),
   unique key idx_username(user_name)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用户表';
-INSERT INTO `sys_user` VALUES ('91a96c4621974583b987c8b72f2f9ed4', 'chockwa', '569badc2c8b71a6f19a23704e1b17b99', '91a96c4621974583b987c8b72f2f9ed4', NULL, NULL, 0, 1, NULL, NULL, NULL);
+INSERT INTO `sys_user` VALUES ('91a96c4621974583b987c8b72f2f9ed4', 'chockwa', '569badc2c8b71a6f19a23704e1b17b99', '91a96c4621974583b987c8b72f2f9ed4', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, NULL);
 
 
 create table sys_source_hot(
@@ -117,5 +119,36 @@ create table sys_download_log(
   create_time datetime null comment '创建时间',
   primary key (id)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '下载记录表';
+
+create table sys_qm_info(
+  id varchar(64) not null comment 'id',
+  area int(2) null comment '地區',
+  name varchar(64) null comemnt '名稱',
+  description varchar(512) comment '描述',
+  image varchar(1024) comment '图片',
+  contact varchar(128) null comemnt '聯繫方式',
+  score varchar(4) null comment '熱度',
+  price int(4) null comment '价格',
+  create_time datetime null comment '创建时间',
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = 'qm信息表';
+
+create table sys_qm_comment(
+  id bigint auto_increment not null,
+  uid varchar(64) null comment '用户id',
+  qm_id varchar(64) null comment 'id',
+  comment varchar(512) null comment '评论',
+  create_time datetime null comment '创建时间',
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = 'qm评论表';
+
+create table sys_charge_log(
+  id bigint auto_increment not null,
+  uid varchar(64) null comment '用户id',
+  charge_code varchar(32) null comment '码',
+  charge_coin int(4) null comment '币',
+  create_time datetime null comment '创建时间',
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '充值表';
 
 
