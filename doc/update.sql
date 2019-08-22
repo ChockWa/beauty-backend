@@ -147,8 +147,17 @@ create table sys_charge_log(
   uid varchar(64) null comment '用户id',
   charge_code varchar(32) null comment '码',
   charge_coin int(4) null comment '币',
+  charge_price int(4) null comment '金額',
   create_time datetime null comment '创建时间',
   primary key (id)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '充值表';
+
+create table sys_qm_buy_log()(
+  id bigint auto_increment not null,
+  uid varchar(64) null comment '用户id',
+  qm_id varchar(64) null comment 'qm id',
+  create_time datetime null comment '创建时间',
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用戶購買qm記錄表';
 
 

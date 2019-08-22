@@ -39,4 +39,8 @@ public class User {
 
     private String avator;
 
+    private int coin;
+
+    private Date vipEndTime;
+
 }

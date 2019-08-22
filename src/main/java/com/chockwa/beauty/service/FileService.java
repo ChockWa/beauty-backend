@@ -9,11 +9,14 @@ import com.chockwa.beauty.common.utils.ZipUtils;
 import com.chockwa.beauty.dto.AddSourceDto;
 import com.chockwa.beauty.dto.UploadResponse;
 import com.chockwa.beauty.dto.UploadResult;
+import com.chockwa.beauty.entity.QmInfo;
 import com.chockwa.beauty.entity.Source;
 import com.chockwa.beauty.entity.SourceDetail;
+import com.chockwa.beauty.mapper.QmInfoMapper;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.github.tobato.fastdfs.service.TrackerClient;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -32,6 +35,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -62,6 +66,9 @@ public class FileService {
 
     @Autowired
     private TaskExecutor taskExecutor;
+
+    @Autowired
+    private QmInfoMapper qmInfoMapper;
 
     public UploadResponse upload(MultipartFile file) {
         // 上传并且生成缩略图
@@ -140,7 +147,7 @@ public class FileService {
             if(descFile == null){
                 continue;
             }
-            Source source = expainDescFile(descFile);
+            Source source = expainDescFile(descFile, Source.class);
             String sourceDirName = String.valueOf(System.currentTimeMillis());
             List<SourceDetail> sourceDetails = uploadFiles(sourceDirName, files);
             taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), sourceDirName, sourceDirName + "/origin"));
@@ -164,10 +171,10 @@ public class FileService {
         }
     }
 
-    private Source expainDescFile(File descFile){
+    private <T> T expainDescFile(File descFile, Class<T> clazz){
         try {
             String descJson = FileUtils.readFileToString(descFile, "UTF-8");
-            return JSON.parseObject(descJson, Source.class);
+            return JSON.parseObject(descJson, clazz);
         } catch (IOException e) {
             log.error("转换失败", e);
         }
@@ -192,9 +199,6 @@ public class FileService {
     private SourceDetail upload(String fileDirName, File file){
         try {
             HashMap<String, Object> paramMap = new HashMap<>();
-//            String newFilePath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/") + 1) + UUIDUtils.getUuid() + ".jpg";
-//            File newFile = new File(newFilePath);
-//            FileUtils.copyFile(file, newFile);
             paramMap.put("file", file);
             paramMap.put("output","json");
             paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
@@ -266,5 +270,43 @@ public class FileService {
         paramMap.put("output","json");
         String thumbResult= HttpUtil.post("http://198.252.105.138:8080/group/delete", paramMap);
         System.out.println(thumbResult);
+    }
+
+    public String upload(File file, String fileDirName){
+        HashMap<String, Object> paramMap = new HashMap<>(4);
+        paramMap.put("file", file);
+        paramMap.put("output","json");
+        paramMap.put("path", "/qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
+        paramMap.put("scene","image");
+        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
+        UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
+        log.info("uploadResult:{}", JSON.toJSON(uploadResult));
+        return uploadResult.getPath();
+    }
+
+    public void uploadQmInfos(String prepareFilePath){
+        File sourceDir = new File(prepareFilePath);
+        File[] files = sourceDir.listFiles();
+        List<QmInfo> qmInfos = new ArrayList<>();
+        List<String> imageUrls = Lists.newArrayList();
+        for(File file : files){
+            File[] qmFiles = file.listFiles();
+            File descFile = Arrays.asList(qmFiles).stream().filter(f -> f.getName().contains(".txt")).findFirst().orElse(null);
+            if(descFile == null){continue;}
+            QmInfo qmInfo = expainDescFile(descFile, QmInfo.class);
+            for(File qmFile : qmFiles){
+                String fileDirFileName = String.valueOf(System.currentTimeMillis());
+                if(qmFile.getName().contains(".txt")){
+                    continue;
+                }
+                imageUrls.add(upload(qmFile, fileDirFileName));
+            }
+            qmInfo.setImage(imageUrls.stream().collect(Collectors.joining(",")));
+            qmInfo.setCreateTime(new Date());
+            qmInfos.add(qmInfo);
+        }
+        for(QmInfo qmInfo : qmInfos){
+            qmInfoMapper.insert(qmInfo);
+        }
     }
 }

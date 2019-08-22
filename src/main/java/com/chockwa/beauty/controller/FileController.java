@@ -18,6 +18,7 @@ public class FileController {
 
     // 預上傳文件路徑
     private static final String PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/files/";
+    private static final String QM_PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/qms/";
 
     @Autowired
     private FileService fileService;
@@ -90,6 +91,16 @@ public class FileController {
 //        fileService.uploadFiles("E:\\201905301");
         try {
             fileService.uploadFiles(PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
+        } catch (Exception e) {
+            log.error("一键上传失败", e);
+        }
+        return Result.SUCCESS();
+    }
+
+    @GetMapping("uploadQm")
+    public Result uploadQmInfos(String prepareFilePath){
+        try {
+            fileService.uploadQmInfos(QM_PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
         } catch (Exception e) {
             log.error("一键上传失败", e);
         }
