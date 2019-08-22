@@ -1,5 +1,6 @@
 package com.chockwa.beauty.service;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -93,5 +94,17 @@ public class QmService {
     public void deleteQm(String qmId){
         qmInfoMapper.deleteById(qmId);
         qmCommentMapper.delete(new UpdateWrapper<QmComment>().lambda().eq(QmComment::getQmId, qmId));
+    }
+
+    public static void main(String[] args) {
+        // {"area":1,"contact":"QQQQQQQQQQQQ","description":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","name":"XXXXXX","price":5,"score":"8.9"}
+        QmInfo qmInfo = new QmInfo();
+        qmInfo.setArea(1);
+        qmInfo.setName("XXXXXX");
+        qmInfo.setContact("QQQQQQQQQQQQ");
+        qmInfo.setDescription("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        qmInfo.setPrice(5);
+        qmInfo.setScore("8.9");
+        System.out.println(JSON.toJSONString(qmInfo));
     }
 }
