@@ -31,11 +31,6 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public void sign(){
-        SignLog signLog = new SignLog();
-        signLog.setUid(UserInfo.get().getUid());
-        signLog.setCreateTime(new Date());
-        signLogMapper.insert(signLog);
-
         User user = userMapper.selectById(UserInfo.get().getUid());
         Date now = new Date();
         if(Objects.nonNull(user.getLastSignTime()) && DateUtils.isSameDay(DateUtils.addDays(user.getLastSignTime(),1), now)){
@@ -51,5 +46,10 @@ public class UserService {
         }
         user.setLastSignTime(now);
         userMapper.updateById(user);
+
+        SignLog signLog = new SignLog();
+        signLog.setUid(UserInfo.get().getUid());
+        signLog.setCreateTime(new Date());
+        signLogMapper.insert(signLog);
     }
 }
