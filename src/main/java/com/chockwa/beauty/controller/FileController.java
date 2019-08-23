@@ -49,8 +49,9 @@ public class FileController {
      * @return
      */
     @PostMapping("upload")
-    public synchronized Result upload(@RequestParam("file")MultipartFile file){
-        return Result.SUCCESS().setData(fileService.upload(file));
+    public Result upload(@RequestParam("file")MultipartFile file){
+        String fileDirFileName = String.valueOf(System.currentTimeMillis());
+        return Result.SUCCESS().setData("path", fileService.upload(file, fileDirFileName));
     }
 
     /**

@@ -284,6 +284,18 @@ public class FileService {
         return uploadResult.getPath();
     }
 
+    public String upload(MultipartFile file, String fileDirName){
+        HashMap<String, Object> paramMap = new HashMap<>(4);
+        paramMap.put("file", file);
+        paramMap.put("output","json");
+        paramMap.put("path", "/qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
+        paramMap.put("scene","image");
+        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
+        UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
+        log.info("uploadResult:{}", JSON.toJSON(uploadResult));
+        return uploadResult.getPath();
+    }
+
     public void uploadQmInfos(String prepareFilePath){
         File sourceDir = new File(prepareFilePath);
         File[] files = sourceDir.listFiles();
