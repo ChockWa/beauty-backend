@@ -1,16 +1,11 @@
 package com.chockwa.beauty.controller;
 
-import cn.hutool.core.io.FileUtil;
-import com.chockwa.beauty.entity.User;
-import com.chockwa.beauty.mapper.UserMapper;
+import com.chockwa.beauty.entity.Result;
+import com.chockwa.beauty.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @auther: zhuohuahe
@@ -18,14 +13,15 @@ import java.util.List;
  * @description:
  */
 @RestController
+@RequestMapping("user")
 public class UserController {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
-    @GetMapping("/getUser")
-    public User getUser(){
-        return userMapper.selectById(1L);
+    @GetMapping("sign")
+    public Result sign(){
+        userService.sign();
+        return Result.SUCCESS();
     }
-
 }

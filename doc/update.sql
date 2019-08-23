@@ -81,10 +81,11 @@ create table sys_user(
   avator varchar(128) null comment '头像',
   point int(5) null comment '积分',
   coin int(5) null comment '币数',
+  last_sign_time datetime null comment '最後簽到時間',
   primary key (uid),
   unique key idx_username(user_name)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用户表';
-INSERT INTO `sys_user` VALUES ('91a96c4621974583b987c8b72f2f9ed4', 'chockwa', '569badc2c8b71a6f19a23704e1b17b99', '91a96c4621974583b987c8b72f2f9ed4', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_user` VALUES ('91a96c4621974583b987c8b72f2f9ed4', 'chockwa', '569badc2c8b71a6f19a23704e1b17b99', '91a96c4621974583b987c8b72f2f9ed4', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 create table sys_source_hot(
@@ -159,5 +160,12 @@ create table sys_qm_buy_log()(
   create_time datetime null comment '创建时间',
   primary key (id)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用戶購買qm記錄表';
+
+create table sys_sign_log(
+  id bigint auto_increment not null,
+  uid varchar(64) null comment '用户id',
+  create_time datetime null comment '创建时间',
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用戶簽到表';
 
 

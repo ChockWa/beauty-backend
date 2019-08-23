@@ -43,4 +43,6 @@ public class User {
 
     private Date vipEndTime;
 
+    private Date lastSignTime;
+
 }
