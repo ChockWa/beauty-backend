@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @auther: zhuohuahe
@@ -37,9 +38,15 @@ public class UserService {
 
         User user = userMapper.selectById(UserInfo.get().getUid());
         Date now = new Date();
-        if(DateUtils.isSameDay(DateUtils.addDays(user.getLastSignTime(),1), now)){
-            user.setCoin(user.getCoin() + CONTINUITY_SIGN_COIN_DEFAULT);
+        if(Objects.nonNull(user.getLastSignTime()) && DateUtils.isSameDay(DateUtils.addDays(user.getLastSignTime(),1), now)){
+            user.setSignCount(user.getSignCount() + 1);
+            if(user.getSignCount() > 3){
+                user.setCoin(user.getCoin() + CONTINUITY_SIGN_COIN_DEFAULT);
+            }else{
+                user.setCoin(user.getCoin() + SIGN_COIN_DEFAULT);
+            }
         }else{
+            user.setSignCount(0);
             user.setCoin(user.getCoin() + SIGN_COIN_DEFAULT);
         }
         user.setLastSignTime(now);
