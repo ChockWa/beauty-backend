@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @auther: zhuohuahe
  * @date: 2019/6/3 10:48
- * @description:
+ * @description: 限流控制類
  */
 @Component
 public class RateLimiter {
@@ -36,11 +36,6 @@ public class RateLimiter {
 
     @PostConstruct
     public void supplement(){
-        scheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                COUNT.set(SECOND_MAX_CONCURRENT);
-            }
-        }, 500, 10000, TimeUnit.MILLISECONDS);
+        scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> COUNT.set(SECOND_MAX_CONCURRENT), 500, 10000, TimeUnit.MILLISECONDS);
     }
 }

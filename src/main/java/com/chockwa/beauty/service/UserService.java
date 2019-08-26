@@ -33,6 +33,9 @@ public class UserService {
     public void sign(){
         User user = userMapper.selectById(UserInfo.get().getUid());
         Date now = new Date();
+        if(Objects.nonNull(user.getLastSignTime()) && DateUtils.isSameDay(now, user.getLastSignTime())){
+            throw new IllegalStateException("今天已簽到過，請明天再來");
+        }
         if(Objects.nonNull(user.getLastSignTime()) && DateUtils.isSameDay(DateUtils.addDays(user.getLastSignTime(),1), now)){
             user.setSignCount(user.getSignCount() + 1);
             if(user.getSignCount() > 3){
@@ -51,5 +54,13 @@ public class UserService {
         signLog.setUid(UserInfo.get().getUid());
         signLog.setCreateTime(new Date());
         signLogMapper.insert(signLog);
+    }
+
+    public User getUser(){
+        User user = UserInfo.get();
+        user.setPassword(null);
+        user.setSalt(null);
+        user.setUid(null);
+        return user;
     }
 }

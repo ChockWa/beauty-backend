@@ -24,4 +24,9 @@ public class UserController {
         userService.sign();
         return Result.SUCCESS();
     }
+
+    @GetMapping("info")
+    public Result getUser(){
+        return Result.SUCCESS().setData("user", userService.getUser());
+    }
 }

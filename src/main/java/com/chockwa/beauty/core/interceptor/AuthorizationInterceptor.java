@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +50,16 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             // 門戶搜索資源
             .add("/door/search")
             // 門戶下載資源
-            .add("/door/download").build();
+            .add("/door/download")
+            // 簽到
+            .add("/user/sign")
+            // 用戶信息
+            .add("/user/info")
+            // 評論
+            .add("/qm/comment")
+            // 購買
+            .add("/qm/bQm")
+            .build();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -64,7 +74,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
+        UserInfo.clear();
         addLog(request);
     }
 

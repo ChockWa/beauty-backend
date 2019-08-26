@@ -16,4 +16,8 @@ public class UserInfo {
     public static User get(){
         return userInfo.get();
     }
+
+    public static void clear(){
+        userInfo.remove();
+    }
 }

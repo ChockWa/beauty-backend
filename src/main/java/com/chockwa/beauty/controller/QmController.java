@@ -35,8 +35,7 @@ public class QmController {
 
     @GetMapping("bQm")
     public Result buyQm(String qmId){
-        qmService.bugQmInfo(qmId);
-        return Result.SUCCESS();
+        return Result.SUCCESS().setData("info", qmService.bugQmInfo(qmId));
     }
 
     @PostMapping("comment")

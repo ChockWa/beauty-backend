@@ -62,7 +62,7 @@ public class QmService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void bugQmInfo(String qmId){
+    public QmInfo bugQmInfo(String qmId){
         QmInfo qmInfo = qmInfoMapper.selectById(qmId);
         if(qmInfo == null){
             throw new IllegalStateException("QM信息不存在");
@@ -79,6 +79,7 @@ public class QmService {
         userMapper.updateById(user);
 
         qmBugLogMapper.insert(new QmBuyLog(user.getUid(), qmId, new Date()));
+        return qmInfo;
     }
 
     public void addQm(QmInfo qmInfo){
