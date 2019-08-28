@@ -26,6 +26,7 @@ public class QmInfo {
     private String id;
     private int area;
     private String name;
+    private String cover;
     private String description;
     private String image;
     private String contact;
