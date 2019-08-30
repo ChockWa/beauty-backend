@@ -1,5 +1,7 @@
 package com.chockwa.beauty.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import com.chockwa.beauty.entity.SignLog;
 import com.chockwa.beauty.entity.User;
 import com.chockwa.beauty.entity.UserInfo;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -56,11 +59,13 @@ public class UserService {
         signLogMapper.insert(signLog);
     }
 
-    public User getUser(){
+    public Map<String, Object> getUser(){
         User user = UserInfo.get();
         user.setPassword(null);
         user.setSalt(null);
         user.setUid(null);
-        return user;
+        Map<String, Object> userInfo = BeanUtil.beanToMap(user);
+        userInfo.put("isSign", DateUtil.isSameDay(new Date(), user.getLastSignTime()));
+        return userInfo;
     }
 }

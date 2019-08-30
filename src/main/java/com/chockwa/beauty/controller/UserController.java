@@ -27,6 +27,6 @@ public class UserController {
 
     @GetMapping("info")
     public Result getUser(){
-        return Result.SUCCESS().setData("user", userService.getUser());
+        return Result.SUCCESS().setData("info", userService.getUser());
     }
 }
