@@ -33,7 +33,7 @@ public class CommentService {
         query.lambda().eq(QmComment::getUid, UserInfo.get().getUid()).orderByDesc(QmComment::getCreateTime);
         QmComment lastComment = qmCommentMapper.selectList(query).get(0);
         if(Objects.nonNull(lastComment)){
-            if(DateUtil.between(new Date(), lastComment.getCreateTime(), DateUnit.MINUTE) < 3){
+            if(DateUtil.between(lastComment.getCreateTime(), new Date(), DateUnit.MINUTE) < 3){
                 throw new IllegalStateException("兩次評論要相隔3分鐘，請稍後再試");
             }
         }
