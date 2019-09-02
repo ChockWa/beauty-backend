@@ -34,7 +34,7 @@ public class AuthorizationService {
         Assert.notNull(password, "password cannot be empty");
         User user = userMapper.selectOne(new QueryWrapper<User>().lambda().eq(User::getUserName, userName));
         if(user == null){
-            throw new IllegalStateException("User does not exist");
+            throw new IllegalStateException("用戶不存在");
         }
         checkPassword(password, user.getPassword(), user.getSalt());
         String token = JwtUtils.createToken(user);
@@ -49,7 +49,7 @@ public class AuthorizationService {
 //        Assert.notNull(registerDto.getEmail(), "Email cannot be empty");
         User user = userMapper.selectOne(new QueryWrapper<User>().lambda().eq(User::getUserName, registerDto.getUserName()));
         if(user != null){
-            throw new IllegalStateException("The user name already exists");
+            throw new IllegalStateException("用戶名已存在");
         }
         user = new User();
         user.setUid(UUIDUtils.getUuid());
@@ -69,16 +69,16 @@ public class AuthorizationService {
 
     private void checkPassword(String password, String md5Password, String salt){
         if(!md5Password.equals(MD5Utils.md5(salt + password + salt))){
-            throw new IllegalStateException("Password mistake");
+            throw new IllegalStateException("密碼錯誤");
         }
     }
 
     public void checkVerifyCode(String uuid, String verifyCode){
         if(StringUtils.isBlank(uuid) || StringUtils.isBlank(verifyCode)){
-            throw new IllegalArgumentException("Parameter is wrong");
+            throw new IllegalArgumentException("參數有誤");
         }
         if(!verifyCode.equalsIgnoreCase((String) redisUtils.get(uuid))){
-            throw new IllegalStateException("Verification code error");
+            throw new IllegalStateException("驗證碼錯誤");
         }
     }
 

@@ -8,6 +8,6 @@ package com.chockwa.beauty.controller;
 public class BaseController {
 
     public void fallBack(){
-        throw new RuntimeException("Server is busy!Please try again!");
+        throw new RuntimeException("服務器繁忙，請稍後重試！");
     }
 }

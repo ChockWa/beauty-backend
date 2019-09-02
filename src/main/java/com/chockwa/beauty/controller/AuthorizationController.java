@@ -1,5 +1,6 @@
 package com.chockwa.beauty.controller;
 
+import com.chockwa.beauty.annotation.RateLimit;
 import com.chockwa.beauty.common.utils.MD5Utils;
 import com.chockwa.beauty.common.utils.RedisUtils;
 import com.chockwa.beauty.common.utils.UUIDUtils;
@@ -23,7 +24,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("auth")
 @Slf4j
-public class AuthorizationController {
+public class AuthorizationController extends BaseController {
 
     private static final long VERIFYCODE_EXPIRE_SECOND = 1000 * 60 * 5;
 
@@ -47,6 +48,7 @@ public class AuthorizationController {
                 .setData("userName", registerDto.getUserName());
     }
 
+    @RateLimit(fallback = "fallBack")
     @GetMapping("genVerifyCode")
     public void generationVerifyCode(HttpServletResponse response, String uuid){
         try {
@@ -54,7 +56,7 @@ public class AuthorizationController {
             VerifyCodeUtils.outputImage(80,30,response.getOutputStream(),verifyCode);
             redisUtils.set(uuid, verifyCode, VERIFYCODE_EXPIRE_SECOND);
         } catch (IOException e) {
-            log.error("Failed to get verification code", e);
+            log.error("獲取驗證碼失敗", e);
         }
     }
 
