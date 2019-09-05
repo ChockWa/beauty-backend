@@ -29,6 +29,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+import sun.text.resources.cldr.ii.FormatData_ii;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -54,6 +55,9 @@ public class FileService {
 
     @Value("${dns.api-https}")
     private String DNS_HTTPS;
+
+    @Value("${temp.uploadImagePath}")
+    private String uploadImagePath;
 
     @Autowired
     private FastFileStorageClient fastFileStorageClient;
@@ -201,7 +205,7 @@ public class FileService {
             HashMap<String, Object> paramMap = new HashMap<>();
             paramMap.put("file", file);
             paramMap.put("output","json");
-            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
+            paramMap.put("path", "/tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
             paramMap.put("scene","image");
             String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
@@ -215,7 +219,7 @@ public class FileService {
             ImageUtils.cutImageAndGenThumb(thumbFile, thumbFile, 210, 300);
             paramMap.put("file", thumbFile);
             paramMap.put("output","json");
-            paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/thumb");
+            paramMap.put("path", "/tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/thumb");
             paramMap.put("scene","image");
             String thumbResult= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult thumbUploadResult = JSON.parseObject(thumbResult, UploadResult.class);
@@ -284,8 +288,9 @@ public class FileService {
         return uploadResult.getPath();
     }
 
-    public String upload(MultipartFile file, String fileDirName){
+    public String upload(MultipartFile multipartFile, String fileDirName){
         HashMap<String, Object> paramMap = new HashMap<>(4);
+        File file = convertToFile(multipartFile);
         paramMap.put("file", file);
         paramMap.put("output","json");
         paramMap.put("path", "/qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
@@ -293,7 +298,26 @@ public class FileService {
         String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
         UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
         log.info("uploadResult:{}", JSON.toJSON(uploadResult));
+        file.delete();
         return uploadResult.getPath();
+    }
+
+    public File convertToFile(MultipartFile multipartFile){
+        File file = new File(uploadImagePath + multipartFile.getOriginalFilename());
+        try ( InputStream in  = multipartFile.getInputStream(); OutputStream os = new FileOutputStream(file)){
+            // 得到文件流。以文件流的方式输出到新文件
+            // 可以使用byte[] ss = multipartFile.getBytes();代替while
+            byte[] buffer = new byte[4096];
+            int n;
+            while ((n = in.read(buffer,0,4096)) != -1){
+                os.write(buffer,0,n);
+            }
+            os.close();
+            in.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return file;
     }
 
     public void uploadQmInfos(String prepareFilePath){

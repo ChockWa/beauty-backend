@@ -51,5 +51,8 @@ fdfs:
     max-total: 50
     max-wait-millis: 60
 
+temp:
+  uploadImagePath: /usr/
+
 logging:
   config: classpath:logback-prod.xml

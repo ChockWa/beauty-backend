@@ -24,7 +24,7 @@ public class QmController {
     private CommentService commentService;
 
     @GetMapping("qms")
-    public Result qms(PageParam pageParam, Integer area){
+    public Result qms(PageParam pageParam, @RequestParam(required = false) Integer area){
         return Result.SUCCESS().setData("qms", qmService.selectQmPage(pageParam, area));
     }
 
@@ -61,7 +61,7 @@ public class QmController {
         return Result.SUCCESS();
     }
 
-    @DeleteMapping("delete")
+    @GetMapping("delete")
     public Result deleteQm(String qmId){
         qmService.deleteQm(qmId);
         return Result.SUCCESS();

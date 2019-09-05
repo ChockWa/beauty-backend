@@ -26,6 +26,8 @@ import java.util.Date;
 @Service
 public class QmService {
 
+    private static final String UID = "91a96c4621974583b987c8b72f2f9ed4";
+
     @Autowired
     private QmInfoMapper qmInfoMapper;
     @Autowired
@@ -35,12 +37,16 @@ public class QmService {
     @Autowired
     private QmCommentMapper qmCommentMapper;
 
-    public PageResult<QmInfo> selectQmPage(PageParam pageParam, int area){
+    public PageResult<QmInfo> selectQmPage(PageParam pageParam, Integer area){
         IPage<QmInfo> infoIPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         qmInfoMapper.selectPage(infoIPage, new QueryWrapper<QmInfo>().lambda()
-                .eq(QmInfo::getArea, area)
+                .eq(area != null, QmInfo::getArea, area)
                 .orderByDesc(QmInfo::getCreateTime));
-        infoIPage.getRecords().forEach(e -> e.setContact(null));
+        infoIPage.getRecords().forEach(e -> {
+            if(!UserInfo.get().getUid().equals(UID)){
+                e.setContact(null);
+            }
+        });
         PageResult<QmInfo> result = new PageResult<>();
         result.setRecords(infoIPage.getRecords());
         result.setTotal(infoIPage.getTotal());
@@ -55,7 +61,7 @@ public class QmService {
         if((UserInfo.get() == null ||
                 qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
                         .eq(QmBuyLog::getUid, UserInfo.get().getUid())
-                        .eq(QmBuyLog::getQmId, qmId)).isEmpty()) && !UserInfo.get().getUid().equals("91a96c4621974583b987c8b72f2f9ed4")){
+                        .eq(QmBuyLog::getQmId, qmId)).isEmpty()) && !UserInfo.get().getUid().equals(UID)){
             qm.setContact(null);
         }
         return qm;
