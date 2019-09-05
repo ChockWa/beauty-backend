@@ -86,7 +86,7 @@ create table sys_user(
   primary key (uid),
   unique key idx_username(user_name)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用户表';
-INSERT INTO `sys_user` VALUES ('91a96c4621974583b987c8b72f2f9ed4', 'chockwa', '569badc2c8b71a6f19a23704e1b17b99', '91a96c4621974583b987c8b72f2f9ed4', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `sys_user` VALUES ('91a96c4621974583b987c8b72f2f9ed4', 'chockwa', '569badc2c8b71a6f19a23704e1b17b99', '91a96c4621974583b987c8b72f2f9ed4', NULL, NULL, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 create table sys_source_hot(
@@ -125,11 +125,11 @@ create table sys_download_log(
 create table sys_qm_info(
   id varchar(64) not null comment 'id',
   area int(2) null comment '地區',
-  name varchar(64) null comemnt '名稱',
+  name varchar(64) null comment '名稱',
   description varchar(512) comment '描述',
   cover varchar(128) null comment '封面',
   image varchar(1024) comment '图片',
-  contact varchar(128) null comemnt '聯繫方式',
+  contact varchar(128) null comment '聯繫方式',
   score varchar(4) null comment '熱度',
   price int(4) null comment '价格',
   create_time datetime null comment '创建时间',
@@ -155,7 +155,7 @@ create table sys_charge_log(
   primary key (id)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '充值表';
 
-create table sys_qm_buy_log()(
+create table sys_qm_buy_log(
   id bigint auto_increment not null,
   uid varchar(64) null comment '用户id',
   qm_id varchar(64) null comment 'qm id',
