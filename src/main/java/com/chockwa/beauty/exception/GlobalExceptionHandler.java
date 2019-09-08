@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value=Exception.class)
     public Result exceptionHandle(HttpServletRequest request, Exception exception) throws Exception{
-        log.error(exception.getStackTrace().toString());
+        log.error("Exception：", exception);
         Result result = Result.FAIL(9999, exception.getMessage());
         exceptionMsg.set(result);
         return result;

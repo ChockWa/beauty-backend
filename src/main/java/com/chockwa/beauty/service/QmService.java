@@ -58,10 +58,11 @@ public class QmService {
         if(qm == null){
             throw new IllegalStateException("QM信息不存在");
         }
-        if((UserInfo.get() == null ||
-                qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
+        User user = UserInfo.get();
+        if(UserInfo.get() == null ||
+                (qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
                         .eq(QmBuyLog::getUid, UserInfo.get().getUid())
-                        .eq(QmBuyLog::getQmId, qmId)).isEmpty()) && !UserInfo.get().getUid().equals(UID)){
+                        .eq(QmBuyLog::getQmId, qmId)).isEmpty() && !UserInfo.get().getUid().equals(UID))){
             qm.setContact(null);
         }
         return qm;

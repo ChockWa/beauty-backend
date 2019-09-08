@@ -22,8 +22,8 @@ public class JwtUtils {
 
     public static final String SUBJECT = "onehee";
 
-    // 过期时间，毫秒，一個小時
-    public static final long EXPIRE = 1000*60*60;
+    // 过期时间，毫秒，2個小時
+    public static final long EXPIRE = 1000*60*60*2;
 
     // 秘钥
     public static final  String APPSECRET = "onehee666";

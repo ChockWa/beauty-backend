@@ -14,8 +14,10 @@ import com.chockwa.beauty.mapper.QmCommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.OpenOption;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @auther: zhuohuahe
@@ -31,7 +33,7 @@ public class CommentService {
     public void qmComment(String qmId, String comment){
         QueryWrapper<QmComment> query = new QueryWrapper<>();
         query.lambda().eq(QmComment::getUid, UserInfo.get().getUid()).orderByDesc(QmComment::getCreateTime);
-        QmComment lastComment = qmCommentMapper.selectList(query).get(0);
+        QmComment lastComment = qmCommentMapper.selectList(query).stream().findFirst().orElse(null);
         if(Objects.nonNull(lastComment)){
             if(DateUtil.between(lastComment.getCreateTime(), new Date(), DateUnit.MINUTE) < 3){
                 throw new IllegalStateException("兩次評論要相隔3分鐘，請稍後再試");
@@ -46,11 +48,11 @@ public class CommentService {
     }
 
     public PageResult<QmCommentDto> selectCommentPage(String qmId, PageParam pageParam){
-        IPage<QmCommentDto> iPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
-        qmCommentMapper.selectCommentPage(iPage, qmId);
+        Page<QmCommentDto> page = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
+        page.setRecords(qmCommentMapper.selectCommentPage(page, qmId));
         PageResult<QmCommentDto> result = new PageResult<>();
-        result.setTotal(iPage.getTotal());
-        result.setRecords(iPage.getRecords());
+        result.setTotal(page.getTotal());
+        result.setRecords(page.getRecords());
         return result;
     }
 }

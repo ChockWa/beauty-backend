@@ -60,6 +60,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             // 購買
             .add("/qm/bQm")
             .add("/qm/qms")
+            .add("/qm/info")
             .build();
 
     @Override

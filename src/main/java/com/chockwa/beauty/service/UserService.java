@@ -65,7 +65,7 @@ public class UserService {
         user.setSalt(null);
         user.setUid(null);
         Map<String, Object> userInfo = BeanUtil.beanToMap(user);
-        userInfo.put("isSign", DateUtil.isSameDay(new Date(), user.getLastSignTime()));
+        userInfo.put("isSign", Objects.nonNull(user.getLastSignTime()) ? DateUtil.isSameDay(new Date(), user.getLastSignTime()) : false);
         return userInfo;
     }
 }
