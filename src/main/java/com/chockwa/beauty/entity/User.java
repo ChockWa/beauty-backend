@@ -41,6 +41,8 @@ public class User {
 
     private int coin;
 
+    private int point;
+
     private Date vipEndTime;
 
     private Date lastSignTime;

@@ -47,7 +47,7 @@ public class UserService {
                 user.setCoin(user.getCoin() + SIGN_COIN_DEFAULT);
             }
         }else{
-            user.setSignCount(0);
+            user.setSignCount(1);
             user.setCoin(user.getCoin() + SIGN_COIN_DEFAULT);
         }
         user.setLastSignTime(now);
@@ -60,10 +60,7 @@ public class UserService {
     }
 
     public Map<String, Object> getUser(){
-        User user = UserInfo.get();
-        user.setPassword(null);
-        user.setSalt(null);
-        user.setUid(null);
+        User user = userMapper.selectById(UserInfo.get().getUid());
         Map<String, Object> userInfo = BeanUtil.beanToMap(user);
         userInfo.put("isSign", Objects.nonNull(user.getLastSignTime()) ? DateUtil.isSameDay(new Date(), user.getLastSignTime()) : false);
         return userInfo;
