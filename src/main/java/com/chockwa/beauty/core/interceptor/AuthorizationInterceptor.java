@@ -20,6 +20,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @auther: zhuohuahe
@@ -86,6 +87,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         Log log = new Log();
         log.setMethod(request.getRequestURI());
         log.setIp(getIpAddress(request));
+        log.setParams(Objects.nonNull(UserInfo.get()) ? String.format("{uid:%s}", UserInfo.get().getUid()) : "");
         log.setCreateTime(new Date());
         producer.recordLog(log);
     }

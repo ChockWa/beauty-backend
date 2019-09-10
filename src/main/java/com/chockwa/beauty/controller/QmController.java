@@ -1,5 +1,6 @@
 package com.chockwa.beauty.controller;
 
+import com.chockwa.beauty.annotation.RateLimit;
 import com.chockwa.beauty.dto.CommentRequest;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.QmInfo;
@@ -16,34 +17,39 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("qm")
-public class QmController {
+public class QmController extends BaseController{
 
     @Autowired
     private QmService qmService;
     @Autowired
     private CommentService commentService;
 
+    @RateLimit(fallback = "fallBack")
     @GetMapping("qms")
     public Result qms(PageParam pageParam, @RequestParam(required = false) Integer area){
         return Result.SUCCESS().setData("qms", qmService.selectQmPage(pageParam, area));
     }
 
+    @RateLimit(fallback = "fallBack")
     @GetMapping("info")
     public Result qmInfo(String qmId){
         return Result.SUCCESS().setData("info", qmService.getQmInfo(qmId));
     }
 
+    @RateLimit(fallback = "fallBack")
     @GetMapping("bQm")
     public Result buyQm(String qmId){
         return Result.SUCCESS().setData("info", qmService.bugQmInfo(qmId));
     }
 
+    @RateLimit(fallback = "fallBack")
     @PostMapping("comment")
     public Result comment(@RequestBody CommentRequest request){
         commentService.qmComment(request.getQmId(), request.getComment());
         return Result.SUCCESS();
     }
 
+    @RateLimit(fallback = "fallBack")
     @GetMapping("comments")
     public Result comments(PageParam pageParam, String qmId){
         return Result.SUCCESS().setData("comments", commentService.selectCommentPage(qmId, pageParam));
