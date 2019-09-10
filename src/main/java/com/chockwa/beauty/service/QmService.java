@@ -58,14 +58,9 @@ public class QmService {
         if(qm == null){
             throw new IllegalStateException("QM信息不存在");
         }
-        User user = UserInfo.get();
-//        if(UserInfo.get() == null ||
-//                (qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
-//                        .eq(QmBuyLog::getUid, UserInfo.get().getUid())
-//                        .eq(QmBuyLog::getQmId, qmId)).isEmpty() && !UserInfo.get().getUid().equals(UID))){
-//            qm.setContact(null);
-//        }
-        if(UserInfo.get() == null ||
+        User user = userMapper.selectById(UserInfo.get().getUid());
+        boolean isVip  = user.getVipEndTime() == null || new Date().after(user.getVipEndTime()) ? false : true;
+        if(!isVip ||
                 (qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
                         .eq(QmBuyLog::getUid, UserInfo.get().getUid())
                         .eq(QmBuyLog::getQmId, qmId)).isEmpty())){

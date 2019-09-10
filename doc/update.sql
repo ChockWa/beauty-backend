@@ -170,4 +170,15 @@ create table sys_sign_log(
   primary key (id)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用戶簽到表';
 
+create table sys_card (
+  card_no varchar(64) null comment '卡密',
+  uid varchar(64) null comment '用户id',
+  type int(3) null comment '卡類型',
+  status int(3) null comment '狀態1-已使用2-未使用',
+  create_time datetime null comment '創建時間',
+  use_time datetime null comment '使用時間',
+  primary key(card_no)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '卡密表';
+
+
 
