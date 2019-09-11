@@ -1,6 +1,5 @@
 package com.chockwa.beauty.service;
 
-import cn.hutool.core.date.DateUtil;
 import com.chockwa.beauty.entity.Card;
 import com.chockwa.beauty.entity.User;
 import com.chockwa.beauty.entity.UserInfo;
