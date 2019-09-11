@@ -13,6 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @TableName("sys_card")
 public class Card {
 
