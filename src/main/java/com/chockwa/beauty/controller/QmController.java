@@ -7,8 +7,14 @@ import com.chockwa.beauty.entity.QmInfo;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.CommentService;
 import com.chockwa.beauty.service.QmService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @auther: zhuohuahe
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("qm")
+@Slf4j
 public class QmController extends BaseController{
 
     @Autowired
@@ -34,6 +41,25 @@ public class QmController extends BaseController{
     @GetMapping("info")
     public Result qmInfo(String qmId){
         return Result.SUCCESS().setData("info", qmService.getQmInfo(qmId));
+    }
+
+    @RateLimit(fallback = "fallBack")
+    @PostMapping("info-comment")
+    public Result qmInfoWithComment(String qmId, PageParam pageParam){
+        Map<String, Object> data = new HashMap<>(2);
+        CompletableFuture future1 = CompletableFuture.supplyAsync(() -> qmService.getQmInfo(qmId));
+        CompletableFuture future2 = CompletableFuture.supplyAsync(() -> commentService.selectCommentPage(qmId, pageParam));
+        CompletableFuture.allOf(future1, future2).join();
+        try {
+            data.put("info", future1.get());
+            data.put("comments", future2.get());
+        } catch (InterruptedException e) {
+            log.error("獲取qm信息和評論線程被打斷", e);
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            log.error("獲取qm信息和評論線程出現異常", e);
+        }
+        return Result.SUCCESS().setData("data", data);
     }
 
     @RateLimit(fallback = "fallBack")

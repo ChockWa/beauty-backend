@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @auther: zhuohuahe
@@ -42,8 +43,9 @@ public class QmService {
         qmInfoMapper.selectPage(infoIPage, new QueryWrapper<QmInfo>().lambda()
                 .eq(area != null, QmInfo::getArea, area)
                 .orderByDesc(QmInfo::getCreateTime));
+
         infoIPage.getRecords().forEach(e -> {
-            if(!UserInfo.get().getUid().equals(UID)){
+            if(setNullContact(UserInfo.get().getUid(), e.getId())){
                 e.setContact(null);
             }
         });
@@ -58,15 +60,19 @@ public class QmService {
         if(qm == null){
             throw new IllegalStateException("QM信息不存在");
         }
-        User user = userMapper.selectById(UserInfo.get().getUid());
-        boolean isVip  = user.getVipEndTime() == null || new Date().after(user.getVipEndTime()) ? false : true;
-        if(!isVip ||
-                (qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
-                        .eq(QmBuyLog::getUid, UserInfo.get().getUid())
-                        .eq(QmBuyLog::getQmId, qmId)).isEmpty())){
+
+        if(setNullContact(UserInfo.get().getUid(), qmId)){
             qm.setContact(null);
         }
         return qm;
+    }
+
+    private boolean setNullContact(String uid, String qmId){
+        User user = userMapper.selectById(uid);
+        boolean isVip  = user.getVipEndTime() == null || new Date().after(user.getVipEndTime()) ? false : true;
+        return !isVip || (qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
+                .eq(QmBuyLog::getUid, UserInfo.get().getUid())
+                .eq(QmBuyLog::getQmId, qmId)).isEmpty());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -103,6 +109,18 @@ public class QmService {
     public void deleteQm(String qmId){
         qmInfoMapper.deleteById(qmId);
         qmCommentMapper.delete(new UpdateWrapper<QmComment>().lambda().eq(QmComment::getQmId, qmId));
+    }
+
+    public List<QmInfo> getNewerQms(){
+        QueryWrapper<QmInfo> query = new QueryWrapper<>();
+        query.lambda().orderByDesc(QmInfo::getCreateTime).last("limit " + 1 + "," + 5);
+        List<QmInfo> qmInfos = qmInfoMapper.selectList(query);
+        qmInfos.forEach(e -> {
+            if(setNullContact(UserInfo.get().getUid(), e.getId())){
+                e.setContact(null);
+            }
+        });
+        return qmInfos;
     }
 
     public static void main(String[] args) {

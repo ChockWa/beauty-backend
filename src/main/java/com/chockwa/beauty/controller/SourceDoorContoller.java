@@ -2,8 +2,10 @@ package com.chockwa.beauty.controller;
 
 import com.chockwa.beauty.annotation.RateLimit;
 import com.chockwa.beauty.dto.PageParam;
+import com.chockwa.beauty.entity.QmInfo;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.entity.Source;
+import com.chockwa.beauty.service.QmService;
 import com.chockwa.beauty.service.SourceDetailService;
 import com.chockwa.beauty.service.SourceService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,27 +34,30 @@ public class SourceDoorContoller extends BaseController{
     @Autowired
     private SourceDetailService sourceDetailService;
 
+    @Autowired
+    private QmService qmService;
+
 
     @RateLimit(fallback = "fallBack")
     @GetMapping("index")
-    public Result getIndexData() throws InterruptedException {
+    public Result getIndexData() {
         CompletableFuture<List<Source>> newerFuture = CompletableFuture.supplyAsync(() -> sourceService.getIndexSource(1,8));
         CompletableFuture<List<Source>> olderFuture = CompletableFuture.supplyAsync(() -> sourceService.getIndexSource(20,8));
-        CompletableFuture<List<Source>> hotestFuture = CompletableFuture.supplyAsync(() -> sourceService.getHotestSourceList(1,10));
-        CompletableFuture.allOf(newerFuture, olderFuture, hotestFuture).join();
+        CompletableFuture<List<Source>> hotestFuture = CompletableFuture.supplyAsync(() -> sourceService.getHotestSourceList(1,5));
+        CompletableFuture<List<QmInfo>> newerQmsFuture = CompletableFuture.supplyAsync(() -> qmService.getNewerQms());
+        CompletableFuture.allOf(newerFuture, olderFuture, hotestFuture, newerQmsFuture).join();
         try {
-            List<Source> hotest = hotestFuture.get();
             return Result.SUCCESS().setData("newers", newerFuture.get())
                     .setData("olders", olderFuture.get())
-                    .setData("hotests1", hotest.size() < 5 ? hotest.subList(0, hotest.size()) : hotest.subList(0, 5))
-                    .setData("hotests2", hotest.size() < 5 ? hotest.subList(0, hotest.size()) : hotest.subList(5, hotest.size()));
+                    .setData("hotests", hotestFuture.get())
+                    .setData("newerQms", newerQmsFuture.get());
         } catch (InterruptedException e) {
             log.error("thread was interrupted", e);
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
             log.error("get source error!", e);
         }
-        return Result.FAIL(9999, "get source error");
+        return Result.FAIL(9999, "獲取資源失敗，請稍後刷新重試");
     }
 
     @RateLimit(fallback = "fallBack")

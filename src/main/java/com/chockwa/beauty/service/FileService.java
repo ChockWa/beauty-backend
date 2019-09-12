@@ -154,8 +154,8 @@ public class FileService {
             Source source = expainDescFile(descFile, Source.class);
             String sourceDirName = String.valueOf(System.currentTimeMillis());
             List<SourceDetail> sourceDetails = uploadFiles(sourceDirName, files);
-            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), sourceDirName, sourceDirName + "/origin"));
-            source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + sourceDirName + ".zip");
+//            taskExecutor.execute(() -> genZip(UPLOAD_FILE_ROOT_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()), sourceDirName, sourceDirName + "/origin"));
+//            source.setZipDownloadLink(DNS_HTTPS + "/zip/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + sourceDirName + ".zip");
             source.setCover(sourceDetails.get(0).getThumbImage());
             AddSourceDto addSourceDto = new AddSourceDto();
             addSourceDto.setSource(source);
