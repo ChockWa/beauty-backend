@@ -1,5 +1,6 @@
 package com.chockwa.beauty.controller;
 
+import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,16 @@ public class UserController {
     @GetMapping("info")
     public Result getUser(){
         return Result.SUCCESS().setData("info", userService.getUser());
+    }
+
+    @GetMapping("users")
+    public Result getUserListPage(String userName, PageParam pageParam){
+        return Result.SUCCESS().setData("data", userService.getUserListPage(userName, pageParam));
+    }
+
+    @GetMapping("addCoin")
+    public Result addCoin(String uid, Integer coin){
+        userService.addCoin(uid, coin);
+        return Result.SUCCESS();
     }
 }
