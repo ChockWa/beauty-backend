@@ -51,4 +51,20 @@ public class CardService {
         cardMapper.updateById(card);
     }
 
+    public void addCard(String cardNo, Integer type){
+        if(StringUtils.isBlank(cardNo) || type == null){
+            throw new IllegalArgumentException("參數有誤");
+        }
+        Card card = new Card();
+        card.setCardNo(cardNo);
+        card.setType(type);
+        card.setCreateTime(new Date());
+        card.setStatus(1);
+        cardMapper.insert(card);
+    }
+
+    public void deleteCard(String cardNo){
+        cardMapper.deleteById(cardNo);
+    }
+
 }

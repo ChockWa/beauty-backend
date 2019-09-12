@@ -25,4 +25,16 @@ public class CardController extends BaseController{
         cardService.useCard(chargeInfo.getCardNo(), chargeInfo.getType());
         return Result.SUCCESS();
     }
+
+    @GetMapping("add")
+    public Result add(String cardNo, Integer type){
+        cardService.addCard(cardNo, type);
+        return Result.SUCCESS();
+    }
+
+    @GetMapping("delete")
+    public Result delete(String cardNo){
+        cardService.deleteCard(cardNo);
+        return Result.SUCCESS();
+    }
 }
