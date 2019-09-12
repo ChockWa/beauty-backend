@@ -1,5 +1,9 @@
 package com.chockwa.beauty.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chockwa.beauty.dto.PageParam;
+import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.Card;
 import com.chockwa.beauty.entity.User;
 import com.chockwa.beauty.entity.UserInfo;
@@ -49,6 +53,15 @@ public class CardService {
         card.setUseTime(new Date());
         card.setUid(user.getUid());
         cardMapper.updateById(card);
+    }
+
+    public PageResult<Card> getCardsPage(String cardNo, PageParam pageParam){
+        Page<Card> page = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
+        cardMapper.selectPage(page, new QueryWrapper<Card>().lambda().eq(StringUtils.isNotBlank(cardNo), Card::getCardNo, cardNo).orderByDesc(Card::getCreateTime));
+        PageResult<Card> result = new PageResult<>();
+        result.setRecords(page.getRecords());
+        result.setTotal(page.getTotal());
+        return result;
     }
 
     public void addCard(String cardNo, Integer type){

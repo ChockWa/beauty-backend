@@ -51,7 +51,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             // QM相關
             .add("/qm/comment").add("/qm/bQm").add("/qm/qms").add("/qm/info").add("/qm/info-comment")
             // 卡相關
-            .add("/card/charge").add("/card/add").add("/card/delete")
+            .add("/card/charge").add("/card/add").add("/card/delete").add("/card/cards")
             .build();
 
     @Override

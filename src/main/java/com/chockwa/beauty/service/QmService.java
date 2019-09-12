@@ -13,6 +13,7 @@ import com.chockwa.beauty.mapper.QmCommentMapper;
 import com.chockwa.beauty.mapper.QmInfoMapper;
 import com.chockwa.beauty.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,9 @@ import java.util.List;
 public class QmService {
 
     private static final String UID = "91a96c4621974583b987c8b72f2f9ed4";
+
+    @Value("${dns.api-https}")
+    private String DNS_HTTPS;
 
     @Autowired
     private QmInfoMapper qmInfoMapper;
@@ -116,9 +120,8 @@ public class QmService {
         query.lambda().orderByDesc(QmInfo::getCreateTime).last("limit " + 1 + "," + 5);
         List<QmInfo> qmInfos = qmInfoMapper.selectList(query);
         qmInfos.forEach(e -> {
-            if(setNullContact(UserInfo.get().getUid(), e.getId())){
-                e.setContact(null);
-            }
+            e.setContact(null);
+            e.setCover(DNS_HTTPS + e.getCover());
         });
         return qmInfos;
     }
