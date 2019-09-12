@@ -42,27 +42,16 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private static final ImmutableSet<String> NEED_CHECK_LOGIN_URIS = ImmutableSet.<String>builder()
             // 一鍵上傳
             .add("/file/oneUpload")
-            // 後台獲取資源詳情
-            .add("/source/getSourceDetail")
-            // 後台刪除資源
-            .add("/source/delete")
-            // 後台保存資源
-            .add("/source/save")
-            // 門戶搜索資源
-            .add("/door/search")
-            // 門戶下載資源
-            .add("/door/download")
-            // 簽到
-            .add("/user/sign")
-            // 用戶信息
-            .add("/user/info")
-            // 評論
-            .add("/qm/comment")
-            // 購買
-            .add("/qm/bQm")
-            .add("/qm/qms")
-            .add("/qm/info")
-            .add("/card/charge")
+            // 後台資源相關
+            .add("/source/getSourceDetail").add("/source/delete").add("/source/save")
+            // 門戶相關
+            .add("/door/search").add("/door/download")
+            // 用戶相關
+            .add("/user/sign").add("/user/info").add("/user/users").add("/user/addCoin")
+            // QM相關
+            .add("/qm/comment").add("/qm/bQm").add("/qm/qms").add("/qm/info")
+            // 卡相關
+            .add("/card/charge").add("/card/add").add("/card/delete")
             .build();
 
     @Override
