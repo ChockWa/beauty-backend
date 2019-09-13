@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.*;
+import com.chockwa.beauty.exception.BizException;
 import com.chockwa.beauty.mapper.QmBugLogMapper;
 import com.chockwa.beauty.mapper.QmCommentMapper;
 import com.chockwa.beauty.mapper.QmInfoMapper;
@@ -62,9 +63,9 @@ public class QmService {
     public QmInfo getQmInfo(String qmId){
         QmInfo qm = qmInfoMapper.selectById(qmId);
         if(qm == null){
-            throw new IllegalStateException("QM信息不存在");
+            throw new BizException("QM信息不存在");
         }
-
+        User user = UserInfo.get();
         if(setNullContact(UserInfo.get().getUid(), qmId)){
             qm.setContact(null);
         }
