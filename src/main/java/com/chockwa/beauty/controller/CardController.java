@@ -2,6 +2,7 @@ package com.chockwa.beauty.controller;
 
 import com.chockwa.beauty.annotation.RateLimit;
 import com.chockwa.beauty.dto.ChargeInfo;
+import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class CardController extends BaseController{
     public Result charge(@RequestBody ChargeInfo chargeInfo){
         cardService.useCard(chargeInfo.getCardNo(), chargeInfo.getType());
         return Result.SUCCESS();
+    }
+
+    @GetMapping("cards")
+    public Result getCardsPage(String cardNo, PageParam pageParam){
+        return Result.SUCCESS().setData("cards", cardService.getCardsPage(cardNo, pageParam));
     }
 
     @GetMapping("add")
