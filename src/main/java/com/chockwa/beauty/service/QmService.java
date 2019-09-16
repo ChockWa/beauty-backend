@@ -49,8 +49,21 @@ public class QmService {
                 .eq(area != null, QmInfo::getArea, area)
                 .orderByDesc(QmInfo::getCreateTime));
 
+        infoIPage.getRecords().forEach(e -> e.setContact(null));
+        PageResult<QmInfo> result = new PageResult<>();
+        result.setRecords(infoIPage.getRecords());
+        result.setTotal(infoIPage.getTotal());
+        return result;
+    }
+
+    public PageResult<QmInfo> selectQmMgmtPage(PageParam pageParam, Integer area){
+        IPage<QmInfo> infoIPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
+        qmInfoMapper.selectPage(infoIPage, new QueryWrapper<QmInfo>().lambda()
+                .eq(area != null, QmInfo::getArea, area)
+                .orderByDesc(QmInfo::getCreateTime));
+
         infoIPage.getRecords().forEach(e -> {
-            if(setNullContact(UserInfo.get().getUid(), e.getId())){
+            if(!UID.equals(UserInfo.get().getUid())){
                 e.setContact(null);
             }
         });
@@ -59,6 +72,7 @@ public class QmService {
         result.setTotal(infoIPage.getTotal());
         return result;
     }
+
 
     public QmInfo getQmInfo(String qmId){
         QmInfo qm = qmInfoMapper.selectById(qmId);

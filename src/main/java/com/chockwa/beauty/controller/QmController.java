@@ -37,6 +37,11 @@ public class QmController extends BaseController{
         return Result.SUCCESS().setData("qms", qmService.selectQmPage(pageParam, area));
     }
 
+    @GetMapping("qmsMgmt")
+    public Result qmsMgmt(PageParam pageParam, @RequestParam(required = false) Integer area){
+        return Result.SUCCESS().setData("qms", qmService.selectQmMgmtPage(pageParam, area));
+    }
+
     @RateLimit(fallback = "fallBack")
     @GetMapping("info")
     public Result qmInfo(String qmId){
