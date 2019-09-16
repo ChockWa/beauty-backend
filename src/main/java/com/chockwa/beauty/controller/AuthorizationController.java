@@ -62,6 +62,12 @@ public class AuthorizationController extends BaseController {
         }
     }
 
+    @RateLimit(fallback = "fallBack")
+    @GetMapping("auth")
+    public Result auth(){
+        return Result.SUCCESS();
+    }
+
     public static void main(String[] args) {
         String salt = UUIDUtils.getUuid();
         System.out.println(salt);
