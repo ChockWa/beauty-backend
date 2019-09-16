@@ -1,10 +1,8 @@
 package com.chockwa.beauty.service;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.chockwa.beauty.common.utils.ImageUtils;
-import com.chockwa.beauty.common.utils.UUIDUtils;
 import com.chockwa.beauty.common.utils.ZipUtils;
 import com.chockwa.beauty.dto.AddSourceDto;
 import com.chockwa.beauty.dto.UploadResponse;
@@ -19,17 +17,13 @@ import com.github.tobato.fastdfs.service.TrackerClient;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-import sun.text.resources.cldr.ii.FormatData_ii;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -337,6 +331,7 @@ public class FileService {
                 }
                 imageUrls.add(upload(qmFile, fileDirFileName));
             }
+            qmInfo.setCover(imageUrls.get(0));
             qmInfo.setImage(imageUrls.stream().collect(Collectors.joining(",")));
             qmInfo.setCreateTime(new Date());
             qmInfos.add(qmInfo);
