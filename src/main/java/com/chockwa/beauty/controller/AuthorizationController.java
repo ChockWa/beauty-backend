@@ -34,6 +34,7 @@ public class AuthorizationController extends BaseController {
     @Autowired
     private RedisUtils redisUtils;
 
+    @RateLimit(fallback = "fallBack")
     @PostMapping("login")
     public Result login(@RequestBody LoginDto loginDto){
         authorizationService.checkVerifyCode(loginDto.getUuid(), loginDto.getVerifyCode());
@@ -41,6 +42,7 @@ public class AuthorizationController extends BaseController {
                 .setData("userName", loginDto.getUserName());
     }
 
+    @RateLimit(fallback = "fallBack")
     @PostMapping("register")
     public Result register(@RequestBody RegisterDto registerDto){
         authorizationService.checkVerifyCode(registerDto.getUuid(), registerDto.getVerifyCode());
