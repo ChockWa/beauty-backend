@@ -43,4 +43,10 @@ public class CardController extends BaseController{
         cardService.deleteCard(cardNo);
         return Result.SUCCESS();
     }
+
+//    @GetMapping("genCard")
+//    public Result genCard(Integer type, Integer count){
+//        cardService.genCard(type, count);
+//        return Result.SUCCESS();
+//    }
 }

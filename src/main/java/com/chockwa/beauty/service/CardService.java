@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.Date;
+import java.util.Random;
 
 @Service
 public class CardService {
@@ -78,6 +80,44 @@ public class CardService {
 
     public void deleteCard(String cardNo){
         cardMapper.deleteById(cardNo);
+    }
+
+    public void genCard(Integer type, Integer count){
+        for(int i=0;i<count;i++){
+            Card card = new Card();
+            card.setStatus(1);
+            card.setCardNo(getGUID());
+            card.setCreateTime(new Date());
+            card.setType(type);
+            cardMapper.insert(card);
+        }
+    }
+
+    private String getGUID() {
+        StringBuilder uid = new StringBuilder();
+        //产生16位的强随机数
+        Random rd = new SecureRandom();
+        for (int i = 0; i < 12; i++) {
+            //产生0-2的3位随机数
+            int type = rd.nextInt(3);
+            switch (type){
+                case 0:
+                    //0-9的随机数
+                    uid.append(rd.nextInt(10));
+                    break;
+                case 1:
+                    //ASCII在65-90之间为大写,获取大写随机
+                    uid.append((char)(rd.nextInt(25)+65));
+                    break;
+                case 2:
+                    //ASCII在97-122之间为小写，获取小写随机
+                    uid.append((char)(rd.nextInt(25)+97));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return uid.toString();
     }
 
 }

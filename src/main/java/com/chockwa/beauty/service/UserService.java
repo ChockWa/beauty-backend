@@ -44,17 +44,7 @@ public class UserService {
         if(Objects.nonNull(user.getLastSignTime()) && DateUtils.isSameDay(now, user.getLastSignTime())){
             throw new IllegalStateException("今天已簽到過，請明天再來");
         }
-        if(Objects.nonNull(user.getLastSignTime()) && DateUtils.isSameDay(DateUtils.addDays(user.getLastSignTime(),1), now)){
-            user.setSignCount(user.getSignCount() + 1);
-            if(user.getSignCount() > 3){
-                user.setCoin(user.getCoin() + CONTINUITY_SIGN_COIN_DEFAULT);
-            }else{
-                user.setCoin(user.getCoin() + SIGN_COIN_DEFAULT);
-            }
-        }else{
-            user.setSignCount(1);
-            user.setCoin(user.getCoin() + SIGN_COIN_DEFAULT);
-        }
+        user.setCoin(user.getCoin() + SIGN_COIN_DEFAULT);
         user.setLastSignTime(now);
         userMapper.updateById(user);
 
