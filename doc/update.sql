@@ -126,7 +126,7 @@ create table sys_qm_info(
   id varchar(64) not null comment 'id',
   area int(2) null comment '地區',
   name varchar(64) null comment '名稱',
-  description varchar(512) comment '描述',
+  description varchar(256) comment '描述',
   cover varchar(128) null comment '封面',
   image varchar(1024) comment '图片',
   contact varchar(128) null comment '聯繫方式',
@@ -179,6 +179,20 @@ create table sys_card (
   use_time datetime null comment '使用時間',
   primary key(card_no)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '卡密表';
+
+create table sys_qm_confirm(
+  id varchar(36) null comment 'qmid',
+  uid varchar(36) null comment 'uid',
+  area int(2) null comment '地區',
+  name varchar(64) null comment '名稱',
+  description varchar(256) comment '描述',
+  cover varchar(128) null comment '封面',
+  image varchar(1024) comment '图片',
+  contact varchar(128) null comment '聯繫方式',
+  status int(1) null comment '審核狀態1-通過0-待審核-1不通過',
+  create_time datetime null comment '創建時間',
+  primary key(uid)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用戶上傳qm表';
 
 
 
