@@ -1,5 +1,6 @@
 package com.chockwa.beauty.controller;
 
+import com.chockwa.beauty.annotation.RateLimit;
 import com.chockwa.beauty.dto.UploadResponse;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.FileService;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("file")
 @Slf4j
-public class FileController {
+public class FileController extends BaseController {
 
     // 預上傳文件路徑
     private static final String PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/files/";
@@ -48,6 +49,7 @@ public class FileController {
      * @param file
      * @return
      */
+    @RateLimit(fallback = "fallBack")
     @PostMapping("upload")
     public Result upload(@RequestParam("file")MultipartFile file){
         String fileDirFileName = String.valueOf(System.currentTimeMillis());
