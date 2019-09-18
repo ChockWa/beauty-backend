@@ -135,7 +135,7 @@ public class SourceService {
         List<SourceHot> sourceHots = sourceHotMapper.selectList(new QueryWrapper<SourceHot>().lambda().orderByDesc(SourceHot::getCount).last("limit " + pageIndex + "," + pageSize));
         List<String> sourceIds = sourceHots.stream().map(m -> m.getSourceId()).collect(Collectors.toList());
         if(CollectionUtils.isEmpty(sourceIds)){
-            return getIndexSource(1,10);
+            return getIndexSource(1,5);
         }
         List<Source> hotests = sourceMapper.selectList(new QueryWrapper<Source>().lambda().in(Source::getId, sourceIds));
         hotests.forEach(e -> {
