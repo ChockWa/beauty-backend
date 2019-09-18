@@ -117,6 +117,7 @@ public class QmService {
 
     public void addQm(QmInfo qmInfo){
         qmInfo.setCreateTime(new Date());
+        qmInfo.setCover(qmInfo.getImage().split(",")[0]);
         qmInfoMapper.insert(qmInfo);
     }
 
