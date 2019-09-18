@@ -6,10 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.QmConfirm;
+import com.chockwa.beauty.entity.QmInfo;
+import com.chockwa.beauty.entity.User;
 import com.chockwa.beauty.entity.UserInfo;
 import com.chockwa.beauty.mapper.QmConfirmMapper;
+import com.chockwa.beauty.mapper.QmInfoMapper;
+import com.chockwa.beauty.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -23,6 +28,10 @@ public class QmConfirmService {
 
     @Autowired
     private QmConfirmMapper qmConfirmMapper;
+    @Autowired
+    private QmInfoMapper qmInfoMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     public void add(QmConfirm qmConfirm){
         Assert.notNull(qmConfirm, "QM信息不能為空");
@@ -47,13 +56,32 @@ public class QmConfirmService {
         return result;
     }
 
-    public void verify(String qmId, Integer status){
+    @Transactional(rollbackFor = Exception.class)
+    public void verify(String qmId, Integer status, Integer price){
         Assert.notNull(qmId, "QmId不能為空");
         Assert.notNull(status, "審核狀態不能為空");
-        QmConfirm qmConfirm = new QmConfirm();
-        qmConfirm.setId(qmId);
+        QmConfirm qmConfirm = qmConfirmMapper.selectById(qmId);
         qmConfirm.setStatus(status);
         qmConfirmMapper.updateById(qmConfirm);
+
+        if(1 == status){
+            QmInfo qmInfo = new QmInfo();
+            qmInfo.setCover(qmConfirm.getCover());
+            qmInfo.setContact(qmConfirm.getContact());
+            qmInfo.setDescription(qmInfo.getDescription());
+            qmInfo.setName(qmInfo.getName());
+            qmInfo.setArea(qmConfirm.getArea());
+            qmInfo.setScore("9.2");
+            qmInfo.setPrice(price);
+            qmInfo.setCreateTime(new Date());
+            qmInfo.setImage(qmConfirm.getImage());
+            qmInfo.setId(qmConfirm.getId());
+            qmInfoMapper.insert(qmInfo);
+
+            User user = userMapper.selectById(qmConfirm.getUid());
+            user.setCoin(user.getCoin()+15);
+            userMapper.updateById(user);
+        }
     }
 
     public void delete(String qmId){
