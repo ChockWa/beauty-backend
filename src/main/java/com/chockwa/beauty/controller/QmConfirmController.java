@@ -33,8 +33,8 @@ public class QmConfirmController extends BaseController {
     }
 
     @GetMapping("verify")
-    public Result verify(String qmId, Integer status){
-        qmConfirmService.verify(qmId, status);
+    public Result verify(String qmId, Integer status, Integer price){
+        qmConfirmService.verify(qmId, status, price);
         return Result.SUCCESS();
     }
 
