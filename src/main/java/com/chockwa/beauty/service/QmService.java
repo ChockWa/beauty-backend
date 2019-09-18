@@ -133,7 +133,7 @@ public class QmService {
 
     public List<QmInfo> getNewerQms(){
         QueryWrapper<QmInfo> query = new QueryWrapper<>();
-        query.lambda().orderByDesc(QmInfo::getCreateTime).last("limit " + 1 + "," + 5);
+        query.lambda().orderByDesc(QmInfo::getCreateTime).last("limit " + 1 + "," + 4);
         List<QmInfo> qmInfos = qmInfoMapper.selectList(query);
         qmInfos.forEach(e -> {
             e.setContact(null);
