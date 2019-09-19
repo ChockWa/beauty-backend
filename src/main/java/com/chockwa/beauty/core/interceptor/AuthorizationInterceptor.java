@@ -41,7 +41,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
      */
     private static final ImmutableSet<String> NEED_CHECK_LOGIN_URIS = ImmutableSet.<String>builder()
             // 一鍵上傳
-            .add("/file/oneUpload").add("/file/upload")
+            .add("/file/oneUpload").add("/file/upload").add("/file/uploadQm")
             // 後台資源相關
             .add("/source/getSourceDetail").add("/source/delete").add("/source/save")
             // 門戶相關
