@@ -334,6 +334,7 @@ public class FileService {
             qmInfo.setCover(imageUrls.get(0));
             qmInfo.setImage(imageUrls.stream().collect(Collectors.joining(",")));
             qmInfo.setCreateTime(new Date());
+            qmInfo.setScore("9.3");
             qmInfos.add(qmInfo);
         }
         for(QmInfo qmInfo : qmInfos){
