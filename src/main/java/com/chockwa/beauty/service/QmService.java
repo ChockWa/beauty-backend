@@ -117,6 +117,7 @@ public class QmService {
 
     public void addQm(QmInfo qmInfo){
         qmInfo.setCreateTime(new Date());
+        qmInfo.setCover(qmInfo.getImage().split(",")[0]);
         qmInfoMapper.insert(qmInfo);
     }
 
@@ -131,14 +132,15 @@ public class QmService {
     }
 
     public List<QmInfo> getNewerQms(){
+        Page<QmInfo> page = new Page<>(1,5);
         QueryWrapper<QmInfo> query = new QueryWrapper<>();
-        query.lambda().orderByDesc(QmInfo::getCreateTime).last("limit " + 1 + "," + 5);
-        List<QmInfo> qmInfos = qmInfoMapper.selectList(query);
-        qmInfos.forEach(e -> {
+        query.lambda().orderByDesc(QmInfo::getCreateTime);
+        qmInfoMapper.selectPage(page, query);
+        page.getRecords().forEach(e -> {
             e.setContact(null);
             e.setCover(DNS_HTTPS + e.getCover());
         });
-        return qmInfos;
+        return page.getRecords();
     }
 
     public static void main(String[] args) {

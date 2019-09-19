@@ -246,7 +246,7 @@ public class FileService {
         Map<String, Object> paramMap = new HashMap<>(4);
         paramMap.put("file", descText);
         paramMap.put("output","json");
-        paramMap.put("path", "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
+        paramMap.put("path", "/tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
         paramMap.put("scene","");
         String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
     }

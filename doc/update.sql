@@ -127,7 +127,7 @@ create table sys_qm_info(
   area int(2) null comment '地區',
   name varchar(64) null comment '名稱',
   description varchar(256) comment '描述',
-  cover varchar(128) null comment '封面',
+  cover varchar(200) null comment '封面',
   image varchar(1024) comment '图片',
   contact varchar(128) null comment '聯繫方式',
   score varchar(4) null comment '熱度',
