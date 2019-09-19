@@ -79,7 +79,6 @@ public class QmService {
         if(qm == null){
             throw new BizException("QM信息不存在");
         }
-        User user = UserInfo.get();
         if(setNullContact(UserInfo.get().getUid(), qmId)){
             qm.setContact(null);
         }
