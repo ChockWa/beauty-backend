@@ -88,7 +88,7 @@ public class QmService {
     private boolean setNullContact(String uid, String qmId){
         User user = userMapper.selectById(uid);
         boolean isVip  = user.getVipEndTime() == null || new Date().after(user.getVipEndTime()) ? false : true;
-        return !isVip || (qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
+        return (!isVip) && (qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()
                 .eq(QmBuyLog::getUid, UserInfo.get().getUid())
                 .eq(QmBuyLog::getQmId, qmId)).isEmpty());
     }
