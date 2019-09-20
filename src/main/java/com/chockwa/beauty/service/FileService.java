@@ -324,8 +324,8 @@ public class FileService {
             File descFile = Arrays.stream(qmFiles).filter(f -> f.getName().contains(".txt")).findFirst().orElse(null);
             if(descFile == null){continue;}
             QmInfo qmInfo = expainDescFile(descFile, QmInfo.class);
+            String fileDirFileName = String.valueOf(System.currentTimeMillis());
             for(File qmFile : qmFiles){
-                String fileDirFileName = String.valueOf(System.currentTimeMillis());
                 if(qmFile.getName().contains(".txt")){
                     continue;
                 }
