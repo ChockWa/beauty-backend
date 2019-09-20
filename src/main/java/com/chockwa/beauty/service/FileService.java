@@ -291,6 +291,7 @@ public class FileService {
         File newFile = new File(QM_UPLOAD_BASE_PATH + newFilePath);
         try {
             FileUtils.copyFile(file, newFile);
+            log.info("上傳qm圖片:{}", newFilePath);
             return newFilePath;
         } catch (IOException e) {
             log.error("文件複製失敗:{}", file.getAbsolutePath(), e);
