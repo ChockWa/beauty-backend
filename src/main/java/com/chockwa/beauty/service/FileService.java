@@ -292,7 +292,7 @@ public class FileService {
         try {
             FileUtils.copyFile(file, newFile);
             log.info("上傳qm圖片:{}", newFilePath);
-            return newFilePath;
+            return "/qm" + newFilePath;
         } catch (IOException e) {
             log.error("文件複製失敗:{}", file.getAbsolutePath(), e);
         }
