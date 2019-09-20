@@ -318,13 +318,13 @@ public class FileService {
         File sourceDir = new File(prepareFilePath);
         File[] files = sourceDir.listFiles();
         List<QmInfo> qmInfos = new ArrayList<>();
-        List<String> imageUrls = Lists.newArrayList();
         for(File file : files){
             File[] qmFiles = file.listFiles();
             File descFile = Arrays.stream(qmFiles).filter(f -> f.getName().contains(".txt")).findFirst().orElse(null);
             if(descFile == null){continue;}
             QmInfo qmInfo = expainDescFile(descFile, QmInfo.class);
             String fileDirFileName = String.valueOf(System.currentTimeMillis());
+            List<String> imageUrls = new ArrayList<>(3);
             for(File qmFile : qmFiles){
                 if(qmFile.getName().contains(".txt")){
                     continue;
