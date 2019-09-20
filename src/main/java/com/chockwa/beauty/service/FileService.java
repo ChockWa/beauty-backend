@@ -1,5 +1,6 @@
 package com.chockwa.beauty.service;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.chockwa.beauty.common.utils.ImageUtils;
@@ -37,6 +38,8 @@ import java.util.stream.Collectors;
 public class FileService {
 
     private static final String UPLOAD_FILE_ROOT_PATH = "/usr/local/go-fastdfs/files/";
+
+    private static final String QM_UPLOAD_BASE_PATH = "/files/qms";
 
     @Value("${thumb-image.width}")
     private int thumbWidth;
@@ -282,6 +285,19 @@ public class FileService {
         return uploadResult.getPath();
     }
 
+    public String uploadCustom(File file, String fileDirName){
+        String newFilePath = "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/"
+                + fileDirName + "/" + file.getName();
+        File newFile = new File(QM_UPLOAD_BASE_PATH + newFilePath);
+        try {
+            FileUtils.copyFile(file, newFile);
+            return newFilePath;
+        } catch (IOException e) {
+            log.error("文件複製失敗:{}", file.getAbsolutePath(), e);
+        }
+        return null;
+    }
+
     public String upload(MultipartFile multipartFile, String fileDirName){
         HashMap<String, Object> paramMap = new HashMap<>(4);
         File file = convertToFile(multipartFile);
@@ -329,7 +345,7 @@ public class FileService {
                 if(qmFile.getName().contains(".txt")){
                     continue;
                 }
-                imageUrls.add(upload(qmFile, fileDirFileName));
+                imageUrls.add(uploadCustom(qmFile, fileDirFileName));
             }
             qmInfo.setCover(imageUrls.get(0));
             qmInfo.setImage(imageUrls.stream().collect(Collectors.joining(",")));
