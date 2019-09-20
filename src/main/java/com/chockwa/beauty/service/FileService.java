@@ -286,7 +286,7 @@ public class FileService {
     }
 
     public String uploadCustom(File file, String fileDirName){
-        String newFilePath = "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/"
+        String newFilePath = "/qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/"
                 + fileDirName + "/" + file.getName();
         File newFile = new File(QM_UPLOAD_BASE_PATH + newFilePath);
         try {
