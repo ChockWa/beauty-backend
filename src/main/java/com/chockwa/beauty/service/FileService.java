@@ -199,7 +199,7 @@ public class FileService {
             HashMap<String, Object> paramMap = new HashMap<>();
             paramMap.put("file", file);
             paramMap.put("output","json");
-            paramMap.put("path", "/tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
+            paramMap.put("path", "tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
             paramMap.put("scene","image");
             String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
@@ -213,7 +213,7 @@ public class FileService {
             ImageUtils.cutImageAndGenThumb(thumbFile, thumbFile, 210, 300);
             paramMap.put("file", thumbFile);
             paramMap.put("output","json");
-            paramMap.put("path", "/tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/thumb");
+            paramMap.put("path", "tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/thumb");
             paramMap.put("scene","image");
             String thumbResult= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
             UploadResult thumbUploadResult = JSON.parseObject(thumbResult, UploadResult.class);
@@ -246,7 +246,7 @@ public class FileService {
         Map<String, Object> paramMap = new HashMap<>(4);
         paramMap.put("file", descText);
         paramMap.put("output","json");
-        paramMap.put("path", "/tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
+        paramMap.put("path", "tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
         paramMap.put("scene","");
         String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
     }
@@ -274,7 +274,7 @@ public class FileService {
         HashMap<String, Object> paramMap = new HashMap<>(4);
         paramMap.put("file", file);
         paramMap.put("output","json");
-        paramMap.put("path", "/qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
+        paramMap.put("path", "qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
         paramMap.put("scene","image");
         String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
         UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
@@ -287,7 +287,7 @@ public class FileService {
         File file = convertToFile(multipartFile);
         paramMap.put("file", file);
         paramMap.put("output","json");
-        paramMap.put("path", "/qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
+        paramMap.put("path", "qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
         paramMap.put("scene","image");
         String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
         UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
