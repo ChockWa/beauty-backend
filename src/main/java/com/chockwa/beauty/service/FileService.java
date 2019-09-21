@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.chockwa.beauty.common.utils.ImageUtils;
+import com.chockwa.beauty.common.utils.UUIDUtils;
 import com.chockwa.beauty.common.utils.ZipUtils;
 import com.chockwa.beauty.dto.AddSourceDto;
 import com.chockwa.beauty.dto.UploadResponse;
@@ -40,6 +41,8 @@ public class FileService {
     private static final String UPLOAD_FILE_ROOT_PATH = "/usr/local/go-fastdfs/files/";
 
     private static final String QM_UPLOAD_BASE_PATH = "/files/qms";
+
+    private static final String TT_UPLOAD_BASE_PATH = "/files/tt";
 
     @Value("${thumb-image.width}")
     private int thumbWidth;
@@ -189,11 +192,12 @@ public class FileService {
             if(file.getName().contains(".txt")){
                 continue;
             }
-            sourceDetails.add(upload(fileDirName, file));
+            sourceDetails.add(uploadTT(fileDirName, file));
         }
-        // 生成描述文件并上传
-        File descFile = generateDescText(tempFiles[0].getAbsolutePath().substring(0, tempFiles[0].getAbsolutePath().lastIndexOf("/")+1));
-        uploadDescText(fileDirName, descFile);
+        // 生成描述文件
+        String descTextPath = TT_UPLOAD_BASE_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) +
+                "/" + fileDirName + "/origin/";
+        generateDescText(descTextPath);
         return sourceDetails;
     }
 
@@ -229,6 +233,30 @@ public class FileService {
         return null;
     }
 
+    public SourceDetail uploadTT(String fileDirName, File file){
+        String originFilePath = "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/"
+                + fileDirName + "/origin" + "/" + file.getName();
+        String thumbFilePath = "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/"
+                + fileDirName + "/thumb" + "/" + "thumb_" + file.getName();
+        File originFile = new File(TT_UPLOAD_BASE_PATH + originFilePath);
+        File thumbFile = new File(TT_UPLOAD_BASE_PATH + thumbFilePath);
+        try {
+            FileUtils.copyFile(file, originFile);
+            FileUtils.copyFile(file, thumbFile);
+            // 生成縮略圖
+            ImageUtils.cutImageAndGenThumb(thumbFile, thumbFile, 210, 300);
+        } catch (IOException e) {
+            log.error("文件複製失敗:{}", file.getAbsolutePath(), e);
+        }
+        // 生成詳情信息
+        SourceDetail detail = new SourceDetail();
+        detail.setThumbImage("/tt" + thumbFilePath);
+        detail.setPicUrl("/tt" + originFilePath);
+        detail.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
+        detail.setCreateTime(new Date());
+        return detail;
+    }
+
     public static void main(String[] args) throws IOException {
 //        generateDescText("E://");
     }
@@ -242,17 +270,17 @@ public class FileService {
         return file;
     }
 
-    private void uploadDescText(String fileDirName, File descText){
-        if(descText == null){
-            return;
-        }
-        Map<String, Object> paramMap = new HashMap<>(4);
-        paramMap.put("file", descText);
-        paramMap.put("output","json");
-        paramMap.put("path", "tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
-        paramMap.put("scene","");
-        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
-    }
+//    private void uploadDescText(String fileDirName, File descText){
+//        if(descText == null){
+//            return;
+//        }
+//        Map<String, Object> paramMap = new HashMap<>(4);
+//        paramMap.put("file", descText);
+//        paramMap.put("output","json");
+//        paramMap.put("path", "tt/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName + "/origin");
+//        paramMap.put("scene","");
+//        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
+//    }
 
     private SourceDetail genSourceDetail(File file, UploadResult result, UploadResult thumbResult){
         SourceDetail detail = new SourceDetail();
@@ -273,19 +301,19 @@ public class FileService {
         System.out.println(thumbResult);
     }
 
-    public String upload(File file, String fileDirName){
-        HashMap<String, Object> paramMap = new HashMap<>(4);
-        paramMap.put("file", file);
-        paramMap.put("output","json");
-        paramMap.put("path", "qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
-        paramMap.put("scene","image");
-        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
-        UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
-        log.info("uploadResult:{}", JSON.toJSON(uploadResult));
-        return uploadResult.getPath();
-    }
+//    public String upload(File file, String fileDirName){
+//        HashMap<String, Object> paramMap = new HashMap<>(4);
+//        paramMap.put("file", file);
+//        paramMap.put("output","json");
+//        paramMap.put("path", "qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
+//        paramMap.put("scene","image");
+//        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
+//        UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
+//        log.info("uploadResult:{}", JSON.toJSON(uploadResult));
+//        return uploadResult.getPath();
+//    }
 
-    public String uploadCustom(File file, String fileDirName){
+    public String uploadQm(File file, String fileDirName){
         String newFilePath = "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/"
                 + fileDirName + "/" + file.getName();
         File newFile = new File(QM_UPLOAD_BASE_PATH + newFilePath);
@@ -346,7 +374,7 @@ public class FileService {
                 if(qmFile.getName().contains(".txt")){
                     continue;
                 }
-                imageUrls.add(uploadCustom(qmFile, fileDirFileName));
+                imageUrls.add(uploadQm(qmFile, fileDirFileName));
             }
             qmInfo.setCover(imageUrls.get(0));
             qmInfo.setImage(imageUrls.stream().collect(Collectors.joining(",")));
