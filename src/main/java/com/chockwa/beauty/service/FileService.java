@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -129,6 +130,7 @@ public class FileService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void uploadFiles(String prepareFilePath) throws IOException, InterruptedException {
         if(StringUtils.isBlank(prepareFilePath)){
             return;
