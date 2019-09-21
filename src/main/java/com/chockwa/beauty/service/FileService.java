@@ -250,8 +250,8 @@ public class FileService {
         }
         // 生成詳情信息
         SourceDetail detail = new SourceDetail();
-        detail.setThumbImage("/tt" + thumbFilePath);
-        detail.setPicUrl("/tt" + originFilePath);
+        detail.setThumbImage("/group1/tt" + thumbFilePath);
+        detail.setPicUrl("/group1/tt" + originFilePath);
         detail.setName(file.getName().substring(0, file.getName().lastIndexOf(".")));
         detail.setCreateTime(new Date());
         return detail;
@@ -320,7 +320,7 @@ public class FileService {
         try {
             FileUtils.copyFile(file, newFile);
             log.info("上傳qm圖片:{}", newFilePath);
-            return "/qm" + newFilePath;
+            return "/group1/qms" + newFilePath;
         } catch (IOException e) {
             log.error("文件複製失敗:{}", file.getAbsolutePath(), e);
         }
