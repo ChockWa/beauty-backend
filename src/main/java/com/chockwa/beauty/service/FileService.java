@@ -195,7 +195,7 @@ public class FileService {
             sourceDetails.add(uploadTT(fileDirName, file));
         }
         // 生成描述文件
-        String descTextPath = TT_UPLOAD_BASE_PATH + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) +
+        String descTextPath = TT_UPLOAD_BASE_PATH + "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) +
                 "/" + fileDirName + "/origin/";
         generateDescText(descTextPath);
         return sourceDetails;
@@ -245,6 +245,7 @@ public class FileService {
             FileUtils.copyFile(file, thumbFile);
             // 生成縮略圖
             ImageUtils.cutImageAndGenThumb(thumbFile, thumbFile, 210, 300);
+            log.info("上傳tt圖片成功:{}", file.getAbsolutePath());
         } catch (IOException e) {
             log.error("文件複製失敗:{}", file.getAbsolutePath(), e);
         }
