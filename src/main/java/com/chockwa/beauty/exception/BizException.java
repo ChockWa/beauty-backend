@@ -16,7 +16,9 @@ public class BizException extends RuntimeException {
 
     private String message;
 
-    public static BizException TOKEN_EXPIRE = new BizException(1000, "Token expired, please login again");
+    public static BizException TOKEN_EXPIRE = new BizException(1000, "會話已過期，請重新登陸");
+
+    public static BizException COIN_NOT_ENOUGH = new BizException(1001, "金幣不足，請先充值");
 
     public BizException(int code, String message) {
         super(message);

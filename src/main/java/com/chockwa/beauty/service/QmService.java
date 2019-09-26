@@ -104,7 +104,7 @@ public class QmService {
             throw new IllegalStateException("用戶不存在");
         }
         if(qmInfo.getPrice() > user.getCoin()){
-            throw new IllegalStateException("金幣數不足，請先充值");
+            throw BizException.COIN_NOT_ENOUGH;
         }
         user.setCoin(user.getCoin() - qmInfo.getPrice());
         user.setUpdateTime(new Date());

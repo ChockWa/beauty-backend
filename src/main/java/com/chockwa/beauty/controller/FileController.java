@@ -29,19 +29,13 @@ public class FileController extends BaseController {
      * @param file
      * @return
      */
-    @PostMapping("uploadZip")
-    public synchronized Result uploadZip(@RequestParam("file")MultipartFile file){
-        File tempDir = getTempDir();
-        fileService.unZip(file, tempDir.getAbsolutePath());
-        List<UploadResponse> uploadResponseList = fileService.upload(tempDir.getAbsolutePath());
-        deleteTempDir(tempDir);
-        return Result.SUCCESS().setData("data", uploadResponseList);
-    }
-
-//    @PostMapping("unZipAndUpload")
-//    public synchronized Result unZipAndUpload(@RequestParam("file")MultipartFile file){
-//        fileService.unZipAndUpload(file);
-//        return Result.SUCCESS();
+//    @PostMapping("uploadZip")
+//    public synchronized Result uploadZip(@RequestParam("file")MultipartFile file){
+//        File tempDir = getTempDir();
+//        fileService.unZip(file, tempDir.getAbsolutePath());
+//        List<UploadResponse> uploadResponseList = fileService.upload(tempDir.getAbsolutePath());
+//        deleteTempDir(tempDir);
+//        return Result.SUCCESS().setData("data", uploadResponseList);
 //    }
 
     /**
@@ -60,38 +54,37 @@ public class FileController extends BaseController {
      * 创建临时目录
      * @return
      */
-    private File getTempDir(){
-        File directory = new File("");
-        String tempDirPath = directory.getAbsolutePath() + "\\.temp\\";
-        File tempDir = new File(tempDirPath);
-        if(tempDir.exists()){
-            tempDir.delete();
-        }
-        tempDir.mkdirs();
-        return tempDir;
-    }
+//    private File getTempDir(){
+//        File directory = new File("");
+//        String tempDirPath = directory.getAbsolutePath() + "\\.temp\\";
+//        File tempDir = new File(tempDirPath);
+//        if(tempDir.exists()){
+//            tempDir.delete();
+//        }
+//        tempDir.mkdirs();
+//        return tempDir;
+//    }
 
     /**
      * 递归删除文件
      * @param tempDir
      */
-    private void deleteTempDir(File tempDir){
-        if(tempDir != null){
-            File[] files = tempDir.listFiles();
-            for(File file : files){
-                if(file.isFile()){
-                    file.delete();
-                }else {
-                    deleteTempDir(file);
-                }
-            }
-            tempDir.delete();
-        }
-    }
+//    private void deleteTempDir(File tempDir){
+//        if(tempDir != null){
+//            File[] files = tempDir.listFiles();
+//            for(File file : files){
+//                if(file.isFile()){
+//                    file.delete();
+//                }else {
+//                    deleteTempDir(file);
+//                }
+//            }
+//            tempDir.delete();
+//        }
+//    }
 
     @GetMapping("oneUpload")
     public Result oneUpload(String prepareFilePath){
-//        fileService.uploadFiles("E:\\201905301");
         try {
             fileService.uploadFiles(PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
         } catch (Exception e) {
