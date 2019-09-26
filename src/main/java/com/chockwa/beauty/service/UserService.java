@@ -57,7 +57,7 @@ public class UserService {
     public Map<String, Object> getUser(){
         User user = userMapper.selectById(UserInfo.get().getUid());
         Map<String, Object> userInfo = BeanUtil.beanToMap(user);
-        userInfo.put("isVip", new Date().before(user.getVipEndTime()));
+        userInfo.put("isVip", Objects.nonNull(user.getVipEndTime()) && new Date().before(user.getVipEndTime()));
         userInfo.put("isSign", Objects.nonNull(user.getLastSignTime()) ? DateUtil.isSameDay(new Date(), user.getLastSignTime()) : false);
         return userInfo;
     }
