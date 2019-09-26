@@ -46,6 +46,7 @@ public class UserService {
         }
         user.setCoin(user.getCoin() + SIGN_COIN_DEFAULT);
         user.setLastSignTime(now);
+        user.setSignCount(user.getSignCount() + 1);
         userMapper.updateById(user);
 
         SignLog signLog = new SignLog();
