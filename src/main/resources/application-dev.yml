@@ -5,7 +5,7 @@ spring:
       # 基本属性 url、user、password 193.112.46.15 192.168.246.128 173.82.114.131
       url: jdbc:mysql://192.119.71.83:12306/beauty?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
-      password: '!@pppqqq'
+      password: '!@GoNe2o30yIf3sA82ZU'
       # 配置初始化大小、最小、最大 (通常来说，只需要修改initialSize、minIdle、maxActive)
       initial-size: 1
       min-idle: 1
@@ -33,7 +33,7 @@ spring:
     database: 0
     host: 192.119.71.83
     port: 10379
-    password: '!@*pppqqq'    # 密码（默认为空）
+    password: '!@*GoNe2o30yIf3sA82ZU'    # 密码（默认为空）
     timeout: 10000ms  # 连接超时时长（毫秒）
     jedis:
       pool:
