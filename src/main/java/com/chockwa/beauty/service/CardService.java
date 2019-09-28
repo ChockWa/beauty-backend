@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.Card;
+import com.chockwa.beauty.entity.ChargeLog;
 import com.chockwa.beauty.entity.User;
 import com.chockwa.beauty.entity.UserInfo;
 import com.chockwa.beauty.mapper.CardMapper;
+import com.chockwa.beauty.mapper.ChargeLogMapper;
 import com.chockwa.beauty.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -25,6 +27,8 @@ public class CardService {
     private CardMapper cardMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ChargeLogMapper chargeLogMapper;
 
     @Transactional(rollbackFor = Exception.class)
     public void useCard(String cardNo, Integer type){
@@ -40,7 +44,9 @@ public class CardService {
         }
 
         User user = userMapper.selectById(UserInfo.get().getUid());
-        if(type == 1){
+        if(type == 0){
+            user.setCoin(user.getCoin() + 18);
+        }else if(type == 1){
             user.setCoin(user.getCoin() + 30);
         }else if(type == 2){
             user.setCoin(user.getCoin() + 50);
@@ -55,6 +61,12 @@ public class CardService {
         card.setUseTime(new Date());
         card.setUid(user.getUid());
         cardMapper.updateById(card);
+
+        ChargeLog chargeLog = new ChargeLog();
+        chargeLog.setChargeCode(cardNo);
+        chargeLog.setUid(user.getUid());
+        chargeLog.setCreateTime(new Date());
+        chargeLogMapper.insert(chargeLog);
     }
 
     public PageResult<Card> getCardsPage(String cardNo, PageParam pageParam){
