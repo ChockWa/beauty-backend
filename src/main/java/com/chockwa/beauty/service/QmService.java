@@ -131,7 +131,7 @@ public class QmService {
     }
 
     public List<QmInfo> getNewerQms(){
-        Page<QmInfo> page = new Page<>(1,5);
+        Page<QmInfo> page = new Page<>(1,8);
         QueryWrapper<QmInfo> query = new QueryWrapper<>();
         query.lambda().orderByDesc(QmInfo::getCreateTime);
         qmInfoMapper.selectPage(page, query);

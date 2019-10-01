@@ -42,13 +42,11 @@ public class SourceDoorContoller extends BaseController{
     @GetMapping("index")
     public Result getIndexData() {
         CompletableFuture<List<Source>> newerFuture = CompletableFuture.supplyAsync(() -> sourceService.getIndexSource(1,8));
-        CompletableFuture<List<Source>> olderFuture = CompletableFuture.supplyAsync(() -> sourceService.getIndexSource(20,8));
         CompletableFuture<List<Source>> hotestFuture = CompletableFuture.supplyAsync(() -> sourceService.getHotestSourceList(1,5));
         CompletableFuture<List<QmInfo>> newerQmsFuture = CompletableFuture.supplyAsync(() -> qmService.getNewerQms());
-        CompletableFuture.allOf(newerFuture, olderFuture, hotestFuture, newerQmsFuture).join();
+        CompletableFuture.allOf(newerFuture, hotestFuture, newerQmsFuture).join();
         try {
             return Result.SUCCESS().setData("newers", newerFuture.get())
-                    .setData("olders", olderFuture.get())
                     .setData("hotests", hotestFuture.get())
                     .setData("newerQms", newerQmsFuture.get());
         } catch (InterruptedException e) {
