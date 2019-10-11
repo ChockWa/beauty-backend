@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
+import com.chockwa.beauty.dto.SourceDetailInfo;
 import com.chockwa.beauty.entity.SourceDetail;
 import com.chockwa.beauty.entity.SourceHot;
 import com.chockwa.beauty.mapper.SourceDetailMapper;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -52,15 +54,20 @@ public class SourceDetailService {
         return pageResult;
     }
 
-    public List<SourceDetail> getList(String sourceId){
+    public List<SourceDetailInfo> getList(String sourceId){
         List<SourceDetail> list = sourceDetailMapper.selectList(new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
+        List<SourceDetailInfo> infos = null;
         if(!CollectionUtils.isEmpty(list)){
-            list.forEach(e -> {
-                e.setThumbImage(DNS_HTTPS + e.getThumbImage());
-                e.setPicUrl(DNS_HTTPS + e.getPicUrl());
-            });
+            infos = new ArrayList<>(list.size());
+            for(int i=0;i<list.size();i++){
+                SourceDetailInfo info = new SourceDetailInfo();
+                info.setId(i);
+                info.setThumbImage(DNS_HTTPS + list.get(i).getThumbImage());
+                info.setPicUrl(DNS_HTTPS + list.get(i).getPicUrl());
+                infos.add(info);
+            }
         }
-        return list;
+        return infos;
     }
 
     public void delete(String sourceDetailId){
