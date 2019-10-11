@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -49,6 +50,17 @@ public class SourceDetailService {
         pageResult.setTotal(result.getTotal());
         pageResult.setRecords(result.getRecords());
         return pageResult;
+    }
+
+    public List<SourceDetail> getList(String sourceId){
+        List<SourceDetail> list = sourceDetailMapper.selectList(new QueryWrapper<SourceDetail>().lambda().eq(SourceDetail::getSourceId, sourceId));
+        if(!CollectionUtils.isEmpty(list)){
+            list.forEach(e -> {
+                e.setThumbImage(DNS_HTTPS + e.getThumbImage());
+                e.setPicUrl(DNS_HTTPS + e.getPicUrl());
+            });
+        }
+        return list;
     }
 
     public void delete(String sourceDetailId){

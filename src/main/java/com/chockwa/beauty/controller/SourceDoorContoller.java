@@ -83,6 +83,12 @@ public class SourceDoorContoller extends BaseController{
     }
 
     @RateLimit(fallback = "fallBack")
+    @GetMapping("allDetails")
+    public Result getSourceDetailList(String sourceId){
+        return Result.SUCCESS().setData("data", sourceDetailService.getList(sourceId));
+    }
+
+    @RateLimit(fallback = "fallBack")
     @GetMapping("max")
     public Result getMax(String sourceDetailId){
         return Result.SUCCESS().setData("url", sourceDetailService.getMaxImageById(sourceDetailId));
