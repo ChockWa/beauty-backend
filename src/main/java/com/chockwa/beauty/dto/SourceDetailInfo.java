@@ -15,6 +15,7 @@ import lombok.Setter;
 public class SourceDetailInfo {
 
     private int id;
+    private String detailId;
     private String thumbImage;
     private String picUrl;
 }

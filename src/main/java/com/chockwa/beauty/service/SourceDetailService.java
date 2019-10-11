@@ -62,6 +62,7 @@ public class SourceDetailService {
             for(int i=0;i<list.size();i++){
                 SourceDetailInfo info = new SourceDetailInfo();
                 info.setId(i);
+                info.setDetailId(list.get(i).getId());
                 info.setThumbImage(DNS_HTTPS + list.get(i).getThumbImage());
                 info.setPicUrl(DNS_HTTPS + list.get(i).getPicUrl());
                 infos.add(info);
