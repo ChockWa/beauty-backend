@@ -36,6 +36,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private LogEventDisruptor logEventDisruptor;
 
+    private static final ImmutableSet<String> IP_BLACK_SET = ImmutableSet.<String>builder()
+        .add("117.136.79.48").build();
     /**
      * 需要检验登陆的黑名单
      */
@@ -60,6 +62,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 檢查ip
+        checkIp(getIpAddress(request));
         if(checkNeedLoginOrNot(request.getRequestURI())){
             String token = request.getHeader("beautyT");
             if(StringUtils.isBlank(token) || !JwtUtils.verifyToken(token)){
@@ -91,6 +95,12 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             throw new RuntimeException("uri is blank");
         }
         return NEED_CHECK_LOGIN_URIS.contains(uri);
+    }
+
+    private void checkIp(String ip){
+        if(IP_BLACK_SET.contains(ip)){
+            throw new BizException("你被禁止訪問該站，有問題請發送郵件到chockwa888@gmail.com解封");
+        }
     }
 
     private String getIpAddress(HttpServletRequest request) {
