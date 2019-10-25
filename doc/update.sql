@@ -194,5 +194,7 @@ create table sys_qm_confirm(
   primary key(uid)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用戶上傳qm表';
 
+alter table sys_qm_info add column status int(2) not null default 1 comment '狀態';
+
 
 

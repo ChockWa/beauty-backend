@@ -33,4 +33,5 @@ public class QmInfo {
     private String score;
     private int price;
     private Date createTime;
+    private Integer status;
 }

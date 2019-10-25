@@ -47,6 +47,7 @@ public class QmService {
         IPage<QmInfo> infoIPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         qmInfoMapper.selectPage(infoIPage, new QueryWrapper<QmInfo>().lambda()
                 .eq(area != null, QmInfo::getArea, area)
+                .eq(QmInfo::getStatus, 1)
                 .orderByDesc(QmInfo::getCreateTime));
 
         infoIPage.getRecords().forEach(e -> e.setContact(null));
