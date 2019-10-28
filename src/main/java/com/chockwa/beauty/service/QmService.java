@@ -13,6 +13,7 @@ import com.chockwa.beauty.mapper.QmBugLogMapper;
 import com.chockwa.beauty.mapper.QmCommentMapper;
 import com.chockwa.beauty.mapper.QmInfoMapper;
 import com.chockwa.beauty.mapper.UserMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,10 +44,11 @@ public class QmService {
     @Autowired
     private QmCommentMapper qmCommentMapper;
 
-    public PageResult<QmInfo> selectQmPage(PageParam pageParam, Integer area){
+    public PageResult<QmInfo> selectQmPage(PageParam pageParam, Integer area, String content){
         IPage<QmInfo> infoIPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         qmInfoMapper.selectPage(infoIPage, new QueryWrapper<QmInfo>().lambda()
                 .eq(area != null, QmInfo::getArea, area)
+                .like(StringUtils.isNotBlank(content), QmInfo::getName, content)
                 .eq(QmInfo::getStatus, 1)
                 .orderByDesc(QmInfo::getCreateTime));
 
