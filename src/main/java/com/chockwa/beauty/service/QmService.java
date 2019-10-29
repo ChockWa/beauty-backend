@@ -1,6 +1,5 @@
 package com.chockwa.beauty.service;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -31,7 +30,7 @@ import java.util.List;
 @Service
 public class QmService {
 
-    private static final String UID = "91a96c4621974583b987c8b72f2f9ed4";
+    public static final String UID = "91a96c4621974583b987c8b72f2f9ed4";
 
     @Value("${dns.api-https}")
     private String DNS_HTTPS;
