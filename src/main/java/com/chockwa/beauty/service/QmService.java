@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chockwa.beauty.constant.QmType;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.*;
@@ -50,9 +51,13 @@ public class QmService {
                 .eq(area != null, QmInfo::getArea, area)
                 .like(StringUtils.isNotBlank(content), QmInfo::getName, content)
                 .eq(QmInfo::getStatus, 1)
+                .eq(QmInfo::getType, QmType.QM.getCode())
                 .orderByDesc(QmInfo::getCreateTime));
 
-        infoIPage.getRecords().forEach(e -> e.setContact(null));
+        infoIPage.getRecords().forEach(e -> {
+                    e.setContactCode(null);
+                    e.setContact(null);
+                });
         PageResult<QmInfo> result = new PageResult<>();
         result.setRecords(infoIPage.getRecords());
         result.setTotal(infoIPage.getTotal());
@@ -63,11 +68,13 @@ public class QmService {
         IPage<QmInfo> infoIPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         qmInfoMapper.selectPage(infoIPage, new QueryWrapper<QmInfo>().lambda()
                 .eq(area != null, QmInfo::getArea, area)
+                .eq(QmInfo::getType, QmType.QM.getCode())
                 .orderByDesc(QmInfo::getCreateTime));
 
         infoIPage.getRecords().forEach(e -> {
             if(!UID.equals(UserInfo.get().getUid())){
                 e.setContact(null);
+                e.setContactCode(null);
             }
         });
         PageResult<QmInfo> result = new PageResult<>();
@@ -84,6 +91,7 @@ public class QmService {
         }
         if(setNullContact(UserInfo.get().getUid(), qmId)){
             qm.setContact(null);
+            qm.setContactCode(null);
         }
         return qm;
     }
@@ -136,24 +144,15 @@ public class QmService {
     public List<QmInfo> getNewerQms(){
         Page<QmInfo> page = new Page<>(1,8);
         QueryWrapper<QmInfo> query = new QueryWrapper<>();
-        query.lambda().orderByDesc(QmInfo::getCreateTime);
+        query.lambda().eq(QmInfo::getType, QmType.QM.getCode())
+                .eq(QmInfo::getStatus, 1)
+                .orderByDesc(QmInfo::getCreateTime);
         qmInfoMapper.selectPage(page, query);
         page.getRecords().forEach(e -> {
             e.setContact(null);
+            e.setContactCode(null);
             e.setCover(DNS_HTTPS + e.getCover());
         });
         return page.getRecords();
-    }
-
-    public static void main(String[] args) {
-        // {"area":1,"contact":"QQQQQQQQQQQQ","description":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","name":"XXXXXX","price":5,"score":"8.9"}
-        QmInfo qmInfo = new QmInfo();
-        qmInfo.setArea(1);
-        qmInfo.setName("XXXXXX");
-        qmInfo.setContact("QQQQQQQQQQQQ");
-        qmInfo.setDescription("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        qmInfo.setPrice(5);
-        qmInfo.setScore("8.9");
-        System.out.println(JSON.toJSONString(qmInfo));
     }
 }

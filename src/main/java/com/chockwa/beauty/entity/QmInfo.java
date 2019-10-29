@@ -34,4 +34,6 @@ public class QmInfo {
     private int price;
     private Date createTime;
     private Integer status;
+    private Integer type;
+    private String contactCode;
 }

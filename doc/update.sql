@@ -195,6 +195,7 @@ create table sys_qm_confirm(
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用戶上傳qm表';
 
 alter table sys_qm_info add column status int(2) not null default 1 comment '狀態';
-
-
+-- 20191029
+alter table sys_qm_info add column type int(1) not null default 1 comment '1-qm2-sn';
+alter table sys_qm_info add column contact_code varchar(128) null comment '聯繫方式二維碼';
 
