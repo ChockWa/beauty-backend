@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SnService {
 
+    public static final String UID = "91a96c4621974583b987c8b72f2f9ed4";
+
     @Autowired
     private QmInfoMapper qmInfoMapper;
 
@@ -51,7 +53,7 @@ public class SnService {
                 .orderByDesc(QmInfo::getCreateTime));
 
         infoIPage.getRecords().forEach(e -> {
-            if(!QmService.UID.equals(UserInfo.get().getUid())){
+            if(!UID.equals(UserInfo.get().getUid())){
                 e.setContact(null);
                 e.setContactCode(null);
             }
