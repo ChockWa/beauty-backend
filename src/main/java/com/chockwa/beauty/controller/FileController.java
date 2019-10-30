@@ -1,16 +1,12 @@
 package com.chockwa.beauty.controller;
 
 import com.chockwa.beauty.annotation.RateLimit;
-import com.chockwa.beauty.dto.UploadResponse;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.util.List;
 
 @RestController
 @RequestMapping("file")
@@ -57,7 +53,7 @@ public class FileController extends BaseController {
         return Result.SUCCESS();
     }
 
-    @GetMapping("uploadQm")
+    @GetMapping("uploadSn")
     public Result uploadSnInfos(String prepareFilePath){
         try {
             fileService.uploadQmInfos(SN_PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
