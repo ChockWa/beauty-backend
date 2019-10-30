@@ -25,13 +25,13 @@ public class SnController extends BaseController {
     private SnService snService;
 
     @RateLimit(fallback = "fallBack")
-    @GetMapping("qms")
+    @GetMapping("sns")
     public Result qms(PageParam pageParam, @RequestParam(required = false) Integer area,
                       @RequestParam(required = false)String content){
         return Result.SUCCESS().setData("sns", snService.selectSnPage(pageParam, area, content));
     }
 
-    @GetMapping("qmsMgmt")
+    @GetMapping("snsMgmt")
     public Result qmsMgmt(PageParam pageParam, @RequestParam(required = false) Integer area){
         return Result.SUCCESS().setData("sns", snService.selectSnMgmtPage(pageParam, area));
     }
