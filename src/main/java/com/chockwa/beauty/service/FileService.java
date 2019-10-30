@@ -3,6 +3,7 @@ package com.chockwa.beauty.service;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.chockwa.beauty.common.utils.ImageUtils;
+import com.chockwa.beauty.constant.QmType;
 import com.chockwa.beauty.dto.AddSourceDto;
 import com.chockwa.beauty.dto.UploadResult;
 import com.chockwa.beauty.entity.QmInfo;
@@ -364,11 +365,17 @@ public class FileService {
                 if(qmFile.getName().contains(".txt")){
                     continue;
                 }
+                // 二維碼圖片
+                if(qmFile.getName().contains("code")){
+                    qmInfo.setContactCode(uploadQm(qmFile, fileDirFileName));
+                    continue;
+                }
                 imageUrls.add(uploadQm(qmFile, fileDirFileName));
             }
             qmInfo.setCover(imageUrls.get(0));
             qmInfo.setImage(imageUrls.stream().collect(Collectors.joining(",")));
             qmInfo.setCreateTime(new Date());
+            qmInfo.setType(prepareFilePath.contains("qms")?QmType.QM.getCode():QmType.SN.getCode());
             qmInfo.setScore("9.3");
             qmInfos.add(qmInfo);
         }
