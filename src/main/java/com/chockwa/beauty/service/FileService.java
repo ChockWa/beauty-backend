@@ -37,6 +37,8 @@ public class FileService {
 
     private static final String TT_UPLOAD_BASE_PATH = "/files/tt";
 
+    private static final String SN_UPLOAD_BASE_PATH = "/files/sns";
+
     @Value("${thumb-image.width}")
     private int thumbWidth;
 
@@ -318,6 +320,20 @@ public class FileService {
         return null;
     }
 
+    public String uploadSn(File file, String fileDirName){
+        String newFilePath = "/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/"
+                + fileDirName + "/" + file.getName();
+        File newFile = new File(SN_UPLOAD_BASE_PATH + newFilePath);
+        try {
+            FileUtils.copyFile(file, newFile);
+            log.info("上傳sn圖片:{}", newFilePath);
+            return "/group1/sns" + newFilePath;
+        } catch (IOException e) {
+            log.error("文件複製失敗:{}", file.getAbsolutePath(), e);
+        }
+        return null;
+    }
+
     public String upload(MultipartFile multipartFile, String fileDirName){
         HashMap<String, Object> paramMap = new HashMap<>(4);
         File file = convertToFile(multipartFile);
@@ -367,7 +383,7 @@ public class FileService {
                 }
                 // 二維碼圖片
                 if(qmFile.getName().contains("code")){
-                    qmInfo.setContactCode(uploadQm(qmFile, fileDirFileName));
+                    qmInfo.setContactCode(prepareFilePath.contains("qms")?uploadQm(qmFile, fileDirFileName):uploadSn(qmFile, fileDirFileName));
                     continue;
                 }
                 imageUrls.add(uploadQm(qmFile, fileDirFileName));
