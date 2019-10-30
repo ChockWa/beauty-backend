@@ -58,6 +58,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             .add("/auth/auth")
             // 上傳qm相關
             .add("/qm-c/add").add("/qm-c/del").add("/qm-c/list").add("/qm-c/verify")
+            .add("/sn/snsMgmt")
             .build();
 
     @Override
