@@ -386,9 +386,14 @@ public class FileService {
                     qmInfo.setContactCode(prepareFilePath.contains("qms")?uploadQm(qmFile, fileDirFileName):uploadSn(qmFile, fileDirFileName));
                     continue;
                 }
+                // 封面
+                if(qmFile.getName().contains("1")){
+                    qmInfo.setCover(prepareFilePath.contains("qms")?uploadQm(qmFile, fileDirFileName):uploadSn(qmFile, fileDirFileName));
+                    continue;
+                }
                 imageUrls.add(uploadQm(qmFile, fileDirFileName));
             }
-            qmInfo.setCover(imageUrls.get(0));
+            imageUrls.add(0, qmInfo.getCover());
             qmInfo.setImage(imageUrls.stream().collect(Collectors.joining(",")));
             qmInfo.setCreateTime(new Date());
             qmInfo.setType(prepareFilePath.contains("qms")?QmType.QM.getCode():QmType.SN.getCode());
