@@ -2,6 +2,7 @@ package com.chockwa.beauty.controller;
 
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.Result;
+import com.chockwa.beauty.service.MailService;
 import com.chockwa.beauty.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping("sign")
     public Result sign(){
@@ -39,6 +42,12 @@ public class UserController {
     @GetMapping("addCoin")
     public Result addCoin(String uid, Integer coin){
         userService.addCoin(uid, coin);
+        return Result.SUCCESS();
+    }
+
+    @GetMapping("updateMailNotice")
+    public Result sendBeautySiteMessageBatch(){
+        mailService.sendBeautySiteMessageBatch();
         return Result.SUCCESS();
     }
 }

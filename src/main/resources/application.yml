@@ -34,6 +34,72 @@ spring:
       enabled: true
       max-file-size: 50MB
       max-request-size: 50MB
+  mail:
+    host: smtp.qq.com #发送邮件服务器
+    username: hzh081215@qq.com #QQ邮箱
+    password: rxkbioiqkvkfbief #客户端授权码
+    protocol: smtp #发送邮件协议
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.port: 465 #端口号465或587
+    properties.mail.display.sendmail: Javen #可以任意
+    properties.mail.display.sendname: Spring Boot Guide Email #可以任意
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+    from: hzh081215@qq.com #与上面的username保持一致
+#  mail:
+#    host: smtp.gmail.com
+#    username: chockwa888@gmail.com
+#    password: Hzh412553909
+#    protocol: smtp
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          port: 587
+#          ssl:
+#            enable: true
+#          starttls:
+#            enable: true
+#            required: true
+#spring.mail.host: smtp.gmail.com
+#spring.mail.port: 587
+#spring.mail.username: chockwa888@gmail.com
+#spring.mail.password: Hzh412553909
+#spring.mail.properties.mail.smtp.auth: true
+##spring.mail.properties.mail.smtp.ssl.enable: true
+#spring.mail.properties.mail.smtp.starttls.enable: true
+#spring.mail.properties.mail.smtp.starttls.required: true
+#
+#spring.mail.logging.enabled: true
+#
+#spring.mail.logging.strategy.from: PLAIN_TEXT
+#spring.mail.logging.strategy.replyTo: HIDDEN
+#spring.mail.logging.strategy.to: FULL_TEXT_FROM_COMMERCIAL_AT
+#spring.mail.logging.strategy.cc: HIDDEN
+#spring.mail.logging.strategy.bcc: HIDDEN
+#spring.mail.logging.strategy.subject: PLAIN_TEXT
+#spring.mail.logging.strategy.body: FIRST_DOZEN_THEN_STARS
+#spring.mail.logging.strategy.attachments: HIDDEN
+#spring.mail.logging.strategy.encoding: HIDDEN
+#spring.mail.logging.strategy.locale: HIDDEN
+#spring.mail.logging.strategy.sentAt: STANDARD_DATE_FORMAT_WITH_ZONE_ID
+#spring.mail.logging.strategy.receiptTo: HIDDEN
+#spring.mail.logging.strategy.depositionNotificationTo: HIDDEN
+#spring.mail.logging.strategy.ignore.customHeaders: true
+#spring.mail.logging.strategy.ignore.nullAndEmptyCollections: true
+
+#spring.mail.properties.mail.smtp.connecttimeout: 5000
+#spring.mail.properties.mail.smtp.timeout: 3000
+#spring.mail.properties.mail.smtp.writetimeout: 5000
+#spring.mail.host: smtp.office365.com
+#spring.mail.password: hzh412553909
+#spring.mail.port: 587
+#spring.mail.username: chockwa@outlook.com
+#spring.mail.properties.mail.smtp.starttls.enable: true
+#spring.mail.properties.mail.smpt.auth: true
+#support.email: chockwa@outlook.com
 
 thumb-image:
    width: 210
@@ -42,3 +108,4 @@ thumb-image:
 dns:
    api-http: http://www.24beauties.xyz
    api-https: https://www.24beauties.xyz
+   web-site: https://www.24beauties.xyz/qms
