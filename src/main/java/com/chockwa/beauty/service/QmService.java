@@ -154,4 +154,19 @@ public class QmService {
         });
         return page.getRecords();
     }
+
+    public List<QmInfo> getNewerSns(){
+        Page<QmInfo> page = new Page<>(1,8);
+        QueryWrapper<QmInfo> query = new QueryWrapper<>();
+        query.lambda().eq(QmInfo::getType, QmType.SN.getCode())
+                .eq(QmInfo::getStatus, 1)
+                .orderByDesc(QmInfo::getCreateTime);
+        qmInfoMapper.selectPage(page, query);
+        page.getRecords().forEach(e -> {
+            e.setContact(null);
+            e.setContactCode(null);
+            e.setCover(DNS_HTTPS + e.getCover());
+        });
+        return page.getRecords();
+    }
 }

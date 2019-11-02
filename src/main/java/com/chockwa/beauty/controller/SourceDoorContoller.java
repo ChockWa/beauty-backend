@@ -41,14 +41,12 @@ public class SourceDoorContoller extends BaseController{
     @RateLimit(fallback = "fallBack")
     @GetMapping("index")
     public Result getIndexData() {
-        CompletableFuture<List<Source>> newerFuture = CompletableFuture.supplyAsync(() -> sourceService.getIndexSource(1,8));
-        CompletableFuture<List<Source>> hotestFuture = CompletableFuture.supplyAsync(() -> sourceService.getHotestSourceList(1,5));
         CompletableFuture<List<QmInfo>> newerQmsFuture = CompletableFuture.supplyAsync(() -> qmService.getNewerQms());
-        CompletableFuture.allOf(newerFuture, hotestFuture, newerQmsFuture).join();
+        CompletableFuture<List<QmInfo>> newerSnsFuture = CompletableFuture.supplyAsync(() -> qmService.getNewerSns());
+        CompletableFuture.allOf(newerQmsFuture, newerSnsFuture).join();
         try {
-            return Result.SUCCESS().setData("newers", newerFuture.get())
-                    .setData("hotests", hotestFuture.get())
-                    .setData("newerQms", newerQmsFuture.get());
+            return Result.SUCCESS().setData("newerQms", newerQmsFuture.get())
+                    .setData("newerSns", newerSnsFuture.get());
         } catch (InterruptedException e) {
             log.error("thread was interrupted", e);
             Thread.currentThread().interrupt();
