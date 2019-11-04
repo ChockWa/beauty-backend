@@ -14,6 +14,7 @@ import com.chockwa.beauty.mapper.QmCommentMapper;
 import com.chockwa.beauty.mapper.QmInfoMapper;
 import com.chockwa.beauty.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -105,13 +106,20 @@ public class QmService {
 
     @Transactional(rollbackFor = Exception.class)
     public QmInfo bugQmInfo(String qmId){
+        User user = userMapper.selectById(UserInfo.get().getUid());
+        if(user == null){
+            throw new IllegalStateException("用戶不存在");
+        }
         QmInfo qmInfo = qmInfoMapper.selectById(qmId);
         if(qmInfo == null){
             throw new IllegalStateException("QM信息不存在");
         }
-        User user = userMapper.selectById(UserInfo.get().getUid());
-        if(user == null){
-            throw new IllegalStateException("用戶不存在");
+        // 判断今天领取了没有
+        Date now = new Date();
+        if(user.getLastReceiveTime() == null || !DateUtils.isSameDay(user.getLastReceiveTime(),now)){
+            user.setLastReceiveTime(now);
+            userMapper.updateById(user);
+            return qmInfo;
         }
         if(qmInfo.getPrice() > user.getCoin()){
             throw BizException.COIN_NOT_ENOUGH;

@@ -5,6 +5,7 @@ import com.chockwa.beauty.dto.CommentRequest;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.QmInfo;
 import com.chockwa.beauty.entity.Result;
+import com.chockwa.beauty.mapper.UserMapper;
 import com.chockwa.beauty.service.CommentService;
 import com.chockwa.beauty.service.QmService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @auther: zhuohuahe

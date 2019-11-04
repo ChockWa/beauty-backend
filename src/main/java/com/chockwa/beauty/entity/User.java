@@ -49,4 +49,6 @@ public class User {
 
     private int signCount;
 
+    private Date lastReceiveTime;
+
 }

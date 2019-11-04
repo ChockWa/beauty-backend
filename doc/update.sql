@@ -83,6 +83,7 @@ create table sys_user(
   coin int(5) null comment '币数',
   last_sign_time datetime null comment '最後簽到時間',
   sign_count int(3) null comment '連續簽到次數',
+  last_receive_time datetime null comment '最後领取時間',
   primary key (uid),
   unique key idx_username(user_name)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '用户表';
@@ -199,3 +200,5 @@ alter table sys_qm_info add column status int(2) not null default 1 comment '狀
 alter table sys_qm_info add column type int(1) not null default 1 comment '1-qm2-sn';
 alter table sys_qm_info add column contact_code varchar(128) null comment '聯繫方式二維碼';
 
+-- 20191104
+alter table sys_user add column last_receive_time datetime null comment '最後领取時間';
