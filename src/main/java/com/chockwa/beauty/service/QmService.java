@@ -115,12 +115,12 @@ public class QmService {
             throw new IllegalStateException("QM信息不存在");
         }
         // 判断今天领取了没有
-//        Date now = new Date();
-//        if(user.getLastReceiveTime() == null || !DateUtils.isSameDay(user.getLastReceiveTime(),now)){
-//            user.setLastReceiveTime(now);
-//            userMapper.updateById(user);
-//            return qmInfo;
-//        }
+        Date now = new Date();
+        if(user.getLastReceiveTime() == null || !DateUtils.isSameDay(user.getLastReceiveTime(),now)){
+            user.setLastReceiveTime(now);
+            userMapper.updateById(user);
+            return qmInfo;
+        }
         if(qmInfo.getPrice() > user.getCoin()){
             throw BizException.COIN_NOT_ENOUGH;
         }
