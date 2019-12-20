@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class RateLimiter {
 
-    private static final int SECOND_MAX_CONCURRENT = 100;
+    private static final int SECOND_MAX_CONCURRENT = 150;
 
     private static final AtomicInteger COUNT = new AtomicInteger();
 
