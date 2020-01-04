@@ -1,6 +1,7 @@
 package com.chockwa.beauty.controller;
 
 import com.chockwa.beauty.annotation.RateLimit;
+import com.chockwa.beauty.constant.QmType;
 import com.chockwa.beauty.dto.CommentRequest;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.QmInfo;
@@ -34,7 +35,7 @@ public class QmController extends BaseController{
     @GetMapping("qms")
     public Result qms(PageParam pageParam, @RequestParam(required = false) Integer area,
                       @RequestParam(required = false)String content){
-        return Result.SUCCESS().setData("qms", qmService.selectQmPage(pageParam, area, content));
+        return Result.SUCCESS().setData("qms", qmService.selectQmPage(pageParam, area, content, QmType.QM));
     }
 
     @GetMapping("qmsMgmt")
