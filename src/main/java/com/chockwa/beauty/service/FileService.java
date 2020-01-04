@@ -396,12 +396,22 @@ public class FileService {
             imageUrls.add(0, qmInfo.getCover());
             qmInfo.setImage(imageUrls.stream().collect(Collectors.joining(",")));
             qmInfo.setCreateTime(new Date());
-            qmInfo.setType(prepareFilePath.contains("qms")?QmType.QM.getCode():QmType.SN.getCode());
+            qmInfo.setType(getType(prepareFilePath));
             qmInfo.setScore("9.3");
             qmInfos.add(qmInfo);
         }
         for(QmInfo qmInfo : qmInfos){
             qmInfoMapper.insert(qmInfo);
+        }
+    }
+
+    private int getType(String prepareFilePath){
+        if(prepareFilePath.contains("qms")){
+            return QmType.QM.getCode();
+        }else if(prepareFilePath.contains("sns")){
+            return QmType.SN.getCode();
+        }else{
+            return QmType.VIDEO.getCode();
         }
     }
 }

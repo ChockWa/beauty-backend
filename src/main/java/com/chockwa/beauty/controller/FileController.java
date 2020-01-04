@@ -17,6 +17,7 @@ public class FileController extends BaseController {
     private static final String PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/files/";
     private static final String QM_PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/qms/";
     private static final String SN_PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/sns/";
+    private static final String VIDEO_PREPARE_UPLOAD_FILE_ROOT_PATH = "/data/video/";
 
     @Autowired
     private FileService fileService;
@@ -57,6 +58,16 @@ public class FileController extends BaseController {
     public Result uploadSnInfos(String prepareFilePath){
         try {
             fileService.uploadQmInfos(SN_PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
+        } catch (Exception e) {
+            log.error("一键上传失败", e);
+        }
+        return Result.SUCCESS();
+    }
+
+    @GetMapping("uploadVideo")
+    public Result uploadVideoInfos(String prepareFilePath){
+        try {
+            fileService.uploadQmInfos(VIDEO_PREPARE_UPLOAD_FILE_ROOT_PATH + prepareFilePath);
         } catch (Exception e) {
             log.error("一键上传失败", e);
         }
