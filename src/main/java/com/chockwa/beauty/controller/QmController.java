@@ -1,18 +1,25 @@
 package com.chockwa.beauty.controller;
 
 import com.chockwa.beauty.annotation.RateLimit;
+import com.chockwa.beauty.common.utils.JwtUtils;
+import com.chockwa.beauty.common.utils.RedisUtils;
 import com.chockwa.beauty.constant.QmType;
 import com.chockwa.beauty.dto.CommentRequest;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.QmInfo;
 import com.chockwa.beauty.entity.Result;
+import com.chockwa.beauty.entity.User;
+import com.chockwa.beauty.entity.UserInfo;
+import com.chockwa.beauty.exception.BizException;
 import com.chockwa.beauty.mapper.UserMapper;
 import com.chockwa.beauty.service.CommentService;
 import com.chockwa.beauty.service.QmService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +37,8 @@ public class QmController extends BaseController{
     private QmService qmService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private RedisUtils redisUtils;
 
     @RateLimit(fallback = "fallBack")
     @GetMapping("qms")
@@ -113,7 +122,12 @@ public class QmController extends BaseController{
      */
     @RateLimit(fallback = "fallBack")
     @GetMapping("addrUtilInfo")
-    public Result getAddrUtil(String qmId, PageParam pageParam){
+    public Result getAddrUtil(String qmId, PageParam pageParam, HttpServletRequest request){
+        String token = request.getHeader("beautyT");
+        if(StringUtils.isBlank(token) || !JwtUtils.verifyToken(token)){
+        }else{
+            UserInfo.set((User) redisUtils.get(token));
+        }
         Map<String, Object> data = new HashMap<>(2);
         data.put("info", qmService.getQmInfo(qmId));
         data.put("comments", commentService.selectCommentPage(qmId, pageParam));
