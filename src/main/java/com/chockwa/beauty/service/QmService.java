@@ -89,7 +89,7 @@ public class QmService {
         if(qm == null){
             throw new BizException("QM信息不存在");
         }
-        if(setNullContact(UserInfo.get().getUid(), qmId)){
+        if(setNullContact(UserInfo.get()==null?null:UserInfo.get().getUid(), qmId)){
             qm.setContact(null);
             qm.setContactCode(null);
         }
@@ -97,6 +97,9 @@ public class QmService {
     }
 
     private boolean setNullContact(String uid, String qmId){
+        if(StringUtils.isBlank(uid)){
+            return true;
+        }
         User user = userMapper.selectById(uid);
         boolean isVip  = user.getVipEndTime() == null || new Date().after(user.getVipEndTime()) ? false : true;
         return (!isVip) && (qmBugLogMapper.selectList(new QueryWrapper<QmBuyLog>().lambda()

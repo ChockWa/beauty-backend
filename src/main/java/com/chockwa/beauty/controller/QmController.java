@@ -105,4 +105,18 @@ public class QmController extends BaseController{
         qmService.deleteQm(qmId);
         return Result.SUCCESS();
     }
+
+    /**
+     * 获取发布器信息
+     * @param qmId
+     * @return
+     */
+    @RateLimit(fallback = "fallBack")
+    @GetMapping("addrUtilInfo")
+    public Result getAddrUtil(String qmId, PageParam pageParam){
+        Map<String, Object> data = new HashMap<>(2);
+        data.put("info", qmService.getQmInfo(qmId));
+        data.put("comments", commentService.selectCommentPage(qmId, pageParam));
+        return Result.SUCCESS().setData("data", data);
+    }
 }
