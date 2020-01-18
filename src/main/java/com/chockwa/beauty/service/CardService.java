@@ -54,6 +54,8 @@ public class CardService {
             user.setVipEndTime(DateUtils.addMonths(new Date(), 1));
         }else if(type == 4){
             user.setVipEndTime(DateUtils.addMonths(new Date(), 3));
+        }else if(type == 5){ // 永久
+            user.setVipEndTime(DateUtils.addMonths(new Date(), 24000));
         }
         userMapper.updateById(user);
 
