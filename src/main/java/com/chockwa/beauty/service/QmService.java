@@ -45,13 +45,13 @@ public class QmService {
     @Autowired
     private QmCommentMapper qmCommentMapper;
 
-    public PageResult<QmInfo> selectQmPage(PageParam pageParam, Integer area, String content, QmType type){
+    public PageResult<QmInfo> selectQmPage(PageParam pageParam, Integer area, String content, Integer type){
         IPage<QmInfo> infoIPage = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
         qmInfoMapper.selectPage(infoIPage, new QueryWrapper<QmInfo>().lambda()
                 .eq(area != null, QmInfo::getArea, area)
                 .like(StringUtils.isNotBlank(content), QmInfo::getName, content)
                 .eq(QmInfo::getStatus, 1)
-                .eq(QmInfo::getType, type.getCode())
+                .eq(QmInfo::getType, type)
                 .orderByDesc(QmInfo::getCreateTime));
 
         infoIPage.getRecords().forEach(e -> {

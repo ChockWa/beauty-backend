@@ -44,7 +44,7 @@ public class QmController extends BaseController{
     @GetMapping("qms")
     public Result qms(PageParam pageParam, @RequestParam(required = false) Integer area,
                       @RequestParam(required = false)String content){
-        return Result.SUCCESS().setData("qms", qmService.selectQmPage(pageParam, area, content, QmType.QM));
+        return Result.SUCCESS().setData("qms", qmService.selectQmPage(pageParam, area, content, QmType.QM.getCode()));
     }
 
     @GetMapping("qmsMgmt")
@@ -132,5 +132,13 @@ public class QmController extends BaseController{
         data.put("info", qmService.getQmInfo(qmId));
         data.put("comments", commentService.selectCommentPage(qmId, pageParam));
         return Result.SUCCESS().setData("data", data);
+    }
+
+
+    @RateLimit(fallback = "fallBack")
+    @GetMapping("qmsQuery")
+    public Result qmsQuery(PageParam pageParam, @RequestParam(required = false) Integer area,
+                      @RequestParam(required = false)String content, @RequestParam(required = false)Integer type){
+        return Result.SUCCESS().setData(qmService.selectQmPage(pageParam, area, content, type));
     }
 }
