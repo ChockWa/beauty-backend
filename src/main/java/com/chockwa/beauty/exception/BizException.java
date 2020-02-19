@@ -18,7 +18,7 @@ public class BizException extends RuntimeException {
 
     public static BizException TOKEN_EXPIRE = new BizException(1000, "會話已過期，請重新登陸");
 
-    public static BizException COIN_NOT_ENOUGH = new BizException(1001, "今天已领取过，需要金幣购买，金币不足請先充值");
+    public static BizException COIN_NOT_ENOUGH = new BizException(1001, "金币不足請先充值");
 
     public BizException(int code, String message) {
         super(message);

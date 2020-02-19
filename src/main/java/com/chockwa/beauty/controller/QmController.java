@@ -6,6 +6,7 @@ import com.chockwa.beauty.common.utils.RedisUtils;
 import com.chockwa.beauty.constant.QmType;
 import com.chockwa.beauty.dto.CommentRequest;
 import com.chockwa.beauty.dto.PageParam;
+import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.QmInfo;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.entity.User;
@@ -17,6 +18,7 @@ import com.chockwa.beauty.service.QmService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +41,8 @@ public class QmController extends BaseController{
     private CommentService commentService;
     @Autowired
     private RedisUtils redisUtils;
+    @Value("${dns.api-https}")
+    private String dnsHttps;
 
     @RateLimit(fallback = "fallBack")
     @GetMapping("qms")
@@ -139,6 +143,10 @@ public class QmController extends BaseController{
     @GetMapping("qmsQuery")
     public Result qmsQuery(PageParam pageParam, @RequestParam(required = false) Integer area,
                       @RequestParam(required = false)String content, @RequestParam(required = false)Integer type){
-        return Result.SUCCESS().setData(qmService.selectQmPage(pageParam, area, content, type));
+        PageResult<QmInfo> pageResult = qmService.selectQmPage(pageParam, area, content, type);
+        pageResult.getRecords().forEach(e -> {
+            e.setCover(dnsHttps + e.getCover());
+        });
+        return Result.SUCCESS().setData(pageResult);
     }
 }

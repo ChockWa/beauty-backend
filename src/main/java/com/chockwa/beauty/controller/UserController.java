@@ -23,7 +23,7 @@ public class UserController {
     @GetMapping("sign")
     public Result sign(){
         userService.sign();
-        return Result.SUCCESS();
+        return Result.SUCCESS().setData("info", userService.getUser());
     }
 
     @GetMapping("info")
