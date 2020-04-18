@@ -11,17 +11,24 @@ import com.chockwa.beauty.entity.UserInfo;
 import com.chockwa.beauty.mapper.CardMapper;
 import com.chockwa.beauty.mapper.ChargeLogMapper;
 import com.chockwa.beauty.mapper.UserMapper;
+import lombok.Cleanup;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Random;
 
 @Service
+@Slf4j
 public class CardService {
     @Autowired
     private CardMapper cardMapper;
@@ -97,6 +104,7 @@ public class CardService {
     }
 
     public void genCard(Integer type, Integer count){
+        @Cleanup BufferedWriter writer = null;
         for(int i=0;i<count;i++){
             Card card = new Card();
             card.setStatus(1);
@@ -104,7 +112,43 @@ public class CardService {
             card.setCreateTime(new Date());
             card.setType(type);
             cardMapper.insert(card);
+            File file = new File("F:\\cardNo.txt");
+            try {
+                writer = new BufferedWriter(new FileWriter(file));
+                writer.write(card.getCardNo());
+                writer.newLine();
+            } catch (IOException e) {
+                log.error("写入文件失败", e);
+                if(writer != null){
+                    try {
+                        writer.close();
+                    } catch (IOException ex) {
+                        log.error("关闭流失败", ex);
+                    }
+                }
+            }
         }
+        try {
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+           log.error("关闭流失败", e);
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        File file = new File("F:\\cardNo.txt");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        String s1 = "qwertyu";
+        String s2 = "1234567";
+        String s3 = "5678900";
+        writer.write(s1);
+        writer.newLine();
+        writer.write(s2);
+        writer.newLine();
+        writer.write(s3);
+        writer.flush();
+        writer.close();
     }
 
     private String getGUID() {
