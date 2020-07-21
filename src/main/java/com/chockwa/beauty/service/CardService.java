@@ -24,7 +24,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -103,53 +105,47 @@ public class CardService {
         cardMapper.deleteById(cardNo);
     }
 
-    public void genCard(Integer type, Integer count){
-        @Cleanup BufferedWriter writer = null;
-        for(int i=0;i<count;i++){
-            Card card = new Card();
-            card.setStatus(1);
-            card.setCardNo(getGUID());
-            card.setCreateTime(new Date());
-            card.setType(type);
-            cardMapper.insert(card);
-            File file = new File("F:\\cardNo.txt");
-            try {
-                writer = new BufferedWriter(new FileWriter(file));
-                writer.write(card.getCardNo());
-                writer.newLine();
-            } catch (IOException e) {
-                log.error("写入文件失败", e);
-                if(writer != null){
-                    try {
-                        writer.close();
-                    } catch (IOException ex) {
-                        log.error("关闭流失败", ex);
-                    }
-                }
-            }
-        }
-        try {
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-           log.error("关闭流失败", e);
-        }
-    }
+//    @Transactional(rollbackFor = Exception.class)
+//    public void genCard(Integer type, Integer count) throws IOException {
+//        List<String> cardNos = new ArrayList<>(count);
+//        for(int i=0;i<count;i++){
+//            Card card = new Card();
+//            card.setStatus(1);
+//            String cardNo = getGUID();
+//            card.setCardNo(cardNo);
+//            card.setCreateTime(new Date());
+//            card.setType(type);
+//            cardMapper.insert(card);
+//            cardNos.add(cardNo);
+//        }
+//        recordCardNos(cardNos);
+//    }
 
-    public static void main(String[] args) throws IOException {
+    private void recordCardNos(List<String> cardNos) throws IOException {
         File file = new File("F:\\cardNo.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        String s1 = "qwertyu";
-        String s2 = "1234567";
-        String s3 = "5678900";
-        writer.write(s1);
-        writer.newLine();
-        writer.write(s2);
-        writer.newLine();
-        writer.write(s3);
+        for(String cardNo : cardNos){
+            writer.write(cardNo);
+            writer.newLine();
+        }
         writer.flush();
         writer.close();
     }
+
+//    public static void main(String[] args) throws IOException {
+//        File file = new File("F:\\cardNo.txt");
+//        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+//        String s1 = "qwertyu";
+//        String s2 = "1234567";
+//        String s3 = "5678900";
+//        writer.write(s1);
+//        writer.newLine();
+//        writer.write(s2);
+//        writer.newLine();
+//        writer.write(s3);
+//        writer.flush();
+//        writer.close();
+//    }
 
     private String getGUID() {
         StringBuilder uid = new StringBuilder();

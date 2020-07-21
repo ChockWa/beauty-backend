@@ -5,6 +5,7 @@ import com.chockwa.beauty.dto.ChargeInfo;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.CardService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("card")
+@Slf4j
 public class CardController extends BaseController{
 
     @Autowired
@@ -46,7 +48,12 @@ public class CardController extends BaseController{
 
 //    @GetMapping("genCard")
 //    public Result genCard(Integer type, Integer count){
-//        cardService.genCard(type, count);
+//        try {
+//            cardService.genCard(type, count);
+//        }catch (Exception e){
+//            log.error("生成卡号失败:", e);
+//            return Result.FAIL(9999, "生成卡号失败");
+//        }
 //        return Result.SUCCESS();
 //    }
 }
