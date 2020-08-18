@@ -42,7 +42,7 @@ public class CollectService {
 
     public PageResult<CollectDto> selectPage(PageParam pageParam){
         Page<CollectDto> page = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
-        collectMapper.selectCollectPage(page, UserInfo.get().getUid());
+        page.setRecords(collectMapper.selectCollectPage(page, UserInfo.get().getUid()));
         PageResult<CollectDto> result = new PageResult<>();
         result.setTotal(page.getTotal());
         result.setRecords(page.getRecords());

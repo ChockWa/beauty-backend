@@ -184,7 +184,7 @@ public class QmService {
 
     public PageResult<CollectDto> selectBuyPage(PageParam pageParam){
         Page<CollectDto> page = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
-        qmInfoMapper.selectBuyPage(page, UserInfo.get().getUid());
+        page.setRecords(qmInfoMapper.selectBuyPage(page, UserInfo.get().getUid()));
         PageResult<CollectDto> result = new PageResult<>();
         result.setTotal(page.getTotal());
         result.setRecords(page.getRecords());
