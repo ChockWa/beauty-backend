@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chockwa.beauty.constant.QmType;
+import com.chockwa.beauty.dto.CollectDto;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.dto.PageResult;
 import com.chockwa.beauty.entity.*;
@@ -179,5 +180,14 @@ public class QmService {
             e.setCover(DNS_HTTPS + e.getCover());
         });
         return page.getRecords();
+    }
+
+    public PageResult<CollectDto> selectBuyPage(PageParam pageParam){
+        Page<CollectDto> page = new Page<>(pageParam.getPageIndex(), pageParam.getPageSize());
+        qmInfoMapper.selectBuyPage(page, UserInfo.get().getUid());
+        PageResult<CollectDto> result = new PageResult<>();
+        result.setTotal(page.getTotal());
+        result.setRecords(page.getRecords());
+        return result;
     }
 }

@@ -89,6 +89,14 @@ public class QmController extends BaseController{
     }
 
     @RateLimit(fallback = "fallBack")
+    @GetMapping("bp")
+    public Result buyPage(PageParam pageParam){
+        return Result.SUCCESS().setData(qmService.selectBuyPage(pageParam));
+    }
+
+
+
+    @RateLimit(fallback = "fallBack")
     @PostMapping("comment")
     public Result comment(@RequestBody CommentRequest request){
         commentService.qmComment(request.getQmId(), request.getComment());

@@ -202,3 +202,10 @@ alter table sys_qm_info add column contact_code varchar(128) null comment '聯�
 
 -- 20191104
 alter table sys_user add column last_receive_time datetime null comment '最後领取時間';
+
+create table sys_collect (
+  id bigint auto_increment not null,
+  uid varchar(36) null,
+  qm_id varchar(36) null,
+  primary key(id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '收藏表';
