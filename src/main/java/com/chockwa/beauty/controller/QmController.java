@@ -16,6 +16,7 @@ import com.chockwa.beauty.mapper.UserMapper;
 import com.chockwa.beauty.service.CommentService;
 import com.chockwa.beauty.service.QmService;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -91,7 +92,11 @@ public class QmController extends BaseController{
     @RateLimit(fallback = "fallBack")
     @GetMapping("bp")
     public Result buyPage(PageParam pageParam){
-        return Result.SUCCESS().setData(qmService.selectBuyPage(pageParam));
+        val pageResult = qmService.selectBuyPage(pageParam);
+        pageResult.getRecords().forEach(e -> {
+            e.setCover(dnsHttps + e.getCover());
+        });
+        return Result.SUCCESS().setData(pageResult);
     }
 
 
