@@ -51,7 +51,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             // 用戶相關
             .add("/user/sign").add("/user/info").add("/user/users").add("/user/addCoin")
             // QM相關
-            .add("/qm/comment").add("/qm/bQm").add("/qm/qmsMgmt").add("/qm/info").add("/qm/info-comment")
+            .add("/qm/comment").add("/qm/bQm").add("/qm/qmsMgmt").add("/qm/info").add("/qm/info-comment").add("/qm/bp")
             // 卡相關
             .add("/card/charge").add("/card/add").add("/card/delete").add("/card/cards")
             // 授權相關
@@ -60,6 +60,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             .add("/qm-c/add").add("/qm-c/del").add("/qm-c/list").add("/qm-c/verify")
             .add("/sn/snsMgmt")
             .add("/video/videosMgmt")
+            .add("/collect/list").add("/collect/collect").add("/collect/remove")
             .build();
 
     @Override
