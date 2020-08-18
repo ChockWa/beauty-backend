@@ -88,7 +88,7 @@ public class QmService {
     public QmInfo getQmInfo(String qmId){
         QmInfo qm = qmInfoMapper.selectById(qmId);
         if(qm == null){
-            throw new BizException("QM信息不存在");
+            throw new BizException("QM信息不存在或已下架");
         }
         if(setNullContact(UserInfo.get()==null?null:UserInfo.get().getUid(), qmId)){
             qm.setContact(null);
