@@ -4,7 +4,9 @@ import com.chockwa.beauty.annotation.RateLimit;
 import com.chockwa.beauty.dto.PageParam;
 import com.chockwa.beauty.entity.Result;
 import com.chockwa.beauty.service.CollectService;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,11 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CollectController extends BaseController {
     @Autowired
     private CollectService collectService;
+    @Value("${dns.api-https}")
+    private String dnsHttps;
 
     @RateLimit(fallback = "fallBack")
     @GetMapping("list")
     public Result list(PageParam pageParam){
-        return Result.SUCCESS().setData(collectService.selectPage(pageParam));
+        val pageResult = collectService.selectPage(pageParam);
+        pageResult.getRecords().forEach(e -> {
+            e.setCover(dnsHttps + e.getCover());
+        });
+        return Result.SUCCESS().setData(pageResult);
     }
 
     @RateLimit(fallback = "fallBack")
