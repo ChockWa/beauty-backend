@@ -24,7 +24,7 @@ public class CollectService {
                 .eq(Collect::getUid, UserInfo.get().getUid());
         val exist = collectMapper.selectList(query);
         if(!exist.isEmpty()){
-            throw new BizException("已收藏过，请勿重新收藏!");
+            throw new BizException(9999, "已收藏过，请勿重新收藏!");
         }
 
         Collect collect = new Collect();
