@@ -5,5 +5,6 @@
     select b.id qmId, b.name qmName, b.cover from sys_collect a
     left join sys_qm_info b on a.qm_id = b.id
     where a.uid = #{uid}
+    and b.status = 1
   </select>
 </mapper>
