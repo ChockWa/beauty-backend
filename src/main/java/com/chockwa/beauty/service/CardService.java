@@ -105,21 +105,21 @@ public class CardService {
         cardMapper.deleteById(cardNo);
     }
 
-//    @Transactional(rollbackFor = Exception.class)
-//    public void genCard(Integer type, Integer count) throws IOException {
-//        List<String> cardNos = new ArrayList<>(count);
-//        for(int i=0;i<count;i++){
-//            Card card = new Card();
-//            card.setStatus(1);
-//            String cardNo = getGUID();
-//            card.setCardNo(cardNo);
-//            card.setCreateTime(new Date());
-//            card.setType(type);
-//            cardMapper.insert(card);
-//            cardNos.add(cardNo);
-//        }
-//        recordCardNos(cardNos);
-//    }
+    @Transactional(rollbackFor = Exception.class)
+    public void genCard(Integer type, Integer count) throws IOException {
+        List<String> cardNos = new ArrayList<>(count);
+        for(int i=0;i<count;i++){
+            Card card = new Card();
+            card.setStatus(1);
+            String cardNo = getGUID();
+            card.setCardNo(cardNo);
+            card.setCreateTime(new Date());
+            card.setType(type);
+            cardMapper.insert(card);
+            cardNos.add(cardNo);
+        }
+        recordCardNos(cardNos);
+    }
 
     private void recordCardNos(List<String> cardNos) throws IOException {
         File file = new File("F:\\cardNo.txt");
