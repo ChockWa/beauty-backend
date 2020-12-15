@@ -46,14 +46,14 @@ public class CardController extends BaseController{
         return Result.SUCCESS();
     }
 
-//    @GetMapping("genCard")
-//    public Result genCard(Integer type, Integer count){
-//        try {
-//            cardService.genCard(type, count);
-//        }catch (Exception e){
-//            log.error("生成卡号失败:", e);
-//            return Result.FAIL(9999, "生成卡号失败");
-//        }
-//        return Result.SUCCESS();
-//    }
+    @GetMapping("genCard")
+    public Result genCard(Integer type, Integer count){
+        try {
+            cardService.genCard(type, count);
+        }catch (Exception e){
+            log.error("生成卡号失败:", e);
+            return Result.FAIL(9999, "生成卡号失败");
+        }
+        return Result.SUCCESS();
+    }
 }

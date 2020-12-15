@@ -209,3 +209,9 @@ create table sys_collect (
   qm_id varchar(36) null,
   primary key(id)
 )ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '收藏表';
+
+create table sys_coupon (
+  id bigint auto_increment not null,
+  content text null,
+  primary key (id)
+)ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '优惠券';
