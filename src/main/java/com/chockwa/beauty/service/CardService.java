@@ -122,7 +122,7 @@ public class CardService {
     }
 
     private void recordCardNos(List<String> cardNos) throws IOException {
-        File file = new File("F:\\cardNo.txt");
+        File file = new File("D:\\cardNo.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         for(String cardNo : cardNos){
             writer.write(cardNo);

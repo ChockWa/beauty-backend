@@ -1,6 +1,5 @@
 package com.chockwa.beauty.service;
 
-import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.chockwa.beauty.common.utils.ImageUtils;
 import com.chockwa.beauty.constant.QmType;
@@ -10,7 +9,6 @@ import com.chockwa.beauty.entity.QmInfo;
 import com.chockwa.beauty.entity.Source;
 import com.chockwa.beauty.entity.SourceDetail;
 import com.chockwa.beauty.mapper.QmInfoMapper;
-import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,8 +52,8 @@ public class FileService {
     @Value("${temp.uploadImagePath}")
     private String uploadImagePath;
 
-    @Autowired
-    private FastFileStorageClient fastFileStorageClient;
+//    @Autowired
+//    private FastFileStorageClient fastFileStorageClient;
 
 //    @Autowired
 //    private TrackerClient trackerClient;
@@ -286,13 +284,13 @@ public class FileService {
 //        return detail;
 //    }
 
-    public void delete(){
-        HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("md5", "d41d8cd98f00b204e9800998ecf8427e");
-        paramMap.put("output","json");
-        String thumbResult= HttpUtil.post("http://198.252.105.138:8080/group/delete", paramMap);
-        System.out.println(thumbResult);
-    }
+//    public void delete(){
+//        HashMap<String, Object> paramMap = new HashMap<>();
+//        paramMap.put("md5", "d41d8cd98f00b204e9800998ecf8427e");
+//        paramMap.put("output","json");
+//        String thumbResult= HttpUtil.post("http://198.252.105.138:8080/group/delete", paramMap);
+//        System.out.println(thumbResult);
+//    }
 
 //    public String upload(File file, String fileDirName){
 //        HashMap<String, Object> paramMap = new HashMap<>(4);
@@ -334,19 +332,19 @@ public class FileService {
         return null;
     }
 
-    public String upload(MultipartFile multipartFile, String fileDirName){
-        HashMap<String, Object> paramMap = new HashMap<>(4);
-        File file = convertToFile(multipartFile);
-        paramMap.put("file", file);
-        paramMap.put("output","json");
-        paramMap.put("path", "qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
-        paramMap.put("scene","image");
-        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
-        UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
-        log.info("uploadResult:{}", JSON.toJSON(uploadResult));
-        file.delete();
-        return uploadResult.getPath();
-    }
+//    public String upload(MultipartFile multipartFile, String fileDirName){
+//        HashMap<String, Object> paramMap = new HashMap<>(4);
+//        File file = convertToFile(multipartFile);
+//        paramMap.put("file", file);
+//        paramMap.put("output","json");
+//        paramMap.put("path", "qm/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()) + "/" + fileDirName);
+//        paramMap.put("scene","image");
+//        String result= HttpUtil.post(DNS_HTTP + ":8080/upload", paramMap);
+//        UploadResult uploadResult = JSON.parseObject(result, UploadResult.class);
+//        log.info("uploadResult:{}", JSON.toJSON(uploadResult));
+//        file.delete();
+//        return uploadResult.getPath();
+//    }
 
     public File convertToFile(MultipartFile multipartFile){
         File file = new File(uploadImagePath + multipartFile.getOriginalFilename());

@@ -27,12 +27,12 @@ public class FileController extends BaseController {
      * @param file
      * @return
      */
-    @RateLimit(fallback = "fallBack")
-    @PostMapping("upload")
-    public Result upload(@RequestParam("file")MultipartFile file){
-        String fileDirFileName = String.valueOf(System.currentTimeMillis());
-        return Result.SUCCESS().setData("path", fileService.upload(file, fileDirFileName));
-    }
+//    @RateLimit(fallback = "fallBack")
+//    @PostMapping("upload")
+//    public Result upload(@RequestParam("file")MultipartFile file){
+//        String fileDirFileName = String.valueOf(System.currentTimeMillis());
+//        return Result.SUCCESS().setData("path", fileService.upload(file, fileDirFileName));
+//    }
 
     @GetMapping("oneUpload")
     public Result oneUpload(String prepareFilePath){
